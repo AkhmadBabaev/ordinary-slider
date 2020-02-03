@@ -1,6 +1,10 @@
-class OSlider {
-  constructor(elem, { position } = {}) {
-    this.elem = elem;
+import Observable from '../Observable/Observable';
+
+class View extends Observable {
+  constructor(rootElem, { position }) {
+    super();
+
+    this.root = rootElem;
     this.position = position;
 
     this.init = this.init.bind(this);
@@ -26,7 +30,7 @@ class OSlider {
 
     this.track.append(this.thumb);
     this.slider.append(this.track);
-    this.elem.append(this.slider);
+    this.root.append(this.slider);
   }
 
   setPosition(position) {
@@ -46,7 +50,7 @@ class OSlider {
       if (position < 0) position = 0;
       if (position > this.track.clientWidth) position = this.track.clientWidth;
 
-      this.setPosition(position);
+      this.notify({ position });
     };
 
     const handleMouseUp = () => {
@@ -62,4 +66,4 @@ class OSlider {
   }
 }
 
-export default OSlider;
+export default View;
