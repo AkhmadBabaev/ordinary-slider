@@ -1,0 +1,10 @@
+* text=auto
+
+# If you have .editorconfig you have to make sure
+# these params won't coflict
+# Windows files (always CRLF)
+*.sln eol=crlf
+*.bat eol=crlf
+
+# Linux files (always LF)
+*.sh eol=lf
