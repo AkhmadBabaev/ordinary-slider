@@ -7,3 +7,44 @@
 /* ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   Additional Styles
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
+
+.slider-carrier {
+  width: 400px;
+  margin-bottom: 100px;
+}
+
+.o-slider {
+  $background: #a5a5a5;
+
+  width: 100%;
+  min-width: 200px;
+  height: 10px;
+  background-color: $background;
+  padding: 0 10px;
+  box-sizing: border-box;
+
+  &__track {
+    height: 100%;
+    position: relative;
+  }
+
+  &__thumb {
+    $width: 8px;
+    $background: scale-color($background, $lightness: -60%);
+    $translateX: ($width / 2 ) * -1;
+
+    width: $width;
+    height: 100%;
+    background-color: $background;
+
+    position: absolute;
+    top: 0;
+
+    transform: translateX($translateX) scaleY(2);
+    cursor: grab;
+  }
+}
+
+.Cursor * {
+  cursor: grabbing;
+}
