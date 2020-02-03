@@ -3,6 +3,7 @@ extends: "airbnb-base"
 env:
   browser: true
   node: true
+  jquery: true
 
 globals:
   document: false
