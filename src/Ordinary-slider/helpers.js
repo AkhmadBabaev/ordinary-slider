@@ -21,3 +21,19 @@ export function isNumber(value) {
 export function isObject(value) {
   return compareType(value, 'object');
 }
+
+export function isBoolean(value) {
+  return typeof value === 'boolean';
+}
+
+export function isDefined(value) {
+  return (value !== undefined) && (value !== null);
+}
+
+export function isElement(value) {
+  return value instanceof Element;
+}
+
+export function softRounding(num) {
+  return Number(num.toFixed(1));
+}
