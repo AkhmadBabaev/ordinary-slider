@@ -17,6 +17,13 @@ ignorePatterns:
   - "/dist"
 
 rules:
+  no-unused-expressions: 0
+
   import/no-extraneous-dependencies:
     - error
     - devDependencies: true
+
+  no-console:
+    - error
+    - allow:
+      - error
