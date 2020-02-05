@@ -1,4 +1,5 @@
 import Observable from '../Observable/Observable';
+import defaultState from './defaultState';
 
 import {
   isObject, isBoolean, isNumber,
@@ -8,13 +9,6 @@ import {
 class Model extends Observable {
   constructor(options = {}) {
     super();
-
-    this.state = {
-      min: 0,
-      max: 100,
-      step: 1,
-      position: 0,
-    };
 
     this.getState = this.getState.bind(this);
     this.setState = this.setState.bind(this);
@@ -26,7 +20,7 @@ class Model extends Observable {
     this.handlePosition = this.handlePosition.bind(this);
     this.handleProp = this.handleProp.bind(this);
 
-    this.setState({ ...this.state, ...options }, false);
+    this.setState({ ...defaultState, ...options }, false);
   }
 
   setState(properties, notify = true) {
