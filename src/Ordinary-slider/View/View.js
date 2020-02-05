@@ -1,20 +1,36 @@
 import Observable from '../Observable/Observable';
 
+import {
+  isObject, isDefined, isElement,
+} from '../helpers';
+
 class View extends Observable {
-  constructor(rootElem, { position }) {
+  constructor(rootElem, options) {
     super();
 
+    if (!isDefined(rootElem)) throw new ReferenceError('Root element is not defined');
+    if (!isElement(rootElem)) throw new TypeError('Root should be an HTML element');
     this.root = rootElem;
-    this.position = position;
+
+    if (!isDefined(options)) throw new ReferenceError('View options is not defined');
+    if (!isObject(options)) throw new TypeError('View options should be an object');
+    this.options = options;
 
     this.init = this.init.bind(this);
-    this.setPosition = this.setPosition.bind(this);
+
+    this.applyState = this.applyState.bind(this);
+    this.updateBoundaries = this.updateBoundaries.bind(this);
+    this.updatePosition = this.updatePosition.bind(this);
+    this.setRatio = this.setRatio.bind(this);
+
     this.handleMouseDown = this.handleMouseDown.bind(this);
 
     this.init();
   }
 
   init() {
+    this.root.innerHTML = '';
+
     this.slider = document.createElement('div');
     this.slider.classList.add('o-slider');
 
@@ -23,32 +39,53 @@ class View extends Observable {
 
     this.thumb = document.createElement('div');
     this.thumb.classList.add('o-slider__thumb');
+    this.updatePosition();
 
     this.thumb.addEventListener('mousedown', this.handleMouseDown);
-
-    this.setPosition(this.position);
 
     this.track.append(this.thumb);
     this.slider.append(this.track);
     this.root.append(this.slider);
+
+    this.trackWidth = this.track.clientWidth;
+    this.setRatio();
   }
 
-  setPosition(position) {
-    this.thumb.style.left = `${position}px`;
+  applyState(properties) {
+    if (!isDefined(properties)) throw new TypeError('applyState argument is not defined');
+    if (!isObject(properties)) throw new TypeError('applyState argument should be an object');
+    this.options = { ...this.options, ...properties };
+
+    const hasBoundaries = isDefined(properties.min) || isDefined(properties.max);
+    const hasPosition = isDefined(properties.position);
+
+    hasBoundaries && this.updateBoundaries(hasPosition);
+    hasPosition && this.updatePosition();
+  }
+
+  updateBoundaries(hasPosition) {
+    this.setRatio();
+    !hasPosition && this.updatePosition();
+  }
+
+  updatePosition() {
+    const { position, min } = this.options;
+    this.thumb.style.left = `${(position - min) * this.ratio}px`;
   }
 
   handleMouseDown(e) {
     const isLeftClick = e.which === 1;
     if (!isLeftClick) return;
 
+    const { ratio } = this;
+    const { min } = this.options;
     const parentX = this.track.getBoundingClientRect().x;
+
     document.body.classList.add('Cursor');
 
     const handleMouseMove = (evt) => {
-      let position = evt.clientX - parentX;
-
-      if (position < 0) position = 0;
-      if (position > this.track.clientWidth) position = this.track.clientWidth;
+      const pxPosition = evt.clientX - parentX;
+      const position = pxPosition / ratio + min;
 
       this.notify({ position });
     };
@@ -63,6 +100,14 @@ class View extends Observable {
     document.addEventListener('mouseup', handleMouseUp);
 
     e.preventDefault();
+  }
+
+  setRatio() {
+    const { min, max } = this.options;
+    const trackWidth = this.trackWidth || this.track.clientWidth;
+    const gap = max - min;
+
+    this.ratio = trackWidth / gap;
   }
 }
 

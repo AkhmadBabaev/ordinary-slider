@@ -9,7 +9,7 @@ class Presenter {
   }
 
   init() {
-    this.model.subscribe(this.view.setPosition);
+    this.model.subscribe(this.view.applyState);
     this.view.subscribe(this.model.setState);
   }
 }
