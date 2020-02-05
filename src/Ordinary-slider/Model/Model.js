@@ -13,6 +13,8 @@ class Model extends Observable {
     this.getState = this.getState.bind(this);
     this.setState = this.setState.bind(this);
 
+    this.isDuplicateValue = this.isDuplicateValue.bind(this);
+
     this.validateProp = this.validateProp.bind(this);
     this.handleMin = this.handleMin.bind(this);
     this.handleMax = this.handleMax.bind(this);
@@ -160,6 +162,8 @@ class Model extends Observable {
   }
 
   validateProp(prop, value) {
+    if (this.isDuplicateValue(prop, value)) return;
+
     switch (prop) {
       case 'position': case 'min': case 'max': case 'step':
         if (!isNumber(value)) throw new TypeError(`${prop} is not number`);
@@ -179,6 +183,10 @@ class Model extends Observable {
 
       default: break;
     }
+  }
+
+  isDuplicateValue(prop, value) {
+    return this.getState()[prop] === value;
   }
 }
 
