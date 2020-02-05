@@ -24,6 +24,7 @@ class View extends Observable {
     this.setRatio = this.setRatio.bind(this);
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleWindowResize = this.handleWindowResize.bind(this);
 
     this.init();
   }
@@ -49,6 +50,8 @@ class View extends Observable {
 
     this.trackWidth = this.track.clientWidth;
     this.setRatio();
+
+    window.addEventListener('resize', this.handleWindowResize);
   }
 
   applyState(properties) {
@@ -69,8 +72,10 @@ class View extends Observable {
   }
 
   updatePosition() {
-    const { position, min } = this.options;
-    this.thumb.style.left = `${(position - min) * this.ratio}px`;
+    const { position, min, max } = this.options;
+    const gap = max - min;
+
+    this.thumb.style.left = `${(100 / gap) * (position - min)}%`;
   }
 
   handleMouseDown(e) {
@@ -100,6 +105,14 @@ class View extends Observable {
     document.addEventListener('mouseup', handleMouseUp);
 
     e.preventDefault();
+  }
+
+  handleWindowResize() {
+    // track width was not changed
+    if (this.trackWidth === this.track.clientWidth) return;
+
+    this.trackWidth = this.track.clientWidth;
+    this.updateBoundaries(true);
   }
 
   setRatio() {
