@@ -23,6 +23,10 @@ class View extends Observable {
     this.updatePosition = this.updatePosition.bind(this);
     this.setRatio = this.setRatio.bind(this);
 
+    this.setTip = this.setTip.bind(this);
+    this.addTip = this.addTip.bind(this);
+    this.removeTip = this.removeTip.bind(this);
+
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
 
@@ -40,9 +44,10 @@ class View extends Observable {
 
     this.thumb = document.createElement('div');
     this.thumb.classList.add('o-slider__thumb');
-    this.updatePosition();
-
     this.thumb.addEventListener('mousedown', this.handleMouseDown);
+
+    this.setTip();
+    this.updatePosition();
 
     this.track.append(this.thumb);
     this.slider.append(this.track);
@@ -61,8 +66,10 @@ class View extends Observable {
 
     const hasBoundaries = isDefined(properties.min) || isDefined(properties.max);
     const hasPosition = isDefined(properties.position);
+    const hasTip = isDefined(properties.tip);
 
-    hasBoundaries && this.updateBoundaries(hasPosition);
+    hasTip && this.setTip();
+    hasBoundaries && this.updateBoundaries();
     hasPosition && this.updatePosition();
   }
 
@@ -72,10 +79,28 @@ class View extends Observable {
   }
 
   updatePosition() {
-    const { position, min, max } = this.options;
-    const gap = max - min;
+    const {
+      position, min, max, tip,
+    } = this.options;
 
-    this.thumb.style.left = `${(100 / gap) * (position - min)}%`;
+    this.thumb.style.left = `${(100 / (max - min)) * (position - min)}%`;
+    tip && (this.tip.textContent = position);
+  }
+
+  setTip() {
+    this.options.tip ? this.addTip() : this.removeTip();
+  }
+
+  removeTip() {
+    this.tip.remove();
+  }
+
+  addTip() {
+    this.tip = document.createElement('div');
+    this.tip.classList.add('o-slider__tip');
+    this.tip.textContent = this.options.position;
+
+    this.thumb.append(this.tip);
   }
 
   handleMouseDown(e) {
@@ -97,6 +122,7 @@ class View extends Observable {
 
     const handleMouseUp = () => {
       document.body.classList.remove('Cursor');
+
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };

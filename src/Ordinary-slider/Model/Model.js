@@ -170,6 +170,11 @@ class Model extends Observable {
         this.changedProps[prop] = Number(value);
         break;
 
+      case 'tip':
+        if (!isBoolean(value)) throw new TypeError(`${prop} is not a boolean`);
+        this.changedProps[prop] = value;
+        break;
+
       default: throw new Error(`${prop} is non existed property`);
     }
   }
