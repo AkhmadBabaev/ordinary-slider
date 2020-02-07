@@ -107,10 +107,12 @@ class View extends Observable {
     const isLeftClick = e.which === 1;
     if (!isLeftClick) return;
 
+    const { currentTarget } = e;
     const { ratio } = this;
     const { min } = this.options;
     const parentX = this.track.getBoundingClientRect().x;
 
+    currentTarget.classList.add('o-slider__thumb_active');
     document.body.classList.add('Cursor');
 
     const handleMouseMove = (evt) => {
@@ -121,6 +123,7 @@ class View extends Observable {
     };
 
     const handleMouseUp = () => {
+      currentTarget.classList.remove('o-slider__thumb_active');
       document.body.classList.remove('Cursor');
 
       document.removeEventListener('mousemove', handleMouseMove);
