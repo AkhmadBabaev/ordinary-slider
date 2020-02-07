@@ -35,9 +35,7 @@ class View extends Observable {
 
   init() {
     this.root.innerHTML = '';
-
-    this.slider = document.createElement('div');
-    this.slider.classList.add('o-slider');
+    this.root.classList.add('o-slider');
 
     this.track = document.createElement('div');
     this.track.classList.add('o-slider__track');
@@ -50,8 +48,7 @@ class View extends Observable {
     this.updatePosition();
 
     this.track.append(this.thumb);
-    this.slider.append(this.track);
-    this.root.append(this.slider);
+    this.root.append(this.track);
 
     this.trackWidth = this.track.clientWidth;
     this.setRatio();
