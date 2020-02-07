@@ -16,7 +16,7 @@
 .o-slider {
   --h: 0;
   --s: 0%;
-  --l: 65%;
+  --l: 80%;
 
   font-size: 15px;
 
@@ -33,7 +33,7 @@
   }
 
   &__thumb {
-    --l: 40%;
+    --l: 50%;
     --thumbBg: HSL(var(--h), var(--s), var(--l));
 
     text-align: center;
@@ -49,7 +49,7 @@
     cursor: grab;
 
     &_active, &:hover {
-      --l: 30%;
+      --l: 35%;
     }
   }
 
