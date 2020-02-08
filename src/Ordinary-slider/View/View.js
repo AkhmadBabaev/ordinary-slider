@@ -116,7 +116,7 @@ class View extends Observable {
     const shiftX = offsetX - (width / 2);
 
     currentTarget.classList.add('o-slider__thumb_active');
-    document.body.classList.add('Cursor');
+    document.body.classList.add('o-slider_grabbed');
 
     const handleMouseMove = (evt) => {
       const pxPosition = evt.clientX - parentX - shiftX;
@@ -127,7 +127,7 @@ class View extends Observable {
 
     const handleMouseUp = () => {
       currentTarget.classList.remove('o-slider__thumb_active');
-      document.body.classList.remove('Cursor');
+      document.body.classList.remove('o-slider_grabbed');
 
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
