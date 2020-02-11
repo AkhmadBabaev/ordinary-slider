@@ -1,7 +1,10 @@
 import Observable from '../Observable/Observable';
 
+import Track from './Track';
+
 import {
   isObject, isDefined, isElement,
+  propertyFilter,
 } from '../helpers';
 
 class View extends Observable {
@@ -17,18 +20,7 @@ class View extends Observable {
     this.options = options;
 
     this.init = this.init.bind(this);
-
     this.applyState = this.applyState.bind(this);
-    this.updateBoundaries = this.updateBoundaries.bind(this);
-    this.updatePosition = this.updatePosition.bind(this);
-    this.setRatio = this.setRatio.bind(this);
-
-    this.setTip = this.setTip.bind(this);
-    this.addTip = this.addTip.bind(this);
-    this.removeTip = this.removeTip.bind(this);
-
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleWindowResize = this.handleWindowResize.bind(this);
 
     this.init();
   }
@@ -37,122 +29,31 @@ class View extends Observable {
     this.root.innerHTML = '';
     this.root.classList.add('o-slider');
 
-    this.track = document.createElement('div');
-    this.track.classList.add('o-slider__track');
+    const trackProps = ['min', 'max', 'position', 'tip'];
+    const filteredTrackProps = propertyFilter(this.options, trackProps);
 
-    this.thumb = document.createElement('div');
-    this.thumb.classList.add('o-slider__thumb');
-    this.thumb.addEventListener('mousedown', this.handleMouseDown);
-
-    this.setTip();
-    this.updatePosition();
-
-    this.track.append(this.thumb);
-    this.root.append(this.track);
-
-    this.trackWidth = this.track.clientWidth;
-    this.setRatio();
-
-    window.addEventListener('resize', this.handleWindowResize);
+    this.track = new Track({
+      ...filteredTrackProps,
+      parent: this.root,
+      notify: this.notify,
+    });
   }
 
-  applyState(properties) {
-    if (!isDefined(properties)) throw new TypeError('applyState argument is not defined');
-    if (!isObject(properties)) throw new TypeError('applyState argument should be an object');
-    this.options = { ...this.options, ...properties };
+  applyState(options) {
+    this.options = { ...this.options, ...options };
 
-    const hasBoundaries = isDefined(properties.min) || isDefined(properties.max);
-    const hasPosition = isDefined(properties.position);
-    const hasTip = isDefined(properties.tip);
+    const hasMin = isDefined(options.min);
+    const hasMax = isDefined(options.max);
+    const hasPosition = isDefined(options.position);
+    const hasTip = isDefined(options.tip);
 
-    hasTip && this.setTip();
-    hasBoundaries && this.updateBoundaries();
-    hasPosition && this.updatePosition();
-  }
+    const isTrackUpdated = hasMin || hasMax || hasPosition || hasTip;
+    if (isTrackUpdated) {
+      const props = ['min', 'max', 'position', 'tip'];
+      const filteredProps = propertyFilter(options, props);
 
-  updateBoundaries(hasPosition) {
-    this.setRatio();
-    !hasPosition && this.updatePosition();
-  }
-
-  updatePosition() {
-    const {
-      position, min, max, tip,
-    } = this.options;
-
-    this.thumb.style.left = `${(100 / (max - min)) * (position - min)}%`;
-    tip && (this.tip.textContent = position);
-  }
-
-  setTip() {
-    this.options.tip ? this.addTip() : this.removeTip();
-  }
-
-  removeTip() {
-    this.tip.remove();
-  }
-
-  addTip() {
-    this.tip = document.createElement('div');
-    this.tip.classList.add('o-slider__tip');
-    this.tip.textContent = this.options.position;
-
-    this.thumb.append(this.tip);
-  }
-
-  handleMouseDown(e) {
-    const isLeftClick = e.which === 1;
-    if (!isLeftClick) return;
-
-    const {
-      currentTarget, target, offsetX,
-    } = e;
-
-    const { ratio } = this;
-    const { min } = this.options;
-    const parentX = this.track.getBoundingClientRect().x;
-
-    const width = target.clientWidth;
-    const shiftX = offsetX - (width / 2);
-
-    currentTarget.classList.add('o-slider__thumb_active');
-    document.body.classList.add('o-slider_grabbed');
-
-    const handleMouseMove = (evt) => {
-      const pxPosition = evt.clientX - parentX - shiftX;
-      const position = pxPosition / ratio + min;
-
-      this.notify({ position });
-    };
-
-    const handleMouseUp = () => {
-      currentTarget.classList.remove('o-slider__thumb_active');
-      document.body.classList.remove('o-slider_grabbed');
-
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-
-    e.preventDefault();
-  }
-
-  handleWindowResize() {
-    // track width was not changed
-    if (this.trackWidth === this.track.clientWidth) return;
-
-    this.trackWidth = this.track.clientWidth;
-    this.updateBoundaries(true);
-  }
-
-  setRatio() {
-    const { min, max } = this.options;
-    const trackWidth = this.trackWidth || this.track.clientWidth;
-    const gap = max - min;
-
-    this.ratio = trackWidth / gap;
+      this.track.update(filteredProps);
+    }
   }
 }
 

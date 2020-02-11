@@ -37,3 +37,27 @@ export function isElement(value) {
 export function softRounding(num) {
   return Number(num.toFixed(1));
 }
+
+export function propertyFilter(obj, properties) {
+  const result = {};
+
+  properties.forEach((prop) => {
+    let value = obj[prop];
+    let propName = prop;
+
+    if (prop.includes(':')) {
+      const firstPart = prop.split(':')[0];
+      const secondPart = prop.split(':')[1];
+
+      if (!firstPart.length) throw new SyntaxError('Invalid value');
+      if (!secondPart.length) throw new SyntaxError('Invalid value');
+
+      propName = secondPart;
+      value = obj[firstPart];
+    }
+
+    isDefined(value) && (result[propName] = value);
+  });
+
+  return result;
+}
