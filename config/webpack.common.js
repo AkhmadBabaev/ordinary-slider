@@ -19,7 +19,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loader: 'ts-loader',
       },
 
       // Markup
@@ -39,6 +39,9 @@ module.exports = {
         options: { name: '[path][name].[ext]' },
       },
     ],
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
   },
   plugins: [
     new webpack.ProvidePlugin({
