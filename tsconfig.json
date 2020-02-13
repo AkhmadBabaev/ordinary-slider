@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "strict": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "strictPropertyInitialization": false,
+    "outDir": "dist"
+  }
+}

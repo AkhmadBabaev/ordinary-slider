@@ -12,7 +12,7 @@ module.exports = merge(common, {
 
       {
         enforce: 'pre',
-        test: /\.js$/,
+        test: /\.(ts|js)$/,
         exclude: /node_modules/,
         loader: 'eslint-loader',
         options: { failOnError: true },

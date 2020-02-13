@@ -1,4 +1,21 @@
-extends: "airbnb-base"
+extends:
+  - "airbnb-base"
+
+overrides:
+  -
+    files:
+      - "*.ts"
+
+    extends:
+      - "plugin:@typescript-eslint/recommended"
+
+    rules:
+      "@typescript-eslint/no-explicit-any": off
+
+parser: "@typescript-eslint/parser"
+
+plugins:
+  - "@typescript-eslint"
 
 env:
   browser: true
@@ -17,7 +34,7 @@ ignorePatterns:
   - "/dist"
 
 rules:
-  no-unused-expressions: 0
+  no-unused-expressions: off
 
   import/no-extraneous-dependencies:
     - error

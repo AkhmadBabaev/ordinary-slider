@@ -17,7 +17,7 @@ module.exports = {
       // Scripts
 
       {
-        test: /\.js$/,
+        test: /\.(ts|js)$/,
         exclude: /node_modules/,
         loader: 'ts-loader',
       },
