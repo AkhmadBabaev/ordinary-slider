@@ -16,7 +16,7 @@ class Tip {
   init() {
     this.tip = document.createElement('div');
     this.tip.classList.add('o-slider__tip');
-    this.setText(this.options.text);
+    this.setText();
 
     this.options.parent.append(this.tip);
   }
