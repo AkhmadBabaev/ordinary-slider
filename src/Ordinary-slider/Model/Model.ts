@@ -1,31 +1,26 @@
 import Observable from '../Observable/Observable';
 import defaultState from './defaultState';
 
+import { State } from './Interfaces';
+
 import {
   isObject, isBoolean, isNumber,
   isDefined, softRounding,
 } from '../helpers';
 
 class Model extends Observable {
-  constructor(options = {}) {
+  private state: State = defaultState;
+
+  private changedProps: Partial<State>;
+
+  constructor(options: Partial<State> = {}) {
     super();
 
-    this.getState = this.getState.bind(this);
     this.setState = this.setState.bind(this);
-
-    this.isDuplicateValue = this.isDuplicateValue.bind(this);
-
-    this.validateProp = this.validateProp.bind(this);
-    this.handleMin = this.handleMin.bind(this);
-    this.handleMax = this.handleMax.bind(this);
-    this.handleStep = this.handleStep.bind(this);
-    this.handlePosition = this.handlePosition.bind(this);
-    this.handleProp = this.handleProp.bind(this);
-
-    this.setState({ ...defaultState, ...options }, false);
+    Object.keys(options).length && this.setState(options, false);
   }
 
-  setState(properties, notify = true) {
+  public setState(properties: Partial<State>, notify = true): void {
     // no arguments
     if (!arguments.length) throw new Error('setState has not arguments');
 
@@ -41,8 +36,7 @@ class Model extends Observable {
     // unnecessary arguments
     if (arguments.length > 2) {
       console.error(`
-        setState should contain no more than 2 arguments,
-        remove unnecessary arguments
+        setState should contain no more than 2 arguments, remove unnecessary arguments
       `);
     }
 
@@ -51,7 +45,7 @@ class Model extends Observable {
 
     // validate properties
     Object.keys(properties).forEach((prop) => {
-      this.validateProp(prop, properties[prop]);
+      this.validateProp(prop, properties[prop as keyof State]);
     });
 
     // handle properties
@@ -67,11 +61,11 @@ class Model extends Observable {
     delete this.changedProps;
   }
 
-  getState() {
-    return this.state || {};
+  public getState(): State {
+    return this.state;
   }
 
-  handleMin() {
+  private handleMin(): void {
     const currentState = { ...this.getState(), ...this.changedProps };
 
     let { min } = currentState;
@@ -81,20 +75,20 @@ class Model extends Observable {
 
     if (min > max) min = max - step;
 
-    const isGreaterThanPosition = min > position;
-    const gap = max - min;
+    const isGreaterThanPosition: boolean = min > position;
+    const gap: number = max - min;
 
     this.changedProps.min = softRounding(min);
 
     // update related properties
-    const hasStep = isDefined(this.changedProps.step);
+    const hasStep: boolean = isDefined(this.changedProps.step);
     if (!hasStep && step > gap) this.handleStep();
 
-    const hasPosition = isDefined(this.changedProps.position);
+    const hasPosition: boolean = isDefined(this.changedProps.position);
     if (!hasPosition && isGreaterThanPosition) this.handlePosition();
   }
 
-  handleMax() {
+  private handleMax(): void {
     const currentState = { ...this.getState(), ...this.changedProps };
 
     let { max } = currentState;
@@ -104,20 +98,20 @@ class Model extends Observable {
 
     if (max < min) max = min + step;
 
-    const isLessThanPosition = max < position;
-    const gap = max - min;
+    const isLessThanPosition: boolean = max < position;
+    const gap: number = max - min;
 
     this.changedProps.max = softRounding(max);
 
     // update related properties
-    const hasStep = isDefined(this.changedProps.step);
+    const hasStep: boolean = isDefined(this.changedProps.step);
     if (!hasStep && step > gap) this.handleStep();
 
-    const hasPosition = isDefined(this.changedProps.position);
+    const hasPosition: boolean = isDefined(this.changedProps.position);
     if (!hasPosition && isLessThanPosition) this.handlePosition();
   }
 
-  handleStep() {
+  private handleStep(): void {
     const currentState = { ...this.getState(), ...this.changedProps };
 
     let { step } = currentState;
@@ -127,17 +121,17 @@ class Model extends Observable {
 
     if (step <= 0) step = 0.5;
 
-    const gap = max - min;
+    const gap: number = max - min;
     if (step > gap) step = gap;
 
     this.changedProps.step = softRounding(step);
 
     // update related properties
-    const hasPosition = isDefined(this.changedProps.position);
+    const hasPosition: boolean = isDefined(this.changedProps.position);
     if (!hasPosition) this.handlePosition();
   }
 
-  handlePosition() {
+  private handlePosition(): void {
     const currentState = { ...this.getState(), ...this.changedProps };
 
     let { position } = currentState;
@@ -145,12 +139,12 @@ class Model extends Observable {
 
     const { min, max, step } = currentState;
 
-    const remainder = (position - min) % step;
+    const remainder: number = (position - min) % step;
 
     if (remainder !== 0) {
-      const halfStep = step / 2;
-      const belowPosition = position - remainder;
-      const abovePosition = belowPosition + step;
+      const halfStep: number = step / 2;
+      const belowPosition: number = position - remainder;
+      const abovePosition: number = belowPosition + step;
 
       position = (halfStep > remainder) ? belowPosition : abovePosition;
     }
@@ -161,37 +155,41 @@ class Model extends Observable {
     this.changedProps.position = softRounding(position);
   }
 
-  validateProp(prop, value) {
-    if (this.isDuplicateValue(prop, value)) return;
+  private validateProp(prop: string, value: unknown): void {
+    let option: boolean | number;
 
     switch (prop) {
-      case 'position': case 'min': case 'max': case 'step':
+      case 'position':
+      case 'min':
+      case 'max':
+      case 'step':
         if (!isNumber(value)) throw new TypeError(`${prop} is not number`);
-        this.changedProps[prop] = Number(value);
-        break;
+        option = Number(value); break;
 
       case 'tip':
         if (!isBoolean(value)) throw new TypeError(`${prop} is not a boolean`);
-        this.changedProps[prop] = value;
-        break;
+        option = value as boolean; break;
 
       default: throw new Error(`${prop} is non existed property`);
     }
+
+    if (!this.isDuplicateValue(prop, option)) {
+      this.changedProps = { ...this.changedProps, [prop]: option };
+    }
   }
 
-  handleProp(prop) {
+  private handleProp(prop: string): void {
     switch (prop) {
       case 'position': this.handlePosition(); break;
       case 'min': this.handleMin(); break;
       case 'max': this.handleMax(); break;
       case 'step': this.handleStep(); break;
-
       default: break;
     }
   }
 
-  isDuplicateValue(prop, value) {
-    return this.getState()[prop] === value;
+  private isDuplicateValue(prop: string, value: number | boolean): boolean {
+    return this.getState()[prop as keyof State] === value;
   }
 }
 
