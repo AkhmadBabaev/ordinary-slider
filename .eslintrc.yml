@@ -11,6 +11,7 @@ overrides:
 
     rules:
       "@typescript-eslint/no-explicit-any": off
+      "@typescript-eslint/ban-ts-ignore": off
 
 parser: "@typescript-eslint/parser"
 
