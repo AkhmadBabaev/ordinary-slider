@@ -4,7 +4,7 @@ import Presenter from './Ordinary-slider/Presenter/Presenter';
 
 import { State } from './Ordinary-slider/Model/Interfaces';
 
-import { isObject } from './Ordinary-slider/helpers';
+import { isObject } from './Ordinary-slider/helpers/helpers';
 
 declare global {
   interface Window {

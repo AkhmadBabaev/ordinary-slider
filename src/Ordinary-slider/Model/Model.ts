@@ -6,7 +6,7 @@ import { State } from './Interfaces';
 import {
   isObject, isBoolean, isNumber,
   isDefined, softRounding,
-} from '../helpers';
+} from '../helpers/helpers';
 
 class Model extends Observable {
   private state: State = defaultState;

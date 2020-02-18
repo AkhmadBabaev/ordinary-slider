@@ -7,7 +7,7 @@ import { State } from '../Model/Interfaces';
 import {
   isObject, isDefined, isElement,
   propertyFilter,
-} from '../helpers';
+} from '../helpers/helpers';
 
 class View extends Observable {
   private options: State;

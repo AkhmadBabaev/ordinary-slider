@@ -3,7 +3,7 @@ import Thumb from '../Thumb/Thumb';
 import { TrackOptions } from './Interfaces';
 import { ThumbOptions } from '../Thumb/Interfaces';
 
-import { isDefined, propertyFilter } from '../../helpers';
+import { isDefined, propertyFilter } from '../../helpers/helpers';
 
 class Track {
   private options: TrackOptions;

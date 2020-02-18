@@ -1,6 +1,6 @@
 import { TipOptions } from './Interfaces';
 
-import { isDefined } from '../../helpers';
+import { isDefined } from '../../helpers/helpers';
 
 class Tip {
   private options: TipOptions;

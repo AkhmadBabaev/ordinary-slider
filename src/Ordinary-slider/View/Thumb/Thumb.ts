@@ -3,7 +3,7 @@ import Tip from '../Tip/Tip';
 import { ThumbOptions } from './Interfaces';
 import { TipOptions } from '../Tip/Interfaces';
 
-import { isDefined, propertyFilter } from '../../helpers';
+import { isDefined, propertyFilter } from '../../helpers/helpers';
 
 class Thumb {
   private options: ThumbOptions;
