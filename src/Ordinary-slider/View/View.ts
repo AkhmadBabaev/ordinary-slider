@@ -5,7 +5,7 @@ import { TrackOptions } from './Track/Interfaces';
 import { State } from '../Model/Interfaces';
 
 import {
-  isObject, isDefined, isElement,
+  isObject, isDefined, isHTMLElement,
   propertyFilter,
 } from '../helpers/helpers';
 
@@ -20,7 +20,7 @@ class View extends Observable {
     super();
 
     if (!isDefined(rootElem)) throw new ReferenceError('Root element is not defined');
-    if (!isElement(rootElem)) throw new TypeError('Root should be an HTML element');
+    if (!isHTMLElement(rootElem)) throw new TypeError('Root should be an HTML element');
     this.root = rootElem;
 
     if (!isDefined(options)) throw new ReferenceError('View options is not defined');
