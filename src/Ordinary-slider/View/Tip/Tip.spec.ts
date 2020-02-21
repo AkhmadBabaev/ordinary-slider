@@ -1,8 +1,9 @@
 import Tip from './Tip';
+import ViewComponent from '../ViewComponent/ViewComponent';
 
 import { TipOptions } from './Interfaces';
 
-document.body.innerHTML = '';
+import { testHasElement, testHasInstance } from '../../helpers/helpers';
 
 const options: TipOptions = {
   parent: document.body,
@@ -13,22 +14,24 @@ const options: TipOptions = {
 const tip = new Tip(options);
 
 describe('Tip', () => {
-  test('should be added to DOM', () => {
-    const isFounded = !!document.body.querySelector('.o-slider__tip');
-    expect(isFounded).toBe(true);
-  });
+  afterEach(() => tip.update(options));
 
-  test('should handle text value', () => {
-    tip.update({ text: 5 });
+  test('is an instance of class ViewComponent',
+    () => testHasInstance(tip, ViewComponent));
 
-    const element = document.body.querySelector('.o-slider__tip');
-    expect((element as HTMLElement).textContent).toBe('5');
-  });
+  test('should be added to parent',
+    () => testHasElement(document.body, tip.getElement()));
 
-  test('can be removed from DOM', () => {
+  test('should be removed from parent', () => {
     tip.update({ isEnabled: false });
 
-    const isFounded = !!document.body.querySelector('.o-slider__tip');
+    const isFounded = document.body.contains(tip.getElement());
     expect(isFounded).toBe(false);
+  });
+
+  test('handles text value', () => {
+    tip.update({ text: 5 });
+
+    expect(tip.getElement().textContent).toBe('5');
   });
 });

@@ -104,3 +104,11 @@ export function debounce(fn: Function, wait: number): () => void {
     timer = setTimeout(() => fn(...params), wait);
   };
 }
+
+export function testHasElement(parent: HTMLElement, element: HTMLElement): void {
+  expect(parent.contains(element)).toBe(true);
+}
+
+export function testHasInstance(elem: unknown, instance: unknown): void {
+  expect(elem).toBeInstanceOf(instance);
+}

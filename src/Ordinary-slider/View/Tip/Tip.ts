@@ -1,29 +1,24 @@
+import ViewComponent from '../ViewComponent/ViewComponent';
+
 import { TipOptions } from './Interfaces';
 
 import { isDefined } from '../../helpers/helpers';
 
-class Tip {
-  private options: TipOptions;
-
-  private tip: HTMLElement;
-
+class Tip extends ViewComponent<TipOptions> {
   constructor(options: TipOptions) {
-    this.options = options;
-
-    this.update = this.update.bind(this);
+    super(options);
     this.init();
   }
 
   private init(): void {
-    this.tip = document.createElement('div');
-    this.tip.classList.add('o-slider__tip');
+    this.createElement('div', { class: 'o-slider__tip' });
 
     this.setText();
-    this.options.parent.append(this.tip);
+    this.options.parent.append(this.element);
   }
 
   public update(options: Partial<TipOptions>): void {
-    this.options = { ...this.options, ...options };
+    super.update(options);
 
     const hasIsEnabled: boolean = isDefined(options.isEnabled);
     hasIsEnabled && this.toggle();
@@ -37,7 +32,7 @@ class Tip {
   }
 
   private disable(): void {
-    this.tip.remove();
+    this.element.remove();
   }
 
   private toggle(): void {
@@ -45,7 +40,7 @@ class Tip {
   }
 
   private setText(): void {
-    this.tip.textContent = String(this.options.text);
+    this.element.textContent = String(this.options.text);
   }
 }
 
