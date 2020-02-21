@@ -1,3 +1,4 @@
+import ViewComponent from '../ViewComponent/ViewComponent';
 import Tip from '../Tip/Tip';
 
 import { ThumbOptions } from './Interfaces';
@@ -5,42 +6,36 @@ import { TipOptions } from '../Tip/Interfaces';
 
 import { isDefined, propertyFilter, throttle } from '../../helpers/helpers';
 
-class Thumb {
-  private options: ThumbOptions;
-
-  private thumb: HTMLElement;
-
+class Thumb extends ViewComponent<ThumbOptions> {
   private tip: Tip;
 
   constructor(options: ThumbOptions) {
-    this.options = options;
+    super(options);
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
-
-    this.update = this.update.bind(this);
     this.init();
   }
 
   private init(): void {
-    this.thumb = document.createElement('div');
-    this.thumb.classList.add('o-slider__thumb');
-    this.thumb.addEventListener('mousedown', this.handleMouseDown);
+    this.createElement('div', { class: 'o-slider__thumb' });
+
+    this.element.addEventListener('mousedown', this.handleMouseDown);
 
     const tipProps: string[] = ['position:text', 'tip:isEnabled'];
-    const filteredTipProps: Partial<TipOptions> = (
-      propertyFilter((this.options as Partial<TipOptions>), tipProps)
-    );
+    const filteredTipProps: Partial<TipOptions> = propertyFilter(this.options, tipProps);
 
     this.tip = new Tip({
       ...filteredTipProps,
-      parent: this.thumb,
+      parent: this.element,
     } as TipOptions);
 
-    this.options.parent.append(this.thumb);
+    this.setPosition();
+
+    this.options.parent.append(this.element);
   }
 
   public update(options: Partial<ThumbOptions>): void {
-    this.options = { ...this.options, ...options };
+    super.update(options);
 
     const hasPosition: boolean = isDefined(options.position);
     hasPosition && this.setPosition();
@@ -52,7 +47,7 @@ class Thumb {
   private setPosition(): void {
     const { position, min, max } = this.options;
 
-    this.thumb.style.left = `${(100 / (max - min)) * (position - min)}%`;
+    this.element.style.left = `${(100 / (max - min)) * (position - min)}%`;
     this.tip.update({ text: position });
   }
 
@@ -75,8 +70,8 @@ class Thumb {
     const shiftX: number = offsetX - (width / 2);
     const parentX: number = parent.getBoundingClientRect().x;
 
-    let handleMouseMove = (mouseMoveEvent: MouseEvent): void => {
-      const pxPosition: number = mouseMoveEvent.clientX - parentX - shiftX;
+    let handleMouseMove = ({ clientX }: MouseEvent): void => {
+      const pxPosition: number = clientX - parentX - shiftX;
       const position: number = pxPosition / ratio + min;
 
       notify({ position });

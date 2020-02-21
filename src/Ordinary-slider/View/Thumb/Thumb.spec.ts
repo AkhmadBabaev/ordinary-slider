@@ -1,8 +1,9 @@
 import Thumb from './Thumb';
+import ViewComponent from '../ViewComponent/ViewComponent';
 
 import { ThumbOptions } from './Interfaces';
 
-document.body.innerHTML = '';
+import { testHasElement, testHasInstance } from '../../helpers/helpers';
 
 const options: ThumbOptions = {
   parent: document.body,
@@ -10,23 +11,28 @@ const options: ThumbOptions = {
   min: 0,
   max: 100,
   position: 0,
-  ratio: 360 / 100,
+  ratio: 3,
   tip: true,
 };
 
 const thumb = new Thumb(options);
 
 describe('Thumb', () => {
-  test('should be added to DOM', () => {
-    const isFounded = !!document.body.querySelector('.o-slider__thumb');
-    expect(isFounded).toBe(true);
-  });
+  test('is an instance of class ViewComponent',
+    () => testHasInstance(thumb, ViewComponent));
 
-  test('should handle position value', () => {
+  test('should be added to parent',
+    () => testHasElement(document.body, thumb.getElement()));
+
+  test('handles position value', () => {
     thumb.update({ position: 5 });
 
-    const element = document.body.querySelector('.o-slider__thumb');
-    const left: number = parseFloat((element as HTMLElement).style.left);
-    expect(left).toBeGreaterThan(0);
+    const { left } = thumb.getElement().style;
+    expect(left).toBe('5%');
+  });
+
+  test('contains element tip', () => {
+    const isFounded = !!thumb.getElement().querySelector('.o-slider__tip');
+    expect(isFounded).toBe(true);
   });
 });
