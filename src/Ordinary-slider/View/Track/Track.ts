@@ -3,7 +3,7 @@ import Thumb from '../Thumb/Thumb';
 import { TrackOptions } from './Interfaces';
 import { ThumbOptions } from '../Thumb/Interfaces';
 
-import { isDefined, propertyFilter } from '../../helpers/helpers';
+import { isDefined, propertyFilter, debounce } from '../../helpers/helpers';
 
 class Track {
   private options: TrackOptions;
@@ -16,6 +16,7 @@ class Track {
     this.options = options;
 
     this.handleWindowResize = this.handleWindowResize.bind(this);
+    this.handleWindowResize = debounce(this.handleWindowResize, 800);
 
     this.update = this.update.bind(this);
     this.init();

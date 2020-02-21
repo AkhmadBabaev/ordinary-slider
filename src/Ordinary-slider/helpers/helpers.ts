@@ -38,7 +38,10 @@ export function softRounding(num: number): number {
   return Number(num.toFixed(1));
 }
 
-export function propertyFilter(obj: { [key: string]: unknown }, properties: string[]): object {
+export function propertyFilter(
+  obj: { [key: string]: any },
+  properties: string[],
+): { [x: string]: any } {
   const result: { [key: string]: unknown } = {};
 
   properties.forEach((prop: string) => {
@@ -92,4 +95,12 @@ export function throttle(fn: Function, wait: number): () => void {
   }
 
   return wrapper;
+}
+
+export function debounce(fn: Function, wait: number): () => void {
+  let timer: any;
+  return function wrapper(...params: unknown[]): void {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...params), wait);
+  };
 }

@@ -1,4 +1,7 @@
-import { isNumber, propertyFilter, throttle } from './helpers';
+import {
+  isNumber, propertyFilter,
+  throttle, debounce,
+} from './helpers';
 
 describe('isNumber', () => {
   describe('Values that should be a number', () => {
@@ -101,5 +104,39 @@ describe('throttle', () => {
     jest.advanceTimersByTime(400);
 
     expect(log).toBe(6);
+  });
+});
+
+describe('debounce', () => {
+  class Fake {
+    something = 2;
+
+    constructor() {
+      this.doSomething = this.doSomething.bind(this);
+    }
+
+    doSomething(): void {
+      this.something *= 2;
+    }
+  }
+
+  const fake = new Fake();
+  let fn = fake.doSomething;
+
+  test('should be called after 1000ms from the last call', () => {
+    fn = debounce(fn, 1000);
+    jest.useFakeTimers();
+
+    fn();
+    expect(fake.something).toBe(2);
+
+    jest.advanceTimersByTime(500);
+
+    fn();
+    expect(fake.something).toBe(2);
+
+    jest.advanceTimersByTime(1000);
+
+    expect(fake.something).toBe(4);
   });
 });
