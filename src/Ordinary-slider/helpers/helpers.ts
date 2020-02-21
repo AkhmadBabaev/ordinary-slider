@@ -61,3 +61,35 @@ export function propertyFilter(obj: { [key: string]: unknown }, properties: stri
 
   return result;
 }
+
+export function throttle(fn: Function, wait: number): () => void {
+  let isThrottled = false;
+  let context: unknown;
+  let args: unknown[] | null;
+
+  function wrapper(this: unknown, ...params: unknown[]): void {
+    if (isThrottled) {
+      args = params;
+      context = this;
+      return;
+    }
+
+    fn.apply(this, params);
+
+    isThrottled = true;
+
+    const handler = (): void => {
+      isThrottled = false;
+
+      if (args) {
+        wrapper.apply(context, args);
+        context = null;
+        args = null;
+      }
+    };
+
+    setTimeout(handler, wait);
+  }
+
+  return wrapper;
+}

@@ -3,7 +3,7 @@ import Tip from '../Tip/Tip';
 import { ThumbOptions } from './Interfaces';
 import { TipOptions } from '../Tip/Interfaces';
 
-import { isDefined, propertyFilter } from '../../helpers/helpers';
+import { isDefined, propertyFilter, throttle } from '../../helpers/helpers';
 
 class Thumb {
   private options: ThumbOptions;
@@ -75,12 +75,14 @@ class Thumb {
     const shiftX: number = offsetX - (width / 2);
     const parentX: number = parent.getBoundingClientRect().x;
 
-    const handleMouseMove = (mouseMoveEvent: MouseEvent): void => {
+    let handleMouseMove = (mouseMoveEvent: MouseEvent): void => {
       const pxPosition: number = mouseMoveEvent.clientX - parentX - shiftX;
       const position: number = pxPosition / ratio + min;
 
       notify({ position });
     };
+
+    handleMouseMove = throttle(handleMouseMove, 40);
 
     const handleMouseUp = (): void => {
       currentTarget.classList.remove('o-slider__thumb_active');
