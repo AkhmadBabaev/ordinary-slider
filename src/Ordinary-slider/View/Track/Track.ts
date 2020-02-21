@@ -1,3 +1,4 @@
+import ViewComponent from '../ViewComponent/ViewComponent';
 import Thumb from '../Thumb/Thumb';
 
 import { TrackOptions } from './Interfaces';
@@ -5,46 +6,37 @@ import { ThumbOptions } from '../Thumb/Interfaces';
 
 import { isDefined, propertyFilter, debounce } from '../../helpers/helpers';
 
-class Track {
-  private options: TrackOptions;
-
-  private track: HTMLElement;
-
+class Track extends ViewComponent<TrackOptions> {
   private thumb: Thumb;
 
   constructor(options: TrackOptions) {
-    this.options = options;
+    super(options);
 
     this.handleWindowResize = this.handleWindowResize.bind(this);
     this.handleWindowResize = debounce(this.handleWindowResize, 800);
-
-    this.update = this.update.bind(this);
     this.init();
   }
 
   private init(): void {
-    this.track = document.createElement('div');
-    this.track.classList.add('o-slider__track');
-    this.options.parent.append(this.track);
+    this.createElement('div', { class: 'o-slider__track' });
+    this.options.parent.append(this.element);
 
-    this.options.trackWidth = this.track.clientWidth;
+    this.options.trackWidth = this.element.clientWidth;
     this.setRatio();
 
     window.addEventListener('resize', this.handleWindowResize);
 
     const thumbProps: string[] = ['min', 'max', 'position', 'tip', 'ratio', 'notify'];
-    const filteredThumbProps: Partial<ThumbOptions> = (
-      propertyFilter(this.options as Partial<ThumbOptions>, thumbProps)
-    );
+    const filteredThumbProps: Partial<ThumbOptions> = propertyFilter(this.options, thumbProps);
 
     this.thumb = new Thumb({
       ...filteredThumbProps,
-      parent: this.track,
+      parent: this.element,
     } as ThumbOptions);
   }
 
   public update(options: Partial<TrackOptions>): void {
-    this.options = { ...this.options, ...options };
+    super.update(options);
 
     const hasMin: boolean = isDefined(options.min);
     const hasMax: boolean = isDefined(options.max);
@@ -80,9 +72,9 @@ class Track {
 
   private handleWindowResize(): void {
     // track width was not changed
-    if (this.options.trackWidth === this.track.clientWidth) return;
+    if (this.options.trackWidth === this.element.clientWidth) return;
 
-    this.options.trackWidth = this.track.clientWidth;
+    this.options.trackWidth = this.element.clientWidth;
     this.setRatio();
     this.thumb.update({ ratio: this.options.ratio });
   }
