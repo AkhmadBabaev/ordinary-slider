@@ -27,7 +27,7 @@ class Track extends ViewComponent<TrackOptions> {
     window.addEventListener('resize', this.handleWindowResize);
 
     const thumbProps: string[] = ['min', 'max', 'position', 'tip', 'ratio', 'notify'];
-    const filteredThumbProps: Partial<ThumbOptions> = propertyFilter(this.options, thumbProps);
+    const filteredThumbProps = propertyFilter(this.options, thumbProps);
 
     this.thumb = new Thumb({
       ...filteredThumbProps,
@@ -48,7 +48,7 @@ class Track extends ViewComponent<TrackOptions> {
       this.setRatio();
 
       const thumbProps: string[] = ['min', 'max', 'position', 'tip'];
-      const filteredThumbProps: Partial<ThumbOptions> = propertyFilter(options, thumbProps);
+      const filteredThumbProps = propertyFilter(options, thumbProps);
 
       this.thumb.update({
         ...filteredThumbProps,
@@ -59,7 +59,7 @@ class Track extends ViewComponent<TrackOptions> {
     const isThumbUpdated: boolean = hasPosition || hasTip;
     if (isThumbUpdated && !isBoundariesUpdated) {
       const props: string[] = ['min', 'max', 'position', 'tip'];
-      const filteredProps: Partial<ThumbOptions> = propertyFilter(options, props);
+      const filteredProps = propertyFilter(options, props);
 
       this.thumb.update(filteredProps);
     }

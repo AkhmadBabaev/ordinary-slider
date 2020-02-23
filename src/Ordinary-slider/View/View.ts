@@ -4,10 +4,7 @@ import Track from './Track/Track';
 import { TrackOptions } from './Track/Interfaces';
 import { State } from '../Model/Interfaces';
 
-import {
-  isObject, isDefined, isHTMLElement,
-  propertyFilter,
-} from '../helpers/helpers';
+import { isDefined, propertyFilter } from '../helpers/helpers';
 
 class View extends Observable {
   private options: State;
@@ -19,12 +16,7 @@ class View extends Observable {
   constructor(rootElem: HTMLElement, options: State) {
     super();
 
-    if (!isDefined(rootElem)) throw new ReferenceError('Root element is not defined');
-    if (!isHTMLElement(rootElem)) throw new TypeError('Root should be an HTML element');
     this.root = rootElem;
-
-    if (!isDefined(options)) throw new ReferenceError('View options is not defined');
-    if (!isObject(options)) throw new TypeError('View options should be an object');
     this.options = options;
 
     this.applyState = this.applyState.bind(this);
@@ -37,9 +29,7 @@ class View extends Observable {
     this.root.classList.add('o-slider');
 
     const trackProps: string[] = ['min', 'max', 'position', 'tip'];
-    const filteredTrackProps: Partial<TrackOptions> = (
-      propertyFilter(this.options as Partial<TrackOptions>, trackProps)
-    );
+    const filteredTrackProps = propertyFilter(this.options, trackProps);
 
     this.track = new Track({
       ...filteredTrackProps,
@@ -59,9 +49,7 @@ class View extends Observable {
     const isTrackUpdated: boolean = hasMin || hasMax || hasPosition || hasTip;
     if (isTrackUpdated) {
       const props: string[] = ['min', 'max', 'position', 'tip'];
-      const filteredProps: Partial<TrackOptions> = (
-        propertyFilter(options as Partial<TrackOptions>, props)
-      );
+      const filteredProps = propertyFilter(options, props);
 
       this.track.update(filteredProps);
     }

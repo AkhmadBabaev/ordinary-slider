@@ -22,7 +22,7 @@ class Thumb extends ViewComponent<ThumbOptions> {
     this.element.addEventListener('mousedown', this.handleMouseDown);
 
     const tipProps: string[] = ['position:text', 'tip:isEnabled'];
-    const filteredTipProps: Partial<TipOptions> = propertyFilter(this.options, tipProps);
+    const filteredTipProps = propertyFilter(this.options, tipProps);
 
     this.tip = new Tip({
       ...filteredTipProps,

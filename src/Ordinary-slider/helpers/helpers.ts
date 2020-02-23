@@ -30,10 +30,6 @@ export function isDefined(value: unknown): boolean {
   return (value !== undefined) && (value !== null);
 }
 
-export function isHTMLElement(value: unknown): boolean {
-  return value instanceof HTMLElement;
-}
-
 export function softRounding(num: number): number {
   return Number(num.toFixed(1));
 }
