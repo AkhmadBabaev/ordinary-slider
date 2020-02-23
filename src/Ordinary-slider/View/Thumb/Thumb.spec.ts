@@ -7,7 +7,6 @@ import { testHasElement, testHasInstance } from '../../helpers/helpers';
 
 const options: ThumbOptions = {
   parent: document.body,
-  notify: () => true,
   min: 0,
   max: 100,
   position: 0,
@@ -27,8 +26,7 @@ describe('Thumb', () => {
   test('handles position value', () => {
     thumb.update({ position: 5 });
 
-    const { left } = thumb.getElement().style;
-    expect(left).toBe('5%');
+    expect(thumb.getElement().style.left).toBe('5%');
   });
 
   test('contains element tip', () => {

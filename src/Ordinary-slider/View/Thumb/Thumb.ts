@@ -62,9 +62,7 @@ class Thumb extends ViewComponent<ThumbOptions> {
     currentTarget.classList.add('o-slider__thumb_active');
     document.body.classList.add('o-slider_grabbed');
 
-    const {
-      min, ratio, parent, notify,
-    } = this.options;
+    const { min, ratio, parent } = this.options;
 
     const width: number = target.clientWidth;
     const shiftX: number = offsetX - (width / 2);
@@ -74,7 +72,10 @@ class Thumb extends ViewComponent<ThumbOptions> {
       const pxPosition: number = clientX - parentX - shiftX;
       const position: number = pxPosition / ratio + min;
 
-      notify({ position });
+      this.element.dispatchEvent(new CustomEvent('positionChanged', {
+        bubbles: true,
+        detail: { position },
+      }));
     };
 
     handleMouseMove = throttle(handleMouseMove, 40);

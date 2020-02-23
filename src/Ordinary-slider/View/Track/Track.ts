@@ -26,7 +26,7 @@ class Track extends ViewComponent<TrackOptions> {
 
     window.addEventListener('resize', this.handleWindowResize);
 
-    const thumbProps: string[] = ['min', 'max', 'position', 'tip', 'ratio', 'notify'];
+    const thumbProps: string[] = ['min', 'max', 'position', 'tip', 'ratio'];
     const filteredThumbProps = propertyFilter(this.options, thumbProps);
 
     this.thumb = new Thumb({

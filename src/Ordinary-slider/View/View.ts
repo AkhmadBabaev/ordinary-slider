@@ -18,15 +18,16 @@ class View extends Observable {
 
     this.root = rootElem;
     this.options = options;
-
     this.applyState = this.applyState.bind(this);
 
+    this.handlePositionChanged = this.handlePositionChanged.bind(this);
     this.init();
   }
 
   private init(): void {
     this.root.innerHTML = '';
     this.root.classList.add('o-slider');
+    this.root.addEventListener('positionChanged', this.handlePositionChanged as EventListener);
 
     const trackProps: string[] = ['min', 'max', 'position', 'tip'];
     const filteredTrackProps = propertyFilter(this.options, trackProps);
@@ -34,7 +35,6 @@ class View extends Observable {
     this.track = new Track({
       ...filteredTrackProps,
       parent: this.root,
-      notify: this.notify,
     } as TrackOptions);
   }
 
@@ -53,6 +53,11 @@ class View extends Observable {
 
       this.track.update(filteredProps);
     }
+  }
+
+  private handlePositionChanged(event: CustomEvent): void {
+    const { position } = event.detail;
+    this.notify({ position });
   }
 }
 
