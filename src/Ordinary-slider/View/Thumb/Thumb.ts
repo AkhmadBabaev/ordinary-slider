@@ -1,4 +1,4 @@
-import ViewComponent from '../ViewComponent/ViewComponent';
+import Simple from '../Templates/Simple/Simple';
 import Tip from '../Tip/Tip';
 
 import { ThumbOptions } from './Interfaces';
@@ -6,7 +6,7 @@ import { TipOptions } from '../Tip/Interfaces';
 
 import { isDefined, propertyFilter, throttle } from '../../helpers/helpers';
 
-class Thumb extends ViewComponent<ThumbOptions> {
+class Thumb extends Simple<ThumbOptions> {
   private tip: Tip;
 
   constructor(options: ThumbOptions) {

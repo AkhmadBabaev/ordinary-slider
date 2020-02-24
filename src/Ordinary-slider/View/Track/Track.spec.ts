@@ -1,5 +1,5 @@
 import Track from './Track';
-import ViewComponent from '../ViewComponent/ViewComponent';
+import Simple from '../Templates/Simple/Simple';
 
 import { TrackOptions } from './Interfaces';
 
@@ -16,11 +16,11 @@ const options: Partial<TrackOptions> = {
 const track = new Track(options as TrackOptions);
 
 describe('Track', () => {
-  test('is an instance of class ViewComponent',
-    () => testHasInstance(track, ViewComponent));
+  test('is an instance of class Simple',
+    () => testHasInstance(track, Simple));
 
   test('should be added to parent',
-    () => testHasElement(document.body, track.getElement()));
+    () => testHasElement(track.getOptions().parent, track.getElement()));
 
   test('contains element thumb', () => {
     const isFounded = !!track.getElement().querySelector('.o-slider__thumb');

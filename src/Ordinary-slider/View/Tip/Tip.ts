@@ -1,10 +1,10 @@
-import ViewComponent from '../ViewComponent/ViewComponent';
+import Simple from '../Templates/Simple/Simple';
 
 import { TipOptions } from './Interfaces';
 
 import { isDefined } from '../../helpers/helpers';
 
-class Tip extends ViewComponent<TipOptions> {
+class Tip extends Simple<TipOptions> {
   constructor(options: TipOptions) {
     super(options);
     this.init();

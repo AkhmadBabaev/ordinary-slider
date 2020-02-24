@@ -1,4 +1,4 @@
-class ViewComponent<T> {
+class Simple<T> {
   protected options: T;
 
   protected element: HTMLElement;
@@ -16,6 +16,10 @@ class ViewComponent<T> {
     return this.element;
   }
 
+  public getOptions(): T {
+    return this.options;
+  }
+
   protected createElement(name: string, attributes?: { [key: string]: unknown }): void {
     const tag = document.createElement(name);
 
@@ -27,4 +31,4 @@ class ViewComponent<T> {
   }
 }
 
-export default ViewComponent;
+export default Simple;

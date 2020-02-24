@@ -1,10 +1,10 @@
-import ViewComponent from '../ViewComponent/ViewComponent';
+import Simple from '../Templates/Simple/Simple';
 
 import { BarOptions } from './Interfaces';
 
 import { isDefined } from '../../helpers/helpers';
 
-class Bar extends ViewComponent<BarOptions> {
+class Bar extends Simple<BarOptions> {
   constructor(options: BarOptions) {
     super(options);
     this.init();

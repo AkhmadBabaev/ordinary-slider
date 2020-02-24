@@ -1,5 +1,5 @@
 import Thumb from './Thumb';
-import ViewComponent from '../ViewComponent/ViewComponent';
+import Simple from '../Templates/Simple/Simple';
 
 import { ThumbOptions } from './Interfaces';
 
@@ -17,11 +17,11 @@ const options: ThumbOptions = {
 const thumb = new Thumb(options);
 
 describe('Thumb', () => {
-  test('is an instance of class ViewComponent',
-    () => testHasInstance(thumb, ViewComponent));
+  test('is an instance of class Simple',
+    () => testHasInstance(thumb, Simple));
 
   test('should be added to parent',
-    () => testHasElement(document.body, thumb.getElement()));
+    () => testHasElement(thumb.getOptions().parent, thumb.getElement()));
 
   test('handles position value', () => {
     thumb.update({ position: 5 });

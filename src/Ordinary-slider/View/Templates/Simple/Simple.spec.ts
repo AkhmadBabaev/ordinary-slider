@@ -1,4 +1,6 @@
-import ViewComponent from './ViewComponent';
+import Simple from './Simple';
+
+import { testHasElement } from '../../../helpers/helpers';
 
 type Options = { parent: HTMLElement };
 
@@ -6,7 +8,7 @@ const testeeOptions: Options = {
   parent: document.body,
 };
 
-class Testee extends ViewComponent<Options> {
+class Testee extends Simple<Options> {
   constructor(options: Options) {
     super(options);
     this.init();
@@ -20,11 +22,9 @@ class Testee extends ViewComponent<Options> {
 
 const testee = new Testee(testeeOptions);
 
-describe('ViewComponent', () => {
-  test('should be added to parent', () => {
-    const isFounded = document.body.contains(testee.getElement());
-    expect(isFounded).toBe(true);
-  });
+describe('Simple', () => {
+  test('should be added to parent',
+    () => testHasElement(testee.getOptions().parent, testee.getElement()));
 
   test('createElement should create an element', () => {
     expect(testee.getElement()).toBeInstanceOf(HTMLElement);

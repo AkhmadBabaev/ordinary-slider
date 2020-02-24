@@ -1,5 +1,5 @@
 import Bar from './Bar';
-import ViewComponent from '../ViewComponent/ViewComponent';
+import Simple from '../Templates/Simple/Simple';
 
 import { BarOptions } from './Interfaces';
 
@@ -16,16 +16,16 @@ const bar = new Bar(options);
 describe('Bar', () => {
   afterEach(() => bar.update(options));
 
-  test('is an instance of class ViewComponent',
-    () => testHasInstance(bar, ViewComponent));
+  test('is an instance of class Simple',
+    () => testHasInstance(bar, Simple));
 
   test('should be added to parent',
-    () => testHasElement(document.body, bar.getElement()));
+    () => testHasElement(bar.getOptions().parent, bar.getElement()));
 
   test('should be removed from parent', () => {
     bar.update({ isEnabled: false });
 
-    const isFounded = document.body.contains(bar.getElement());
+    const isFounded = bar.getOptions().parent.contains(bar.getElement());
     expect(isFounded).toBe(false);
   });
 

@@ -1,4 +1,4 @@
-import ViewComponent from '../ViewComponent/ViewComponent';
+import Simple from '../Templates/Simple/Simple';
 import Thumb from '../Thumb/Thumb';
 import Bar from '../Bar/Bar';
 
@@ -8,7 +8,7 @@ import { BarOptions } from '../Bar/Interfaces';
 
 import { isDefined, propertyFilter, debounce } from '../../helpers/helpers';
 
-class Track extends ViewComponent<TrackOptions> {
+class Track extends Simple<TrackOptions> {
   private thumb: Thumb;
 
   private bar: Bar;

@@ -1,5 +1,5 @@
 import Tip from './Tip';
-import ViewComponent from '../ViewComponent/ViewComponent';
+import Simple from '../Templates/Simple/Simple';
 
 import { TipOptions } from './Interfaces';
 
@@ -16,16 +16,16 @@ const tip = new Tip(options);
 describe('Tip', () => {
   afterEach(() => tip.update(options));
 
-  test('is an instance of class ViewComponent',
-    () => testHasInstance(tip, ViewComponent));
+  test('is an instance of class Simple',
+    () => testHasInstance(tip, Simple));
 
   test('should be added to parent',
-    () => testHasElement(document.body, tip.getElement()));
+    () => testHasElement(tip.getOptions().parent, tip.getElement()));
 
   test('should be removed from parent', () => {
     tip.update({ isEnabled: false });
 
-    const isFounded = document.body.contains(tip.getElement());
+    const isFounded = tip.getOptions().parent.contains(tip.getElement());
     expect(isFounded).toBe(false);
   });
 
