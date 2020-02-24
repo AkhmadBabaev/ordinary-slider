@@ -1,16 +1,16 @@
-import Simple from '../Templates/Simple/Simple';
+import Toggler from '../Templates/Toggler/Toggler';
 
 import { TipOptions } from './Interfaces';
 
 import { isDefined } from '../../helpers/helpers';
 
-class Tip extends Simple<TipOptions> {
+class Tip extends Toggler<TipOptions> {
   constructor(options: TipOptions) {
     super(options);
     this.init();
   }
 
-  private init(): void {
+  protected init(): void {
     this.createElement('div', { class: 'o-slider__tip' });
 
     this.setText();
@@ -25,18 +25,6 @@ class Tip extends Simple<TipOptions> {
 
     const hasText: boolean = isDefined(options.text);
     hasText && this.options.isEnabled && this.setText();
-  }
-
-  private enable(): void {
-    this.init();
-  }
-
-  private disable(): void {
-    this.element.remove();
-  }
-
-  private toggle(): void {
-    this.options.isEnabled ? this.enable() : this.disable();
   }
 
   private setText(): void {
