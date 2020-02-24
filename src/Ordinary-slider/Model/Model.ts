@@ -167,6 +167,7 @@ class Model extends Observable {
         option = Number(value); break;
 
       case 'tip':
+      case 'bar':
         if (!isBoolean(value)) throw new TypeError(`${prop} is not a boolean`);
         option = value as boolean; break;
 

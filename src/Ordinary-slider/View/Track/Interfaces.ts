@@ -6,4 +6,5 @@ export interface TrackOptions {
   ratio: number;
   trackWidth: number;
   tip: boolean;
+  bar: boolean;
 }

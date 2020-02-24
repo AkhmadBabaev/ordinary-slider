@@ -26,4 +26,9 @@ describe('Track', () => {
     const isFounded = !!track.getElement().querySelector('.o-slider__thumb');
     expect(isFounded).toBe(true);
   });
+
+  test('contains element bar', () => {
+    const isFounded = !!track.getElement().querySelector('.o-slider__bar');
+    expect(isFounded).toBe(true);
+  });
 });

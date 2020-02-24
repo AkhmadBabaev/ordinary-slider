@@ -6,6 +6,7 @@ const defaultState: State = {
   step: 1,
   position: 0,
   tip: true,
+  bar: true,
 };
 
 export default defaultState;

@@ -4,6 +4,7 @@ export interface State {
   step: number;
   position: number;
   tip: boolean;
+  bar: boolean;
 }
 
 export interface Model {

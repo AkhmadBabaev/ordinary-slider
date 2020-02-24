@@ -8,13 +8,14 @@ import { testHasElement, testHasInstance } from '../../helpers/helpers';
 const options: BarOptions = {
   parent: document.body,
   isEnabled: true,
-  width: '0%',
+  width: '5%',
 };
 
-// @ts-ignore
 const bar = new Bar(options);
 
 describe('Bar', () => {
+  afterEach(() => bar.update(options));
+
   test('is an instance of class ViewComponent',
     () => testHasInstance(bar, ViewComponent));
 

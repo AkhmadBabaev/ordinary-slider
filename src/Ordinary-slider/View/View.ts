@@ -29,7 +29,7 @@ class View extends Observable {
     this.root.classList.add('o-slider');
     this.root.addEventListener('positionChanged', this.handlePositionChanged as EventListener);
 
-    const trackProps: string[] = ['min', 'max', 'position', 'tip'];
+    const trackProps: string[] = ['min', 'max', 'position', 'tip', 'bar'];
     const filteredTrackProps = propertyFilter(this.options, trackProps);
 
     this.track = new Track({
@@ -45,10 +45,11 @@ class View extends Observable {
     const hasMax: boolean = isDefined(options.max);
     const hasPosition: boolean = isDefined(options.position);
     const hasTip: boolean = isDefined(options.tip);
+    const hasBar: boolean = isDefined(options.bar);
 
-    const isTrackUpdated: boolean = hasMin || hasMax || hasPosition || hasTip;
+    const isTrackUpdated: boolean = hasMin || hasMax || hasPosition || hasTip || hasBar;
     if (isTrackUpdated) {
-      const props: string[] = ['min', 'max', 'position', 'tip'];
+      const props: string[] = ['min', 'max', 'position', 'tip', 'bar'];
       const filteredProps = propertyFilter(options, props);
 
       this.track.update(filteredProps);

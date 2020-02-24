@@ -30,6 +30,15 @@
     position: relative;
   }
 
+  &__bar {
+    --l: 50%;
+    --barBg: HSL(var(--h), var(--s), var(--l));
+
+    height: 100%;
+    width: 0;
+    background-color: var(--barBg);
+  }
+
   &__thumb {
     --l: 50%;
     --thumbBg: HSL(var(--h), var(--s), var(--l));

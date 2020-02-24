@@ -1,13 +1,17 @@
 import ViewComponent from '../ViewComponent/ViewComponent';
 import Thumb from '../Thumb/Thumb';
+import Bar from '../Bar/Bar';
 
 import { TrackOptions } from './Interfaces';
 import { ThumbOptions } from '../Thumb/Interfaces';
+import { BarOptions } from '../Bar/Interfaces';
 
 import { isDefined, propertyFilter, debounce } from '../../helpers/helpers';
 
 class Track extends ViewComponent<TrackOptions> {
   private thumb: Thumb;
+
+  private bar: Bar;
 
   constructor(options: TrackOptions) {
     super(options);
@@ -33,6 +37,16 @@ class Track extends ViewComponent<TrackOptions> {
       ...filteredThumbProps,
       parent: this.element,
     } as ThumbOptions);
+
+    const {
+      max, min, position, bar,
+    } = this.options;
+
+    this.bar = new Bar({
+      isEnabled: bar,
+      width: `${(100 / (max - min)) * (position - min)}%`,
+      parent: this.element,
+    } as BarOptions);
   }
 
   public update(options: Partial<TrackOptions>): void {
@@ -42,6 +56,9 @@ class Track extends ViewComponent<TrackOptions> {
     const hasMax: boolean = isDefined(options.max);
     const hasPosition: boolean = isDefined(options.position);
     const hasTip: boolean = isDefined(options.tip);
+    const hasBar: boolean = isDefined(options.bar);
+
+    const { max, min, position } = this.options;
 
     const isBoundariesUpdated: boolean = hasMin || hasMax;
     if (isBoundariesUpdated) {
@@ -54,6 +71,10 @@ class Track extends ViewComponent<TrackOptions> {
         ...filteredThumbProps,
         ratio: this.options.ratio,
       });
+
+      this.bar.update({
+        width: `${(100 / (max - min)) * (position - min)}%`,
+      });
     }
 
     const isThumbUpdated: boolean = hasPosition || hasTip;
@@ -62,6 +83,14 @@ class Track extends ViewComponent<TrackOptions> {
       const filteredProps = propertyFilter(options, props);
 
       this.thumb.update(filteredProps);
+    }
+
+    const isBarUpdated = hasPosition || hasBar;
+    if (isBarUpdated && !isBoundariesUpdated) {
+      const props: string[] = ['bar:isEnabled'];
+      const filteredProps = propertyFilter(options, props);
+      filteredProps.width = `${(100 / (max - min)) * (position - min)}%`;
+      this.bar.update(filteredProps);
     }
   }
 

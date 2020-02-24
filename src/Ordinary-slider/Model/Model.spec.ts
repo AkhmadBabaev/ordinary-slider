@@ -8,6 +8,7 @@ const testeeState: State = {
   step: 1,
   position: 0,
   tip: true,
+  bar: true,
 };
 
 const model = new Model(testeeState);
