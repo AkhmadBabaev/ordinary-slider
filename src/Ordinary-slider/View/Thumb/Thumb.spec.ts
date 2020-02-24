@@ -3,7 +3,7 @@ import Simple from '../Templates/Simple/Simple';
 
 import { ThumbOptions } from './Interfaces';
 
-import { testHasElement, testHasInstance } from '../../helpers/helpers';
+import { hasChild, testHasInstance } from '../../helpers/helpers';
 
 const options: ThumbOptions = {
   parent: document.body,
@@ -20,12 +20,12 @@ describe('Thumb', () => {
   test('is an instance of class Simple',
     () => testHasInstance(thumb, Simple));
 
-  test('should be added to parent',
-    () => testHasElement(thumb.getOptions().parent, thumb.getElement()));
+  test('should be added to parent', () => {
+    expect(hasChild(thumb.getOptions().parent, thumb.getElement())).toBe(true);
+  });
 
   test('handles position value', () => {
     thumb.update({ position: 5 });
-
     expect(thumb.getElement().style.left).toBe('5%');
   });
 

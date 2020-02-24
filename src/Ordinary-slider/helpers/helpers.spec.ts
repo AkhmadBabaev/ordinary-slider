@@ -1,5 +1,5 @@
 import {
-  isNumber, propertyFilter,
+  isNumber, propertyFilter, hasChild,
   throttle, debounce,
 } from './helpers';
 
@@ -138,5 +138,19 @@ describe('debounce', () => {
     jest.advanceTimersByTime(1000);
 
     expect(fake.something).toBe(4);
+  });
+});
+
+describe('hasChild', () => {
+  const elem = document.createElement('div');
+  document.body.append(elem);
+
+  test('should return true with existed child', () => {
+    expect(hasChild(document.body, elem)).toBe(true);
+  });
+
+  test('should returns false with non-existed child', () => {
+    elem.remove();
+    expect(hasChild(document.body, elem)).toBe(false);
   });
 });

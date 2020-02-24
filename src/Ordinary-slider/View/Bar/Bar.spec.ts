@@ -3,7 +3,7 @@ import Toggler from '../Templates/Toggler/Toggler';
 
 import { BarOptions } from './Interfaces';
 
-import { testHasElement, testHasInstance } from '../../helpers/helpers';
+import { hasChild, testHasInstance } from '../../helpers/helpers';
 
 const options: BarOptions = {
   parent: document.body,
@@ -17,8 +17,9 @@ describe('Bar', () => {
   test('is an instance of class Toggler',
     () => testHasInstance(bar, Toggler));
 
-  test('should be added to parent',
-    () => testHasElement(bar.getOptions().parent, bar.getElement()));
+  test('should be added to parent', () => {
+    expect(hasChild(bar.getOptions().parent, bar.getElement())).toBe(true);
+  });
 
   test('handles width value', () => {
     bar.update({ width: '10%' });

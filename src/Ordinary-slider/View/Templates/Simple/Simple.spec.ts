@@ -1,7 +1,5 @@
 import Simple from './Simple';
 
-import { testHasElement } from '../../../helpers/helpers';
-
 type Options = { parent: HTMLElement };
 
 const testeeOptions: Options = {
@@ -16,16 +14,12 @@ class Testee extends Simple<Options> {
 
   init(): void {
     this.createElement('div', { class: 'testee' });
-    this.options.parent.append(this.element);
   }
 }
 
 const testee = new Testee(testeeOptions);
 
 describe('Simple', () => {
-  test('should be added to parent',
-    () => testHasElement(testee.getOptions().parent, testee.getElement()));
-
   test('createElement should create an element', () => {
     expect(testee.getElement()).toBeInstanceOf(HTMLElement);
   });

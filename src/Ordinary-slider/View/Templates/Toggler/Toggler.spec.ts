@@ -1,7 +1,7 @@
 import Toggler from './Toggler';
 import Simple from '../Simple/Simple';
 
-import { isDefined, testHasInstance, testHasElement } from '../../../helpers/helpers';
+import { isDefined, testHasInstance, hasChild } from '../../../helpers/helpers';
 
 interface Options {
   parent: HTMLElement;
@@ -38,13 +38,11 @@ describe('Toggler ', () => {
 
   test('should be added to parent', () => {
     testee.update({ isEnabled: true });
-    testHasElement(testee.getOptions().parent, testee.getElement());
+    expect(hasChild(testee.getOptions().parent, testee.getElement())).toBe(true);
   });
 
   test('should be removed from parent', () => {
     testee.update({ isEnabled: false });
-
-    const isFounded = testee.getOptions().parent.contains(testee.getElement());
-    expect(isFounded).toBe(false);
+    expect(hasChild(testee.getOptions().parent, testee.getElement())).toBe(false);
   });
 });

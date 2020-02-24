@@ -101,8 +101,8 @@ export function debounce(fn: Function, wait: number): () => void {
   };
 }
 
-export function testHasElement(parent: HTMLElement, element: HTMLElement): void {
-  expect(parent.contains(element)).toBe(true);
+export function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
+  return Object.keys(parent.children).some((x, i: number) => parent.children[i] === child);
 }
 
 export function testHasInstance(elem: unknown, instance: unknown): void {

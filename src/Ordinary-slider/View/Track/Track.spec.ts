@@ -3,7 +3,7 @@ import Simple from '../Templates/Simple/Simple';
 
 import { TrackOptions } from './Interfaces';
 
-import { testHasElement, testHasInstance } from '../../helpers/helpers';
+import { hasChild, testHasInstance } from '../../helpers/helpers';
 
 const options: Partial<TrackOptions> = {
   parent: document.body,
@@ -19,8 +19,9 @@ describe('Track', () => {
   test('is an instance of class Simple',
     () => testHasInstance(track, Simple));
 
-  test('should be added to parent',
-    () => testHasElement(track.getOptions().parent, track.getElement()));
+  test('should be added to parent', () => {
+    expect(hasChild(track.getOptions().parent, track.getElement())).toBe(true);
+  });
 
   test('contains element thumb', () => {
     const isFounded = !!track.getElement().querySelector('.o-slider__thumb');
