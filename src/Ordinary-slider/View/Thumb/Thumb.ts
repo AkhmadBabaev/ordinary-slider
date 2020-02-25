@@ -5,8 +5,7 @@ import { ThumbOptions } from './Interfaces';
 import { TipOptions } from '../Tip/Interfaces';
 
 import {
-  isDefined, propertyFilter,
-  convertPositionUnitToPercent, throttle,
+  isDefined, convertPositionUnitToPercent, throttle,
 } from '../../helpers/helpers';
 
 class Thumb extends Simple<ThumbOptions> {
@@ -21,17 +20,9 @@ class Thumb extends Simple<ThumbOptions> {
 
   private init(): void {
     this.createElement('div', { class: 'o-slider__thumb' });
-
     this.element.addEventListener('mousedown', this.handleMouseDown);
 
-    const tipProps: string[] = ['position:text', 'tip:isEnabled'];
-    const filteredTipProps = propertyFilter(this.options, tipProps);
-
-    this.tip = new Tip({
-      ...filteredTipProps,
-      parent: this.element,
-    } as TipOptions);
-
+    this.handleTip();
     this.setPosition();
 
     this.options.parent.append(this.element);
@@ -41,17 +32,17 @@ class Thumb extends Simple<ThumbOptions> {
     super.update(options);
 
     const hasPosition: boolean = isDefined(options.position);
+    const hasTip: boolean = isDefined(options.tip);
+
     hasPosition && this.setPosition();
 
-    const hasTip: boolean = isDefined(options.tip);
-    hasTip && this.tip.update({ isEnabled: options.tip });
+    const isTipUpdated = hasPosition || hasTip;
+    isTipUpdated && this.handleTip(options, 'update');
   }
 
   private setPosition(): void {
     const { position, min, max } = this.options;
-
     this.element.style.left = convertPositionUnitToPercent({ min, max, position });
-    this.tip.update({ text: position });
   }
 
   private handleMouseDown(mouseDownEvent: MouseEvent): void {
@@ -95,6 +86,22 @@ class Thumb extends Simple<ThumbOptions> {
     document.addEventListener('mouseup', handleMouseUp);
 
     mouseDownEvent.preventDefault();
+  }
+
+  private handleTip(options?: {}, todo?: string): void {
+    const storage = (options || this.options) as { [x: string]: unknown };
+    const props: Partial<TipOptions> = {};
+    const isInit = !isDefined(todo);
+    const isUpdate = todo === 'update';
+
+    isDefined(storage.tip) && (props.isEnabled = storage.tip as boolean);
+    isDefined(storage.position) && (props.text = storage.position as number);
+
+    isInit
+      && (props.parent = this.element)
+      && (this.tip = new Tip(props as TipOptions));
+
+    isUpdate && this.tip.update(props);
   }
 }
 

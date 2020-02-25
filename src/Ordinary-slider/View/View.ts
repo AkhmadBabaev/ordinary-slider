@@ -29,13 +29,7 @@ class View extends Observable {
     this.root.classList.add('o-slider');
     this.root.addEventListener('positionChanged', this.handlePositionChanged as EventListener);
 
-    const trackProps: string[] = ['min', 'max', 'position', 'tip', 'bar'];
-    const filteredTrackProps = propertyFilter(this.options, trackProps);
-
-    this.track = new Track({
-      ...filteredTrackProps,
-      parent: this.root,
-    } as TrackOptions);
+    this.handleTrack();
   }
 
   public applyState(options: Partial<State>): void {
@@ -48,17 +42,27 @@ class View extends Observable {
     const hasBar: boolean = isDefined(options.bar);
 
     const isTrackUpdated: boolean = hasMin || hasMax || hasPosition || hasTip || hasBar;
-    if (isTrackUpdated) {
-      const props: string[] = ['min', 'max', 'position', 'tip', 'bar'];
-      const filteredProps = propertyFilter(options, props);
-
-      this.track.update(filteredProps);
-    }
+    isTrackUpdated && this.handleTrack(options, 'update');
   }
 
   private handlePositionChanged(event: CustomEvent): void {
     const { position } = event.detail;
     this.notify({ position });
+  }
+
+  private handleTrack(options?: {}, todo?: string): void {
+    const storage = (options || this.options) as { [x: string]: unknown };
+    const isInit = !isDefined(todo);
+    const isUpdate = todo === 'update';
+
+    const propsList: string[] = ['min', 'max', 'position', 'tip', 'bar'];
+    const props: Partial<TrackOptions> = propertyFilter(storage, propsList);
+
+    isInit
+      && (props.parent = this.root)
+      && (this.track = new Track(props as TrackOptions));
+
+    isUpdate && this.track.update(props);
   }
 }
 

@@ -7,8 +7,7 @@ import { ThumbOptions } from '../Thumb/Interfaces';
 import { BarOptions } from '../Bar/Interfaces';
 
 import {
-  isDefined, propertyFilter,
-  convertPositionUnitToPercent, debounce,
+  isDefined, convertPositionUnitToPercent, debounce,
 } from '../../helpers/helpers';
 
 class Track extends Simple<TrackOptions> {
@@ -33,68 +32,27 @@ class Track extends Simple<TrackOptions> {
 
     window.addEventListener('resize', this.handleWindowResize);
 
-    const thumbProps: string[] = ['min', 'max', 'position', 'tip', 'ratio'];
-    const filteredThumbProps = propertyFilter(this.options, thumbProps);
-
-    this.thumb = new Thumb({
-      ...filteredThumbProps,
-      parent: this.element,
-    } as ThumbOptions);
-
-    const {
-      max, min, position, bar,
-    } = this.options;
-
-    this.bar = new Bar({
-      isEnabled: bar,
-      width: convertPositionUnitToPercent({ min, max, position }),
-      parent: this.element,
-    } as BarOptions);
+    this.handleThumb();
+    this.handleBar();
   }
 
   public update(options: Partial<TrackOptions>): void {
     super.update(options);
 
+    const hasPosition: boolean = isDefined(options.position);
     const hasMin: boolean = isDefined(options.min);
     const hasMax: boolean = isDefined(options.max);
-    const hasPosition: boolean = isDefined(options.position);
     const hasTip: boolean = isDefined(options.tip);
     const hasBar: boolean = isDefined(options.bar);
 
-    const { max, min, position } = this.options;
-
     const isBoundariesUpdated: boolean = hasMin || hasMax;
-    if (isBoundariesUpdated) {
-      this.setRatio();
+    isBoundariesUpdated && this.setRatio();
 
-      const thumbProps: string[] = ['min', 'max', 'position', 'tip'];
-      const filteredThumbProps = propertyFilter(options, thumbProps);
+    const isThumbUpdated: boolean = isBoundariesUpdated || hasPosition || hasTip;
+    isThumbUpdated && this.handleThumb(options, 'update');
 
-      this.thumb.update({
-        ...filteredThumbProps,
-        ratio: this.options.ratio,
-      });
-
-      this.bar.update({
-        width: convertPositionUnitToPercent({ min, max, position }),
-      });
-    }
-
-    const isThumbUpdated: boolean = hasPosition || hasTip;
-    if (isThumbUpdated && !isBoundariesUpdated) {
-      const props: string[] = ['min', 'max', 'position', 'tip'];
-      const filteredProps = propertyFilter(options, props);
-
-      this.thumb.update(filteredProps);
-    }
-
-    const isBarUpdated = hasPosition || hasBar;
-    if (isBarUpdated && !isBoundariesUpdated) {
-      const props: string[] = ['bar:isEnabled'];
-      const filteredProps = propertyFilter(options, props);
-      filteredProps.width = convertPositionUnitToPercent({ min, max, position });
-      this.bar.update(filteredProps);
-    }
+    const isBarUpdated = isBoundariesUpdated || hasPosition || hasBar;
+    isBarUpdated && this.handleBar(options, 'update');
   }
 
   private setRatio(): void {
@@ -108,7 +66,47 @@ class Track extends Simple<TrackOptions> {
 
     this.options.trackWidth = this.element.clientWidth;
     this.setRatio();
-    this.thumb.update({ ratio: this.options.ratio });
+    this.handleThumb({ ratio: this.options.ratio }, 'update');
+  }
+
+  private handleThumb(options?: {}, todo?: string): void {
+    const storage = (options || this.options) as { [x: string]: unknown };
+    const props: Partial<ThumbOptions> = {};
+    const isInit = !isDefined(todo);
+    const isUpdate = todo === 'update';
+
+    const isBoundariesUpdated = isDefined(storage.min) || isDefined(storage.max);
+    isBoundariesUpdated && (props.ratio = this.options.ratio);
+
+    isDefined(storage.position) && (props.position = storage.position as number);
+    isDefined(storage.min) && (props.min = storage.min as number);
+    isDefined(storage.max) && (props.max = storage.max as number);
+    isDefined(storage.tip) && (props.tip = storage.tip as boolean);
+
+    isInit
+      && (props.parent = this.element)
+      && (this.thumb = new Thumb(props as ThumbOptions));
+
+    isUpdate && this.thumb.update(props);
+  }
+
+  private handleBar(options?: {}, todo?: string): void {
+    const storage = (options || this.options) as { [x: string]: unknown };
+    const props: Partial<BarOptions> = {};
+    const isInit = !isDefined(todo);
+    const isUpdate = todo === 'update';
+
+    const { min, max, position } = this.options;
+    const width = convertPositionUnitToPercent({ min, max, position });
+
+    isDefined(storage.bar) && (props.isEnabled = storage.bar as boolean);
+    isDefined(storage.position) && (props.width = width);
+
+    isInit
+      && (props.parent = this.element)
+      && (this.bar = new Bar(props as BarOptions));
+
+    isUpdate && this.bar.update(props);
   }
 }
 
