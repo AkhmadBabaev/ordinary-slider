@@ -28,7 +28,7 @@ class Tip extends Toggler<TipOptions> {
   }
 
   private setText(): void {
-    this.element.textContent = String(this.options.text);
+    this.element.textContent = this.options.text;
   }
 }
 

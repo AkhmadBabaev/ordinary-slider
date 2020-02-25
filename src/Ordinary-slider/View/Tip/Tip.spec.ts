@@ -8,7 +8,7 @@ import { hasChild, testHasInstance } from '../../helpers/helpers';
 const options: TipOptions = {
   parent: document.body,
   isEnabled: true,
-  text: 10,
+  text: '10',
 };
 
 const tip = new Tip(options);
@@ -22,7 +22,7 @@ describe('Tip', () => {
   });
 
   test('handles text value', () => {
-    tip.update({ text: 5 });
+    tip.update({ text: '5' });
     expect(tip.getElement().textContent).toBe('5');
   });
 });

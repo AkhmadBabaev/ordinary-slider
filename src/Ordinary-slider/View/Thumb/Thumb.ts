@@ -95,7 +95,7 @@ class Thumb extends Simple<ThumbOptions> {
     const isUpdate = todo === 'update';
 
     isDefined(storage.tip) && (props.isEnabled = storage.tip as boolean);
-    isDefined(storage.position) && (props.text = storage.position as number);
+    isDefined(storage.position) && (props.text = storage.position as string);
 
     isInit
       && (props.parent = this.element)
