@@ -105,6 +105,12 @@ export function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
   return Object.keys(parent.children).some((x, i: number) => parent.children[i] === child);
 }
 
+export function convertPositionUnitToPercent(
+  { min, max, position }: { [x: string]: number },
+): string {
+  return `${(100 / (max - min)) * (position - min)}%`;
+}
+
 export function testHasInstance(elem: unknown, instance: unknown): void {
   expect(elem).toBeInstanceOf(instance);
 }

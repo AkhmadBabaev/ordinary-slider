@@ -4,7 +4,10 @@ import Tip from '../Tip/Tip';
 import { ThumbOptions } from './Interfaces';
 import { TipOptions } from '../Tip/Interfaces';
 
-import { isDefined, propertyFilter, throttle } from '../../helpers/helpers';
+import {
+  isDefined, propertyFilter,
+  convertPositionUnitToPercent, throttle,
+} from '../../helpers/helpers';
 
 class Thumb extends Simple<ThumbOptions> {
   private tip: Tip;
@@ -47,7 +50,7 @@ class Thumb extends Simple<ThumbOptions> {
   private setPosition(): void {
     const { position, min, max } = this.options;
 
-    this.element.style.left = `${(100 / (max - min)) * (position - min)}%`;
+    this.element.style.left = convertPositionUnitToPercent({ min, max, position });
     this.tip.update({ text: position });
   }
 

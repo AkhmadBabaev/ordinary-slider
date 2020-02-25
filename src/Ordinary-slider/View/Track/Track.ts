@@ -6,7 +6,10 @@ import { TrackOptions } from './Interfaces';
 import { ThumbOptions } from '../Thumb/Interfaces';
 import { BarOptions } from '../Bar/Interfaces';
 
-import { isDefined, propertyFilter, debounce } from '../../helpers/helpers';
+import {
+  isDefined, propertyFilter,
+  convertPositionUnitToPercent, debounce,
+} from '../../helpers/helpers';
 
 class Track extends Simple<TrackOptions> {
   private thumb: Thumb;
@@ -44,7 +47,7 @@ class Track extends Simple<TrackOptions> {
 
     this.bar = new Bar({
       isEnabled: bar,
-      width: `${(100 / (max - min)) * (position - min)}%`,
+      width: convertPositionUnitToPercent({ min, max, position }),
       parent: this.element,
     } as BarOptions);
   }
@@ -73,7 +76,7 @@ class Track extends Simple<TrackOptions> {
       });
 
       this.bar.update({
-        width: `${(100 / (max - min)) * (position - min)}%`,
+        width: convertPositionUnitToPercent({ min, max, position }),
       });
     }
 
@@ -89,7 +92,7 @@ class Track extends Simple<TrackOptions> {
     if (isBarUpdated && !isBoundariesUpdated) {
       const props: string[] = ['bar:isEnabled'];
       const filteredProps = propertyFilter(options, props);
-      filteredProps.width = `${(100 / (max - min)) * (position - min)}%`;
+      filteredProps.width = convertPositionUnitToPercent({ min, max, position });
       this.bar.update(filteredProps);
     }
   }
