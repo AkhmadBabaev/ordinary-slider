@@ -24,8 +24,13 @@ describe('Thumb', () => {
     expect(hasChild(thumb.getOptions().parent, thumb.getElement())).toBe(true);
   });
 
-  test('handles position value', () => {
+  test('handles position value', async () => {
     thumb.update({ position: 5 });
+
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
+
     expect(thumb.getElement().style.left).toBe('5%');
   });
 

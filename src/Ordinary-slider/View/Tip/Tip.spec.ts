@@ -21,8 +21,13 @@ describe('Tip', () => {
     expect(hasChild(tip.getOptions().parent, tip.getElement())).toBe(true);
   });
 
-  test('handles text value', () => {
+  test('handles text value', async () => {
     tip.update({ text: '5' });
+
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
+
     expect(tip.getElement().textContent).toBe('5');
   });
 });

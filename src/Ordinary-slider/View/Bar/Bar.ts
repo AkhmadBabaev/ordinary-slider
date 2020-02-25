@@ -23,7 +23,9 @@ class Bar extends Toggler<BarOptions> {
   }
 
   private setWidth(): void {
-    this.element.style.width = this.options.width;
+    requestAnimationFrame(() => {
+      this.element.style.width = this.options.width;
+    });
   }
 }
 

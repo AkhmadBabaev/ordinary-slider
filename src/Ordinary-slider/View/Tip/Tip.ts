@@ -23,7 +23,9 @@ class Tip extends Toggler<TipOptions> {
   }
 
   private setText(): void {
-    this.element.textContent = this.options.text;
+    requestAnimationFrame(() => {
+      this.element.textContent = this.options.text;
+    });
   }
 }
 

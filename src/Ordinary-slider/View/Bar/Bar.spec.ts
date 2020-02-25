@@ -21,8 +21,13 @@ describe('Bar', () => {
     expect(hasChild(bar.getOptions().parent, bar.getElement())).toBe(true);
   });
 
-  test('handles width value', () => {
+  test('handles width value', async () => {
     bar.update({ width: '10%' });
+
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
+
     expect(bar.getElement().style.width).toBe('10%');
   });
 });

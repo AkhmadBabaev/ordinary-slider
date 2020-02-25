@@ -41,7 +41,11 @@ class Thumb extends Simple<ThumbOptions> {
 
   private setPosition(): void {
     const { position, min, max } = this.options;
-    this.element.style.left = convertPositionUnitToPercent({ min, max, position });
+    const left = convertPositionUnitToPercent({ min, max, position });
+
+    requestAnimationFrame(() => {
+      this.element.style.left = left;
+    });
   }
 
   private handleMouseDown(mouseDownEvent: MouseEvent): void {
