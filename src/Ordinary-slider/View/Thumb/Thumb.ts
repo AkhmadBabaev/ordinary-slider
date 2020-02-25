@@ -13,12 +13,11 @@ class Thumb extends Simple<ThumbOptions> {
 
   constructor(options: ThumbOptions) {
     super(options);
-
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.init();
   }
 
-  private init(): void {
+  protected init(): void {
     this.createElement('div', { class: 'o-slider__thumb' });
     this.element.addEventListener('mousedown', this.handleMouseDown);
 
@@ -89,7 +88,7 @@ class Thumb extends Simple<ThumbOptions> {
   }
 
   private handleTip(options?: {}, todo?: string): void {
-    const storage = (options || this.options) as { [x: string]: unknown };
+    const storage = (options || this.options) as { [k: string]: unknown };
     const props: Partial<TipOptions> = {};
     const isInit = !isDefined(todo);
     const isUpdate = todo === 'update';

@@ -5,12 +5,15 @@ import { TrackOptions } from './Interfaces';
 
 import { hasChild, testHasInstance } from '../../helpers/helpers';
 
-const options: Partial<TrackOptions> = {
+const options: TrackOptions = {
   parent: document.body,
   min: 0,
   max: 100,
   position: 0,
+  trackWidth: 300,
+  ratio: 3,
   tip: true,
+  bar: true,
 };
 
 const track = new Track(options as TrackOptions);

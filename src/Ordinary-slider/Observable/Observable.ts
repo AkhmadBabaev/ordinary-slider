@@ -15,7 +15,7 @@ class Observable {
     this.observers = this.observers.filter((observer) => observer !== cb);
   }
 
-  public notify(data: { [key: string]: unknown }): void {
+  public notify(data: { [k: string]: unknown }): void {
     this.observers.forEach((observer) => observer(data));
   }
 }

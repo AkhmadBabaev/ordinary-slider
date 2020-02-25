@@ -51,7 +51,7 @@ class View extends Observable {
   }
 
   private handleTrack(options?: {}, todo?: string): void {
-    const storage = (options || this.options) as { [x: string]: unknown };
+    const storage = (options || this.options) as { [k: string]: unknown };
     const isInit = !isDefined(todo);
     const isUpdate = todo === 'update';
 

@@ -35,10 +35,10 @@ export function softRounding(num: number): number {
 }
 
 export function propertyFilter(
-  obj: { [key: string]: any },
+  obj: { [k: string]: any },
   properties: string[],
-): { [x: string]: any } {
-  const result: { [key: string]: unknown } = {};
+): { [k: string]: any } {
+  const result: { [k: string]: unknown } = {};
 
   properties.forEach((prop: string) => {
     let value: unknown = obj[prop];
@@ -106,7 +106,7 @@ export function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
 }
 
 export function convertPositionUnitToPercent(
-  { min, max, position }: { [x: string]: number },
+  { min, max, position }: { [k: string]: number },
 ): string {
   return `${(100 / (max - min)) * (position - min)}%`;
 }

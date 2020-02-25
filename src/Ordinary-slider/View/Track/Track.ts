@@ -17,13 +17,12 @@ class Track extends Simple<TrackOptions> {
 
   constructor(options: TrackOptions) {
     super(options);
-
     this.handleWindowResize = this.handleWindowResize.bind(this);
     this.handleWindowResize = debounce(this.handleWindowResize, 800);
     this.init();
   }
 
-  private init(): void {
+  protected init(): void {
     this.createElement('div', { class: 'o-slider__track' });
     this.options.parent.append(this.element);
 
@@ -55,8 +54,7 @@ class Track extends Simple<TrackOptions> {
   }
 
   private setRatio(todo?: string): void {
-    (todo === 'init')
-      && (this.options.trackWidth = this.element.clientWidth);
+    (todo === 'init') && (this.options.trackWidth = this.element.clientWidth);
 
     const { min, max, trackWidth } = this.options;
     this.options.ratio = trackWidth / (max - min);
@@ -71,7 +69,7 @@ class Track extends Simple<TrackOptions> {
   }
 
   private handleThumb(options?: {}, todo?: string): void {
-    const storage = (options || this.options) as { [x: string]: unknown };
+    const storage = (options || this.options) as { [k: string]: unknown };
     const props: Partial<ThumbOptions> = {};
     const isInit = !isDefined(todo);
     const isUpdate = todo === 'update';
@@ -92,7 +90,7 @@ class Track extends Simple<TrackOptions> {
   }
 
   private handleBar(options?: {}, todo?: string): void {
-    const storage = (options || this.options) as { [x: string]: unknown };
+    const storage = (options || this.options) as { [k: string]: unknown };
     const props: Partial<BarOptions> = {};
     const isInit = !isDefined(todo);
     const isUpdate = todo === 'update';

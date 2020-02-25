@@ -33,9 +33,9 @@ class Model extends Observable {
     // wrong the second argument
     if (!isBoolean(notify)) throw new TypeError('The second setState argument is not a boolean');
 
-    // unnecessary arguments
+    // notify about unnecessary arguments
     if (arguments.length > 2) {
-      console.error(`
+      console.warn(`
         setState should contain no more than 2 arguments, remove unnecessary arguments
       `);
     }

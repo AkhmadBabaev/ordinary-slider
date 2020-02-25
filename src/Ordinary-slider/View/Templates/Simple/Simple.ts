@@ -20,7 +20,7 @@ class Simple<T> {
     return this.options;
   }
 
-  protected createElement(name: string, attributes?: { [key: string]: unknown }): void {
+  protected createElement(name: string, attributes?: { [k: string]: unknown }): void {
     const tag = document.createElement(name);
 
     attributes && Object.keys(attributes).forEach((key) => {

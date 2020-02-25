@@ -30,13 +30,12 @@ describe('Model', () => {
       expect(() => model.setState({})).toThrowError();
     });
 
-    test('throw console.error if arguments is more than 2', () => {
-      // eslint-disable-next-line no-console
-      console.error = jest.fn();
+    test('throw console.warn if arguments is more than 2', () => {
+      console.warn = jest.fn();
 
       // @ts-ignore
       model.setState(testeeState, false, 'fakeArg');
-      expect(console.error).toHaveBeenCalled();
+      expect(console.warn).toHaveBeenCalled();
     });
 
     test('throws error if called with unknowns properties', () => {
