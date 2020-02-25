@@ -7,7 +7,7 @@ import { isDefined } from '../../helpers/helpers';
 class Bar extends Toggler<BarOptions> {
   constructor(options: BarOptions) {
     super(options);
-    this.init();
+    this.options.isEnabled && this.init();
   }
 
   protected init(): void {

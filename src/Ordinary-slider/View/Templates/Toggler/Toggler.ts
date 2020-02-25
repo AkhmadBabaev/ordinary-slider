@@ -7,7 +7,6 @@ class Toggler<T extends { isEnabled: boolean }> extends Simple<T> {
   }
 
   protected enable(): void {
-    this.options.isEnabled && this.disable();
     this.init();
   }
 

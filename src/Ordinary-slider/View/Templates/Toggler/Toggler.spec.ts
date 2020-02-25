@@ -16,7 +16,7 @@ const testeeOptions: Options = {
 class Testee extends Toggler<Options> {
   constructor(options: Options) {
     super(options);
-    this.init();
+    this.options.isEnabled && this.init();
   }
 
   update(options: Partial<Options>): void {
