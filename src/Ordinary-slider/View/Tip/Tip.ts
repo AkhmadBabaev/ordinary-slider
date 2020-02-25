@@ -5,11 +5,6 @@ import { TipOptions } from './Interfaces';
 import { isDefined } from '../../helpers/helpers';
 
 class Tip extends Toggler<TipOptions> {
-  constructor(options: TipOptions) {
-    super(options);
-    this.options.isEnabled && this.init();
-  }
-
   protected init(): void {
     this.createElement('div', { class: 'o-slider__tip' });
 

@@ -1,10 +1,12 @@
 import Simple from '../Simple/Simple';
 
-class Toggler<T extends { isEnabled: boolean }> extends Simple<T> {
-  protected init(): void {
-    // key 'this' to avoid eslint warnings
-    this;
+abstract class Toggler<T extends { isEnabled: boolean }> extends Simple<T> {
+  constructor(options: T) {
+    super(options);
+    this.options.isEnabled && this.init();
   }
+
+  protected abstract init(): void;
 
   protected enable(): void {
     this.init();

@@ -1,4 +1,4 @@
-class Simple<T> {
+abstract class Simple<T> {
   protected options: T;
 
   protected element: HTMLElement;
