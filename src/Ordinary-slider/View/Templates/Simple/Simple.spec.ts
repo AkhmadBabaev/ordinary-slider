@@ -1,9 +1,15 @@
 import Simple from './Simple';
 
-type Options = { parent: HTMLElement };
+interface Options {
+  parent: HTMLElement;
+  sun: boolean;
+  weather: string;
+}
 
 const testeeOptions: Options = {
   parent: document.body,
+  sun: true,
+  weather: 'windy',
 };
 
 class Testee extends Simple<Options> {
@@ -29,5 +35,12 @@ describe('Simple', () => {
 
     expect(element.tagName).toBe('DIV');
     expect(element.classList.contains('testee')).toBe(true);
+  });
+
+  test('update should put updated values to the options', () => {
+    testee.update({ sun: false, weather: 'rain' });
+
+    expect(testee.getOptions().sun).toBe(false);
+    expect(testee.getOptions().weather).toBe('rain');
   });
 });
