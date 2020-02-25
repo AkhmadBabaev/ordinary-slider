@@ -27,8 +27,7 @@ class Track extends Simple<TrackOptions> {
     this.createElement('div', { class: 'o-slider__track' });
     this.options.parent.append(this.element);
 
-    this.options.trackWidth = this.element.clientWidth;
-    this.setRatio();
+    this.setRatio('init');
 
     window.addEventListener('resize', this.handleWindowResize);
 
@@ -55,7 +54,10 @@ class Track extends Simple<TrackOptions> {
     isBarUpdated && this.handleBar(options, 'update');
   }
 
-  private setRatio(): void {
+  private setRatio(todo?: string): void {
+    (todo === 'init')
+      && (this.options.trackWidth = this.element.clientWidth);
+
     const { min, max, trackWidth } = this.options;
     this.options.ratio = trackWidth / (max - min);
   }
@@ -64,8 +66,7 @@ class Track extends Simple<TrackOptions> {
     // track width was not changed
     if (this.options.trackWidth === this.element.clientWidth) return;
 
-    this.options.trackWidth = this.element.clientWidth;
-    this.setRatio();
+    this.setRatio('init');
     this.handleThumb({ ratio: this.options.ratio }, 'update');
   }
 
