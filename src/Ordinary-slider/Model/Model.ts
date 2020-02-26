@@ -48,6 +48,9 @@ class Model extends Observable {
       this.validateProp(prop, properties[prop as keyof State]);
     });
 
+    // when received more than one property
+    if (Object.keys(properties).length > 1) this.validateMultitudeProps();
+
     // handle properties
     Object.keys(this.changedProps).forEach((prop) => { this.handleProp(prop); });
 
@@ -176,6 +179,37 @@ class Model extends Observable {
 
     if (!this.isDuplicateValue(prop, option)) {
       this.changedProps = { ...this.changedProps, [prop]: option };
+    }
+  }
+
+  private validateMultitudeProps(): void {
+    const min = this.changedProps.min as number;
+    const max = this.changedProps.max as number;
+    const step = this.changedProps.step as number;
+    const position = this.changedProps.position as number;
+
+    const hasBoundaries = min && max;
+    const gap = max - min;
+
+    const isMinGreaterThanMax = min > max;
+    const isStepGreaterThanGap = step > gap;
+    const isPositionGreaterThanMax = position > max;
+    const isPositionLessThanMin = position < min;
+
+    if (hasBoundaries && isMinGreaterThanMax) {
+      throw new Error('Min is greater than max');
+    }
+
+    if (step && hasBoundaries && isStepGreaterThanGap) {
+      throw new Error('Step should not be greater than (max - min)');
+    }
+
+    if (position && max && isPositionGreaterThanMax) {
+      throw new Error('Position is greater than max');
+    }
+
+    if (position && min && isPositionLessThanMin) {
+      throw new Error('Position is less than min');
     }
   }
 

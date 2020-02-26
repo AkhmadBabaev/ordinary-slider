@@ -43,6 +43,13 @@ describe('Model', () => {
       expect(() => model.setState({ fake: 'property' })).toThrowError();
     });
 
+    test('throws error if called with multitude options that contradict each other', () => {
+      expect(() => model.setState({ min: 10, max: 5 })).toThrowError();
+      expect(() => model.setState({ min: 10, position: 5 })).toThrowError();
+      expect(() => model.setState({ position: 10, max: 5 })).toThrowError();
+      expect(() => model.setState({ min: 5, max: 10, step: 15 })).toThrowError();
+    });
+
     test('shouldn\'t sending repeated values', () => {
       class Fake {
         something: Partial<State>;
