@@ -20,17 +20,17 @@ describe('Model', () => {
 
   describe('setState', () => {
     test('throws error if called without arguments', () => {
-      const errorName = 'setState has not arguments';
+      const errorMessage = 'setState has not arguments';
 
       // @ts-ignore
-      expect(() => model.setState()).toThrowError(new Error(errorName));
+      expect(() => model.setState()).toThrowError(new Error(errorMessage));
     });
 
     test('throws error if called with empty object', () => {
       expect(() => model.setState({})).toThrowError();
     });
 
-    test('throw console.warn if arguments is more than 2', () => {
+    test('throws console.warn if arguments is more than 2', () => {
       console.warn = jest.fn();
 
       // @ts-ignore
@@ -50,7 +50,7 @@ describe('Model', () => {
       expect(() => model.setState({ min: 5, max: 10, step: 15 })).toThrowError();
     });
 
-    test('shouldn\'t sending repeated values', () => {
+    test('shouldn\'t send repeated values', () => {
       class Fake {
         something: Partial<State>;
 
