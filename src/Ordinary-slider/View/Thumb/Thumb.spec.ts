@@ -9,7 +9,7 @@ const options: ThumbOptions = {
   parent: document.body,
   min: 0,
   max: 100,
-  position: 0,
+  value: 0,
   ratio: 3,
   tip: true,
 };
@@ -24,8 +24,8 @@ describe('Thumb', () => {
     expect(hasChild(thumb.getOptions().parent, thumb.getElement())).toBe(true);
   });
 
-  test('handles position value', async () => {
-    thumb.update({ position: 5 });
+  test('handles position of value', async () => {
+    thumb.update({ value: 5 });
 
     await new Promise((resolve) => {
       requestAnimationFrame(() => resolve());

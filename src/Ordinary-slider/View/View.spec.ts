@@ -26,7 +26,7 @@ describe('View', () => {
 
     (thumbElem as HTMLElement).dispatchEvent(new CustomEvent('positionChanged', {
       bubbles: true,
-      detail: { position: 5 },
+      detail: { value: 5 },
     }));
 
     expect(view.notify).toHaveBeenCalled();

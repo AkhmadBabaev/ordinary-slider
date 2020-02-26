@@ -1,6 +1,6 @@
 import {
   isNumber, propertyFilter, hasChild,
-  throttle, debounce, convertPositionUnitToPercent,
+  throttle, debounce, convertValueUnitToPercent,
 } from './helpers';
 
 describe('isNumber', () => {
@@ -155,7 +155,7 @@ describe('hasChild', () => {
   });
 });
 
-test('convertPositionUnitToPercent should convert position unit into percent', () => {
-  const [min, max, position] = [50, 100, 60];
-  expect(convertPositionUnitToPercent({ min, max, position })).toBe('20%');
+test('convertValueUnitToPercent should convert value unit into percent', () => {
+  const [min, max, value] = [50, 100, 60];
+  expect(convertValueUnitToPercent({ min, max, value })).toBe('20%');
 });

@@ -5,7 +5,7 @@ import { ThumbOptions } from './Interfaces';
 import { TipOptions } from '../Tip/Interfaces';
 
 import {
-  isDefined, convertPositionUnitToPercent, throttle,
+  isDefined, convertValueUnitToPercent, throttle,
 } from '../../helpers/helpers';
 
 class Thumb extends Simple<ThumbOptions> {
@@ -30,18 +30,18 @@ class Thumb extends Simple<ThumbOptions> {
   public update(options: Partial<ThumbOptions>): void {
     super.update(options);
 
-    const hasPosition: boolean = isDefined(options.position);
+    const hasValue: boolean = isDefined(options.value);
     const hasTip: boolean = isDefined(options.tip);
 
-    hasPosition && this.setPosition();
+    hasValue && this.setPosition();
 
-    const isTipUpdated = hasPosition || hasTip;
+    const isTipUpdated = hasValue || hasTip;
     isTipUpdated && this.handleTip(options, 'update');
   }
 
   private setPosition(): void {
-    const { position, min, max } = this.options;
-    const left = convertPositionUnitToPercent({ min, max, position });
+    const { value, min, max } = this.options;
+    const left = convertValueUnitToPercent({ min, max, value });
 
     requestAnimationFrame(() => {
       this.element.style.left = left;
@@ -66,12 +66,12 @@ class Thumb extends Simple<ThumbOptions> {
     const parentX: number = parent.getBoundingClientRect().x;
 
     let handleMouseMove = ({ clientX }: MouseEvent): void => {
-      const pxPosition: number = clientX - parentX - shiftX;
-      const position: number = pxPosition / ratio + min;
+      const position: number = clientX - parentX - shiftX;
+      const value: number = position / ratio + min;
 
       this.element.dispatchEvent(new CustomEvent('positionChanged', {
         bubbles: true,
-        detail: { position },
+        detail: { value },
       }));
     };
 
@@ -98,7 +98,7 @@ class Thumb extends Simple<ThumbOptions> {
     const isUpdate = todo === 'update';
 
     isDefined(storage.tip) && (props.isEnabled = storage.tip as boolean);
-    isDefined(storage.position) && (props.text = storage.position as string);
+    isDefined(storage.value) && (props.text = storage.value as string);
 
     isInit
       && (props.parent = this.element)

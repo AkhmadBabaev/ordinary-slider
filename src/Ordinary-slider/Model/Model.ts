@@ -74,11 +74,11 @@ class Model extends Observable {
     let { min } = currentState;
     if (!Number.isFinite(min)) throw new Error('Min is Infinity');
 
-    const { max, step, position } = currentState;
+    const { max, step, value } = currentState;
 
     if (min > max) min = max - step;
 
-    const isGreaterThanPosition: boolean = min > position;
+    const isGreaterThanValue: boolean = min > value;
     const gap: number = max - min;
 
     this.changedProps.min = softRounding(min);
@@ -87,8 +87,8 @@ class Model extends Observable {
     const hasStep: boolean = isDefined(this.changedProps.step);
     if (!hasStep && step > gap) this.handleStep();
 
-    const hasPosition: boolean = isDefined(this.changedProps.position);
-    if (!hasPosition && isGreaterThanPosition) this.handlePosition();
+    const hasValue: boolean = isDefined(this.changedProps.value);
+    if (!hasValue && isGreaterThanValue) this.handleValue();
   }
 
   private handleMax(): void {
@@ -97,11 +97,11 @@ class Model extends Observable {
     let { max } = currentState;
     if (!Number.isFinite(max)) throw new Error('Max is Infinity');
 
-    const { min, step, position } = currentState;
+    const { min, step, value } = currentState;
 
     if (max < min) max = min + step;
 
-    const isLessThanPosition: boolean = max < position;
+    const isLessThanValue: boolean = max < value;
     const gap: number = max - min;
 
     this.changedProps.max = softRounding(max);
@@ -110,8 +110,8 @@ class Model extends Observable {
     const hasStep: boolean = isDefined(this.changedProps.step);
     if (!hasStep && step > gap) this.handleStep();
 
-    const hasPosition: boolean = isDefined(this.changedProps.position);
-    if (!hasPosition && isLessThanPosition) this.handlePosition();
+    const hasValue: boolean = isDefined(this.changedProps.value);
+    if (!hasValue && isLessThanValue) this.handleValue();
   }
 
   private handleStep(): void {
@@ -130,39 +130,39 @@ class Model extends Observable {
     this.changedProps.step = softRounding(step);
 
     // update related properties
-    const hasPosition: boolean = isDefined(this.changedProps.position);
-    if (!hasPosition) this.handlePosition();
+    const hasValue: boolean = isDefined(this.changedProps.value);
+    if (!hasValue) this.handleValue();
   }
 
-  private handlePosition(): void {
+  private handleValue(): void {
     const currentState = { ...this.getState(), ...this.changedProps };
 
-    let { position } = currentState;
-    if (!Number.isFinite(position)) throw new Error('Position is Infinity');
+    let { value } = currentState;
+    if (!Number.isFinite(value)) throw new Error('Value is Infinity');
 
     const { min, max, step } = currentState;
 
-    const remainder: number = (position - min) % step;
+    const remainder: number = (value - min) % step;
 
     if (remainder !== 0) {
       const halfStep: number = step / 2;
-      const belowPosition: number = position - remainder;
-      const abovePosition: number = belowPosition + step;
+      const belowValue: number = value - remainder;
+      const aboveValue: number = belowValue + step;
 
-      position = (halfStep > remainder) ? belowPosition : abovePosition;
+      value = (halfStep > remainder) ? belowValue : aboveValue;
     }
 
-    if (position < min) position = min;
-    if (position > max) position = max;
+    if (value < min) value = min;
+    if (value > max) value = max;
 
-    this.changedProps.position = softRounding(position);
+    this.changedProps.value = softRounding(value);
   }
 
   private validateProp(prop: string, value: unknown): void {
     let option: boolean | number;
 
     switch (prop) {
-      case 'position':
+      case 'value':
       case 'min':
       case 'max':
       case 'step':
@@ -186,15 +186,15 @@ class Model extends Observable {
     const min = this.changedProps.min as number;
     const max = this.changedProps.max as number;
     const step = this.changedProps.step as number;
-    const position = this.changedProps.position as number;
+    const value = this.changedProps.value as number;
 
     const hasBoundaries = min && max;
     const gap = max - min;
 
     const isMinGreaterThanMax = min > max;
     const isStepGreaterThanGap = step > gap;
-    const isPositionGreaterThanMax = position > max;
-    const isPositionLessThanMin = position < min;
+    const isValueGreaterThanMax = value > max;
+    const isValueLessThanMin = value < min;
 
     if (hasBoundaries && isMinGreaterThanMax) {
       throw new Error('Min is greater than max');
@@ -204,18 +204,18 @@ class Model extends Observable {
       throw new Error('Step should not be greater than (max - min)');
     }
 
-    if (position && max && isPositionGreaterThanMax) {
-      throw new Error('Position is greater than max');
+    if (value && max && isValueGreaterThanMax) {
+      throw new Error('Value is greater than max');
     }
 
-    if (position && min && isPositionLessThanMin) {
-      throw new Error('Position is less than min');
+    if (value && min && isValueLessThanMin) {
+      throw new Error('Value is less than min');
     }
   }
 
   private handleProp(prop: string): void {
     switch (prop) {
-      case 'position': this.handlePosition(); break;
+      case 'value': this.handleValue(); break;
       case 'min': this.handleMin(); break;
       case 'max': this.handleMax(); break;
       case 'step': this.handleStep(); break;

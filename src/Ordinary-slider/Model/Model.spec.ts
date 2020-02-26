@@ -6,7 +6,7 @@ const testeeState: State = {
   min: 0,
   max: 100,
   step: 1,
-  position: 0,
+  value: 0,
   tip: true,
   bar: true,
 };
@@ -45,8 +45,8 @@ describe('Model', () => {
 
     test('throws error if called with multitude options that contradict each other', () => {
       expect(() => model.setState({ min: 10, max: 5 })).toThrowError();
-      expect(() => model.setState({ min: 10, position: 5 })).toThrowError();
-      expect(() => model.setState({ position: 10, max: 5 })).toThrowError();
+      expect(() => model.setState({ min: 10, value: 5 })).toThrowError();
+      expect(() => model.setState({ value: 10, max: 5 })).toThrowError();
       expect(() => model.setState({ min: 5, max: 10, step: 15 })).toThrowError();
     });
 
@@ -69,14 +69,14 @@ describe('Model', () => {
 
       model.setState({
         min: 0, // the same
-        position: 10, // new
+        value: 10, // new
       });
 
-      expect(fake.something).toEqual({ position: 10 });
+      expect(fake.something).toEqual({ value: 10 });
 
       // clear changes
       model.unsubscribe(fake.doSomething);
-      model.setState({ position: testeeState.position });
+      model.setState({ value: testeeState.value });
     });
   });
 
@@ -124,29 +124,29 @@ describe('Model', () => {
       });
     });
 
-    describe('Position', () => {
+    describe('Value', () => {
       test('should be less than min', () => {
-        model.setState({ position: -1 });
-        expect(model.getState().position).toBe(0);
+        model.setState({ value: -1 });
+        expect(model.getState().value).toBe(0);
       });
 
       test('should be greater than max', () => {
-        model.setState({ position: 101 });
-        expect(model.getState().position).toBe(100);
+        model.setState({ value: 101 });
+        expect(model.getState().value).toBe(100);
       });
 
       test('should adapt to step values', () => {
         model.setState({ step: 10 });
 
-        model.setState({ position: 8 });
-        expect(model.getState().position).toBe(10);
+        model.setState({ value: 8 });
+        expect(model.getState().value).toBe(10);
 
-        model.setState({ position: 2 });
-        expect(model.getState().position).toBe(0);
+        model.setState({ value: 2 });
+        expect(model.getState().value).toBe(0);
       });
 
       test('shouldn\'t be Infinity', () => {
-        expect(() => model.setState({ position: Infinity })).toThrowError();
+        expect(() => model.setState({ value: Infinity })).toThrowError();
       });
     });
   });

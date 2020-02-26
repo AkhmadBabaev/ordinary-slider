@@ -9,7 +9,7 @@ const options: TrackOptions = {
   parent: document.body,
   min: 0,
   max: 100,
-  position: 0,
+  value: 0,
   trackWidth: 300,
   ratio: 3,
   tip: true,

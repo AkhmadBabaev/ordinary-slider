@@ -7,7 +7,7 @@ import { ThumbOptions } from '../Thumb/Interfaces';
 import { BarOptions } from '../Bar/Interfaces';
 
 import {
-  isDefined, convertPositionUnitToPercent, debounce,
+  isDefined, convertValueUnitToPercent, debounce,
 } from '../../helpers/helpers';
 
 class Track extends Simple<TrackOptions> {
@@ -37,7 +37,7 @@ class Track extends Simple<TrackOptions> {
   public update(options: Partial<TrackOptions>): void {
     super.update(options);
 
-    const hasPosition: boolean = isDefined(options.position);
+    const hasValue: boolean = isDefined(options.value);
     const hasMin: boolean = isDefined(options.min);
     const hasMax: boolean = isDefined(options.max);
     const hasTip: boolean = isDefined(options.tip);
@@ -46,10 +46,10 @@ class Track extends Simple<TrackOptions> {
     const isBoundariesUpdated: boolean = hasMin || hasMax;
     isBoundariesUpdated && this.setRatio();
 
-    const isThumbUpdated: boolean = isBoundariesUpdated || hasPosition || hasTip;
+    const isThumbUpdated: boolean = isBoundariesUpdated || hasValue || hasTip;
     isThumbUpdated && this.handleThumb(options, 'update');
 
-    const isBarUpdated = isBoundariesUpdated || hasPosition || hasBar;
+    const isBarUpdated = isBoundariesUpdated || hasValue || hasBar;
     isBarUpdated && this.handleBar(options, 'update');
   }
 
@@ -77,7 +77,7 @@ class Track extends Simple<TrackOptions> {
     const isBoundariesUpdated = isDefined(storage.min) || isDefined(storage.max);
     isBoundariesUpdated && (props.ratio = this.options.ratio);
 
-    isDefined(storage.position) && (props.position = storage.position as number);
+    isDefined(storage.value) && (props.value = storage.value as number);
     isDefined(storage.min) && (props.min = storage.min as number);
     isDefined(storage.max) && (props.max = storage.max as number);
     isDefined(storage.tip) && (props.tip = storage.tip as boolean);
@@ -95,11 +95,11 @@ class Track extends Simple<TrackOptions> {
     const isInit = !isDefined(todo);
     const isUpdate = todo === 'update';
 
-    const { min, max, position } = this.options;
-    const width = convertPositionUnitToPercent({ min, max, position });
+    const { min, max, value } = this.options;
+    const width = convertValueUnitToPercent({ min, max, value });
 
     isDefined(storage.bar) && (props.isEnabled = storage.bar as boolean);
-    isDefined(storage.position) && (props.width = width);
+    isDefined(storage.value) && (props.width = width);
 
     isInit
       && (props.parent = this.element)

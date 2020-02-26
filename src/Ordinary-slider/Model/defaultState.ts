@@ -4,7 +4,7 @@ const defaultState: State = {
   min: 0,
   max: 100,
   step: 1,
-  position: 0,
+  value: 0,
   tip: true,
   bar: true,
 };

@@ -2,7 +2,7 @@ export interface State {
   min: number;
   max: number;
   step: number;
-  position: number;
+  value: number;
   tip: boolean;
   bar: boolean;
 }

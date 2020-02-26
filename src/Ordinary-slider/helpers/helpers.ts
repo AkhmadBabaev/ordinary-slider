@@ -105,10 +105,10 @@ export function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
   return Object.keys(parent.children).some((x, i: number) => parent.children[i] === child);
 }
 
-export function convertPositionUnitToPercent(
-  { min, max, position }: { [k: string]: number },
+export function convertValueUnitToPercent(
+  { min, max, value }: { [k: string]: number },
 ): string {
-  return `${(100 / (max - min)) * (position - min)}%`;
+  return `${(100 / (max - min)) * (value - min)}%`;
 }
 
 export function testHasInstance(elem: unknown, instance: unknown): void {

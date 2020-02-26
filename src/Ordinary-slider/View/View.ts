@@ -35,19 +35,19 @@ class View extends Observable {
   public applyState(options: Partial<State>): void {
     this.options = { ...this.options, ...options };
 
+    const hasValue: boolean = isDefined(options.value);
     const hasMin: boolean = isDefined(options.min);
     const hasMax: boolean = isDefined(options.max);
-    const hasPosition: boolean = isDefined(options.position);
     const hasTip: boolean = isDefined(options.tip);
     const hasBar: boolean = isDefined(options.bar);
 
-    const isTrackUpdated: boolean = hasMin || hasMax || hasPosition || hasTip || hasBar;
+    const isTrackUpdated: boolean = hasMin || hasMax || hasValue || hasTip || hasBar;
     isTrackUpdated && this.handleTrack(options, 'update');
   }
 
   private handlePositionChanged(event: CustomEvent): void {
-    const { position } = event.detail;
-    this.notify({ position });
+    const { value } = event.detail;
+    this.notify({ value });
   }
 
   private handleTrack(options?: {}, todo?: string): void {
@@ -55,7 +55,7 @@ class View extends Observable {
     const isInit = !isDefined(todo);
     const isUpdate = todo === 'update';
 
-    const propsList: string[] = ['min', 'max', 'position', 'tip', 'bar'];
+    const propsList: string[] = ['min', 'max', 'value', 'tip', 'bar'];
     const props: Partial<TrackOptions> = propertyFilter(storage, propsList);
 
     isInit
