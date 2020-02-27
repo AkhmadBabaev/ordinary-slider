@@ -31,4 +31,10 @@ describe('View', () => {
 
     expect(view.notify).toHaveBeenCalled();
   });
+
+  test('contains data attributes', () => {
+    Object.keys(defaultState).forEach((attr) => {
+      expect(document.body.hasAttribute(`data-${attr}`)).toBeTruthy();
+    });
+  });
 });

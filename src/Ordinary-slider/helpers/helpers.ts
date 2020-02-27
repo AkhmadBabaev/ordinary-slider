@@ -26,6 +26,10 @@ export function isBoolean(value: unknown): boolean {
   return typeof value === 'boolean';
 }
 
+export function isBooleanSpy(value: string): boolean {
+  return (value === 'true') || (value === 'false');
+}
+
 export function isDefined(value: unknown): boolean {
   return (value !== undefined) && (value !== null);
 }
@@ -109,6 +113,10 @@ export function convertValueUnitToPercent(
   { min, max, value }: { [k: string]: number },
 ): string {
   return `${(100 / (max - min)) * (value - min)}%`;
+}
+
+export function setAttributesAsData(elem: HTMLElement, attrs: { [k: string]: any }): void {
+  Object.keys(attrs).forEach((key) => elem.setAttribute(`data-${key}`, attrs[key]));
 }
 
 export function testHasInstance(elem: unknown, instance: unknown): void {

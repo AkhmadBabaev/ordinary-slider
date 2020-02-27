@@ -30,12 +30,12 @@ declare global {
     }
 
     return this.map((i: number, currentElement: HTMLElement) => {
-      const model: Model = new Model(options);
+      const data = $(currentElement).data();
+      const model: Model = new Model({ ...options, ...data });
       const view: View = new View(currentElement, model.getState());
 
       // eslint-disable-next-line no-new
       new Presenter(model, view);
-
       return this;
     });
   };
