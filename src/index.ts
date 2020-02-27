@@ -29,15 +29,16 @@ declare global {
       throw new ReferenceError('Connection to non-existent element');
     }
 
-    return this.map((i: number, currentElement: HTMLElement) => {
-      const data = $(currentElement).data();
-      const model: Model = new Model({ ...options, ...data });
-      const view: View = new View(currentElement, model.getState());
+    const $first = $(this).first();
 
-      // eslint-disable-next-line no-new
-      new Presenter(model, view);
-      return this;
-    });
+    const element = $first[0];
+    const data = $(element).data();
+    const model: Model = new Model({ ...options, ...data });
+    const view: View = new View(element, model.getState());
+
+    // eslint-disable-next-line no-new
+    new Presenter(model, view);
+    return $first;
   };
 }($));
 

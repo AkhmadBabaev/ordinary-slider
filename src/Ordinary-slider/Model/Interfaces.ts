@@ -10,5 +10,5 @@ export interface State {
 export interface Model {
   setState: (data: Partial<State>, notify?: boolean) => void;
   getState: () => State;
-  subscribe: (cb: (data: Partial<State>) => void) => void;
+  subscribe: (cb: Function) => void;
 }

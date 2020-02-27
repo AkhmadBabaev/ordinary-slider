@@ -1,5 +1,5 @@
 class Observable {
-  private observers: {(cb: any): void}[] = [];
+  private observers: Function[] = [];
 
   constructor() {
     this.subscribe = this.subscribe.bind(this);
@@ -7,11 +7,11 @@ class Observable {
     this.notify = this.notify.bind(this);
   }
 
-  public subscribe(cb: (date: any) => void): void {
+  public subscribe(cb: Function): void {
     this.observers.push(cb);
   }
 
-  public unsubscribe(cb: (date: any) => void): void {
+  public unsubscribe(cb: Function): void {
     this.observers = this.observers.filter((observer) => observer !== cb);
   }
 
