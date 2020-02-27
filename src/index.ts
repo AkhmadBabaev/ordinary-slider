@@ -13,6 +13,10 @@ declare global {
 
   interface JQuery {
     oSlider: (options?: Partial<State>) => JQuery<object> | JQuery<HTMLElement>;
+    getState: () => State;
+    setState: (options: Partial<State>) => void;
+    subscribe: (callback: Function) => void;
+    unsubscribe: (callback: Function) => void;
   }
 }
 
@@ -35,9 +39,13 @@ declare global {
     const data = $(element).data();
     const model: Model = new Model({ ...options, ...data });
     const view: View = new View(element, model.getState());
+    const presenter = new Presenter(model, view);
 
-    // eslint-disable-next-line no-new
-    new Presenter(model, view);
+    $first.getState = presenter.getState;
+    $first.setState = presenter.setState;
+    $first.subscribe = presenter.subscribe;
+    $first.unsubscribe = presenter.unsubscribe;
+
     return $first;
   };
 }($));
