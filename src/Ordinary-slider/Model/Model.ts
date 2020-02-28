@@ -51,6 +51,14 @@ class Model extends Observable {
     // when received more than one property
     if (Object.keys(properties).length > 1) this.validateMultitudeProps();
 
+    // Delete duplicated values from changed props
+    Object.keys(this.changedProps).forEach((prop: string) => {
+      const value = this.changedProps[prop as keyof State];
+      if (this.isDuplicateValue(prop, value as number | boolean)) {
+        delete this.changedProps[prop as keyof State];
+      }
+    });
+
     // handle properties
     Object.keys(this.changedProps).forEach((prop) => { this.handleProp(prop); });
 
@@ -177,9 +185,7 @@ class Model extends Observable {
       default: throw new Error(`${prop} is non existed property`);
     }
 
-    if (!this.isDuplicateValue(prop, option)) {
-      this.changedProps = { ...this.changedProps, [prop]: option };
-    }
+    this.changedProps = { ...this.changedProps, [prop]: option };
   }
 
   private validateMultitudeProps(): void {
