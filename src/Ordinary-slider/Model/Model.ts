@@ -189,13 +189,18 @@ class Model extends Observable {
   }
 
   private validateMultitudeProps(): void {
+    const hasMin = isDefined(this.changedProps.min);
+    const hasMax = isDefined(this.changedProps.max);
+    const hasStep = isDefined(this.changedProps.step);
+    const hasValue = isDefined(this.changedProps.value);
+
     const min = this.changedProps.min as number;
     const max = this.changedProps.max as number;
     const step = this.changedProps.step as number;
     const value = this.changedProps.value as number;
 
-    const hasBoundaries = min && max;
-    const gap = max - min;
+    const hasBoundaries = hasMin && hasMax;
+    const gap = hasBoundaries && (max - min);
 
     const isMinGreaterThanMax = min > max;
     const isStepGreaterThanGap = step > gap;
@@ -206,15 +211,15 @@ class Model extends Observable {
       throw new Error('Min is greater than max');
     }
 
-    if (step && hasBoundaries && isStepGreaterThanGap) {
+    if (hasStep && hasBoundaries && isStepGreaterThanGap) {
       throw new Error('Step should not be greater than (max - min)');
     }
 
-    if (value && max && isValueGreaterThanMax) {
+    if (hasValue && hasMax && isValueGreaterThanMax) {
       throw new Error('Value is greater than max');
     }
 
-    if (value && min && isValueLessThanMin) {
+    if (hasValue && hasMin && isValueLessThanMin) {
       throw new Error('Value is less than min');
     }
   }
