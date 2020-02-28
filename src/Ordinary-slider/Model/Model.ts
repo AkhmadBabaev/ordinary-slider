@@ -62,8 +62,8 @@ class Model extends Observable {
     // handle properties
     Object.keys(this.changedProps).forEach((prop) => { this.handleProp(prop); });
 
-    // notify subscribers
-    notify && this.notify(this.changedProps);
+    // notify subscribers if changedProps has properties
+    Object.keys(this.changedProps).length && notify && this.notify(this.changedProps);
 
     // set state
     this.state = { ...this.getState(), ...this.changedProps };
