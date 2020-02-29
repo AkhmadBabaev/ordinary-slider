@@ -1,6 +1,7 @@
 import Model from './Model';
 
 import { State } from './Interfaces';
+import defaultState from './defaultState';
 
 const testeeState: State = {
   min: 0,
@@ -148,6 +149,12 @@ describe('Model', () => {
       test('shouldn\'t be Infinity', () => {
         expect(() => model.setState({ value: Infinity })).toThrowError();
       });
+    });
+
+    test('reset should return state to default values', () => {
+      model.setState({ min: 10, max: 20 });
+      model.reset();
+      expect(model.getState()).toEqual(defaultState);
     });
   });
 });

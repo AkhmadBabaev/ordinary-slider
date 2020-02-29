@@ -237,6 +237,10 @@ class Model extends Observable {
   private isDuplicateValue(prop: string, value: number | boolean): boolean {
     return this.getState()[prop as keyof State] === value;
   }
+
+  public reset(): void {
+    this.setState(defaultState);
+  }
 }
 
 export default Model;

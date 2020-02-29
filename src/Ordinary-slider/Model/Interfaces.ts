@@ -8,6 +8,7 @@ export interface State {
 }
 
 export interface Model {
+  reset: () => void;
   setState: (data: Partial<State>, notify?: boolean) => void;
   getState: () => State;
   subscribe: (cb: Function) => void;
