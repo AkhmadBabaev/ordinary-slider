@@ -18,12 +18,12 @@ html(lang="en")
 
 
     if isProdEnv
-      link(rel="stylesheet" href="index.bundle.css")
+      link(rel="stylesheet" href="index.min.css")
 
   body.page
     .page__inner
       .container.page__container
         block content
 
-    script(src="index.bundle.js")
+    script(src="index.min.js")
 

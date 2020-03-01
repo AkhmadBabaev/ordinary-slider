@@ -10,7 +10,7 @@ module.exports = {
   },
   output: {
     path: paths.absOutput,
-    filename: `${paths.output}/[name].bundle.js`,
+    filename: `${paths.output}/[name].min.js`,
   },
   module: {
     rules: [

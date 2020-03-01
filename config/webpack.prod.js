@@ -70,7 +70,7 @@ module.exports = merge(common, {
       },
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].bundle.css',
+      filename: '[name].min.css',
     }),
   ],
 });
