@@ -13,6 +13,10 @@ class Paths {
     // auxiliary
     this.auxiliary = 'auxiliary';
 
+    // components
+    this.components = 'components';
+    this.absComponents = path.resolve(__dirname, `${this.absInput}/${this.components}`);
+
     // markup
     this.markup = 'markup';
     this.absMarkup = path.resolve(__dirname, `${this.absInput}/${this.auxiliary}/${this.markup}`);
