@@ -3,6 +3,7 @@
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
 
 @import './auxiliary/styles/basic';
+@import './plugin/o-slider.scss';
 
 /* ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   Additional Styles
@@ -11,74 +12,4 @@
 .slider-carrier {
   width: 400px;
   margin-bottom: 100px;
-}
-
-.o-slider {
-  --h: 0;
-  --s: 0%;
-  --l: 80%;
-
-  font-size: 15px;
-
-  min-width: 200px;
-  height: 10px;
-  background-color: HSL(var(--h), var(--s), var(--l));
-  box-sizing: border-box;
-
-  &__track {
-    height: 100%;
-    position: relative;
-  }
-
-  &__bar {
-    --l: 50%;
-    --barBg: HSL(var(--h), var(--s), var(--l));
-
-    height: 100%;
-    width: 0;
-    background-color: var(--barBg);
-  }
-
-  &__thumb {
-    --l: 50%;
-    --thumbBg: HSL(var(--h), var(--s), var(--l));
-
-    text-align: center;
-    width: 10px;
-    height: 25px;
-    background-color: var(--thumbBg);
-
-    position: absolute;
-    bottom: 50%;
-    left: 0;
-
-    transform: translateX(-50%) translateY(50%);
-    cursor: grab;
-
-    &_active, &:hover {
-      --l: 35%;
-    }
-  }
-
-  &__tip {
-    color: #fff;
-    background-color: var(--thumbBg);
-    vertical-align: bottom;
-    line-height: 1;
-
-    display: inline-block;
-    width: auto;
-    padding: .35em .5em;
-
-    position: absolute;
-    bottom: 35px;
-
-    transform: translateX(-50%);
-    user-select: none;
-    cursor: grab;
-  }
-}
-
-.o-slider_grabbed * {
-  cursor: grabbing;
 }
