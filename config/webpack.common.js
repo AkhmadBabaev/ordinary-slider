@@ -6,6 +6,7 @@ module.exports = {
   context: paths.absInput,
   entry: {
     index: [`./${paths.input}/index`, `./${paths.input}/index.scss`],
+    'o-slider': [`./${paths.input}/plugin/o-slider`, `./${paths.input}/plugin/o-slider.scss`],
   },
   output: {
     path: paths.absOutput,
