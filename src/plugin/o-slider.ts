@@ -51,7 +51,3 @@ declare global {
     return $first;
   };
 }($));
-
-window.addEventListener('load', () => {
-  $('.slider-carrier').oSlider();
-});
