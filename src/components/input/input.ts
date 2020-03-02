@@ -3,6 +3,28 @@ class Input {
 
   constructor(element: HTMLElement) {
     this.element = element;
+    this.getAttribute = this.getAttribute.bind(this);
+    this.setAttribute = this.setAttribute.bind(this);
+    this.init();
+  }
+
+  protected init(): void {
+    !this.element.classList.contains('input') && this.element.classList.add('input');
+  }
+
+  public getAttribute(name: string): string {
+    return this.element.getAttribute(name) as string;
+  }
+
+  public setAttribute(name: string, value: string | number | boolean): void {
+    // set the same value as attribute and DOM property
+    // it isn't a mistake
+    this.element.setAttribute(name, value as string);
+    (this.element as { [k: string]: any })[name] = value;
+  }
+
+  public getElement(): HTMLElement {
+    return this.element;
   }
 }
 
