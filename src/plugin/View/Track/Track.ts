@@ -95,11 +95,15 @@ class Track extends Simple<TrackOptions> {
     const isInit = !isDefined(todo);
     const isUpdate = todo === 'update';
 
+    const isWidthUpdated = isDefined(storage.min)
+      || isDefined(storage.max)
+      || isDefined(storage.value);
+
     const { min, max, value } = this.options;
     const width = convertValueUnitToPercent({ min, max, value });
 
     isDefined(storage.bar) && (props.isEnabled = storage.bar as boolean);
-    isDefined(storage.value) && (props.width = width);
+    isWidthUpdated && (props.width = width);
 
     isInit
       && (props.parent = this.element)

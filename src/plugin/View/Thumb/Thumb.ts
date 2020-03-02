@@ -31,9 +31,11 @@ class Thumb extends Simple<ThumbOptions> {
     super.update(options);
 
     const hasValue: boolean = isDefined(options.value);
+    const hasRatio: boolean = isDefined(options.ratio);
     const hasTip: boolean = isDefined(options.tip);
 
-    hasValue && this.setPosition();
+    const isPositionUpdated = hasValue || hasRatio;
+    isPositionUpdated && this.setPosition();
 
     const isTipUpdated = hasValue || hasTip;
     isTipUpdated && this.handleTip(options, 'update');
