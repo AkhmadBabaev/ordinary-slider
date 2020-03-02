@@ -31,7 +31,7 @@ class View extends Observable {
 
   private init(): void {
     this.root.innerHTML = '';
-    this.root.classList.add('o-slider');
+    !this.root.classList.contains('o-slider') && this.root.classList.add('o-slider');
     this.root.addEventListener('positionChanged', this.handlePositionChanged as EventListener);
 
     setAttributesAsData(this.root, this.options);
