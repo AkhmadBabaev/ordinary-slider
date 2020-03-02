@@ -1,0 +1,14 @@
+mixin slider({ additionalClasses, mods, options = {} } = {})
+  -
+    const className = 'o-slider';
+    const classes = generateClassList({ className, mods, additionalClasses })
+
+  div(
+    class= classes
+    data-min= options.min
+    data-max= options.max
+    data-step= options.step
+    data-value= options.value
+    data-tip= options.tip
+    data-bar= options.bar
+  )
