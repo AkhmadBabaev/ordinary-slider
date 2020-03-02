@@ -1,0 +1,39 @@
+.checkbox {
+  --checkbox-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 0%));
+
+  &__input { display: none; }
+
+  &__input:checked + &__label &__toggler:before {
+    margin-left: auto;
+  }
+
+  &__label {
+    color: var(--checkbox-color);
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  &__title {
+    margin-right: .5em;
+    cursor: pointer;
+  }
+
+  &__toggler {
+    background-color: var(--checkbox-color);
+    height: 1.8em;
+    width: 4em;
+    border: .1em solid var(--checkbox-color);
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &:before {
+      content: '';
+      background-color: #fff;
+      display: block;
+      width: 50%;
+      height: 100%;
+    }
+  }
+}
