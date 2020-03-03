@@ -17,8 +17,13 @@ describe('Input', () => {
     expect(input.getAttribute('class')).toBe('input');
   });
 
-  test('setAttribute should set specified attribute', () => {
+  test('setAttribute should set specified attribute', async () => {
     input.setAttribute('type', 'number');
+
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
+
     expect(input.getAttribute('type')).toBe('number');
   });
 });

@@ -19,8 +19,10 @@ class Input {
   public setAttribute(name: string, value: string | number | boolean): void {
     // set the same value as attribute and DOM property
     // it isn't a mistake
-    this.element.setAttribute(name, value as string);
-    (this.element as { [k: string]: any })[name] = value;
+    requestAnimationFrame(() => {
+      this.element.setAttribute(name, value as string);
+      (this.element as { [k: string]: any })[name] = value;
+    });
   }
 
   public getElement(): HTMLElement {
