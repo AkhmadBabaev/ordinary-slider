@@ -46,3 +46,5 @@ rules:
     - error
     - allow:
       - warn
+
+  no-new: off
