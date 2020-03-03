@@ -1,13 +1,13 @@
 .o-slider {
-  --h: 0;
-  --s: 0%;
-  --l: 80%;
+  --slider-color-light: HSL(var(--h, 0), var(--s, 0%), calc(var(--l, 50%) + 25%));
+  --slider-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 50%));
+  --slider-color-dark: HSL(var(--h, 0), var(--s, 0%), calc(var(--l, 50%) - 10%));
 
   font-size: 15px;
 
   min-width: 200px;
   height: 10px;
-  background-color: HSL(var(--h), var(--s), var(--l));
+  background-color: var(--slider-color-light);
   box-sizing: border-box;
 
   &__track {
@@ -16,22 +16,16 @@
   }
 
   &__bar {
-    --l: 50%;
-    --barBg: HSL(var(--h), var(--s), var(--l));
-
     height: 100%;
     width: 0;
-    background-color: var(--barBg);
+    background-color: var(--slider-color);
   }
 
   &__thumb {
-    --l: 50%;
-    --thumbBg: HSL(var(--h), var(--s), var(--l));
-
     text-align: center;
     width: 10px;
     height: 25px;
-    background-color: var(--thumbBg);
+    background-color: var(--slider-color);
 
     position: absolute;
     bottom: 50%;
@@ -41,13 +35,13 @@
     cursor: grab;
 
     &_active, &:hover {
-      --l: 35%;
+      --slider-color: var(--slider-color-dark);
     }
   }
 
   &__tip {
     color: #fff;
-    background-color: var(--thumbBg);
+    background-color: var(--slider-color);
     vertical-align: bottom;
     line-height: 1;
 
