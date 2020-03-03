@@ -10,12 +10,14 @@
 
 @import './components/checkbox/checkbox';
 @import './components/num-field/num-field';
+@import './components/panel/panel';
 
 /* ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   Additional Styles
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
 
-.slider-carrier {
-  width: 400px;
-  margin-bottom: 100px;
+.page {
+  &__panel {
+    & + & { margin-top: 100px; }
+  }
 }
