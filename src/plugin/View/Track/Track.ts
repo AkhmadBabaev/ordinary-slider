@@ -74,13 +74,15 @@ class Track extends Simple<TrackOptions> {
     const isInit = !isDefined(todo);
     const isUpdate = todo === 'update';
 
-    const isBoundariesUpdated = isDefined(storage.min) || isDefined(storage.max);
-    isBoundariesUpdated && (props.ratio = this.options.ratio);
+    const isRatioUpdated = isDefined(storage.ratio)
+      || isDefined(storage.min)
+      || isDefined(storage.max);
 
     isDefined(storage.value) && (props.value = storage.value as number);
     isDefined(storage.min) && (props.min = storage.min as number);
     isDefined(storage.max) && (props.max = storage.max as number);
     isDefined(storage.tip) && (props.tip = storage.tip as boolean);
+    isRatioUpdated && (props.ratio = storage.ratio as number);
 
     isInit
       && (props.parent = this.element)
