@@ -37,16 +37,16 @@ class Track extends Simple<TrackOptions> {
   public update(options: Partial<TrackOptions>): void {
     super.update(options);
 
-    const hasValue: boolean = isDefined(options.value);
-    const hasMin: boolean = isDefined(options.min);
-    const hasMax: boolean = isDefined(options.max);
-    const hasTip: boolean = isDefined(options.tip);
-    const hasBar: boolean = isDefined(options.bar);
+    const hasValue = isDefined(options.value);
+    const hasMin = isDefined(options.min);
+    const hasMax = isDefined(options.max);
+    const hasTip = isDefined(options.tip);
+    const hasBar = isDefined(options.bar);
 
-    const isBoundariesUpdated: boolean = hasMin || hasMax;
+    const isBoundariesUpdated = hasMin || hasMax;
     isBoundariesUpdated && this.setRatio();
 
-    const isThumbUpdated: boolean = isBoundariesUpdated || hasValue || hasTip;
+    const isThumbUpdated = isBoundariesUpdated || hasValue || hasTip;
     isThumbUpdated && this.handleThumb(options, 'update');
 
     const isBarUpdated = isBoundariesUpdated || hasValue || hasBar;

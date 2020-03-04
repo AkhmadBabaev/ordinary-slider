@@ -30,9 +30,9 @@ class Thumb extends Simple<ThumbOptions> {
   public update(options: Partial<ThumbOptions>): void {
     super.update(options);
 
-    const hasValue: boolean = isDefined(options.value);
-    const hasRatio: boolean = isDefined(options.ratio);
-    const hasTip: boolean = isDefined(options.tip);
+    const hasValue = isDefined(options.value);
+    const hasRatio = isDefined(options.ratio);
+    const hasTip = isDefined(options.tip);
 
     const isPositionUpdated = hasValue || hasRatio;
     isPositionUpdated && this.setPosition();
@@ -55,7 +55,7 @@ class Thumb extends Simple<ThumbOptions> {
     const target = mouseDownEvent.target as HTMLElement;
     const { offsetX, which } = mouseDownEvent;
 
-    const isLeftClick: boolean = which === 1;
+    const isLeftClick = which === 1;
     if (!isLeftClick) return;
 
     currentTarget.classList.add('o-slider__thumb_active');
@@ -63,13 +63,13 @@ class Thumb extends Simple<ThumbOptions> {
 
     const { min, ratio, parent } = this.options;
 
-    const width: number = target.clientWidth;
-    const shiftX: number = offsetX - (width / 2);
-    const parentX: number = parent.getBoundingClientRect().x;
+    const width = target.clientWidth;
+    const shiftX = offsetX - (width / 2);
+    const parentX = parent.getBoundingClientRect().x;
 
     let handleMouseMove = ({ clientX }: MouseEvent): void => {
-      const position: number = clientX - parentX - shiftX;
-      const value: number = position / ratio + min;
+      const position = clientX - parentX - shiftX;
+      const value = position / ratio + min;
 
       this.element.dispatchEvent(new CustomEvent('positionChanged', {
         bubbles: true,

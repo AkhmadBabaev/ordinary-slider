@@ -47,13 +47,13 @@ class View extends Observable {
     setAttributesAsData(this.root, options);
     this.attributesObserver.subscribe();
 
-    const hasValue: boolean = isDefined(options.value);
-    const hasMin: boolean = isDefined(options.min);
-    const hasMax: boolean = isDefined(options.max);
-    const hasTip: boolean = isDefined(options.tip);
-    const hasBar: boolean = isDefined(options.bar);
+    const hasValue = isDefined(options.value);
+    const hasMin = isDefined(options.min);
+    const hasMax = isDefined(options.max);
+    const hasTip = isDefined(options.tip);
+    const hasBar = isDefined(options.bar);
 
-    const isTrackUpdated: boolean = hasMin || hasMax || hasValue || hasTip || hasBar;
+    const isTrackUpdated = hasMin || hasMax || hasValue || hasTip || hasBar;
     isTrackUpdated && this.handleTrack(options, 'update');
   }
 

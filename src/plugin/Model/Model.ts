@@ -86,16 +86,16 @@ class Model extends Observable {
 
     if (min >= max) min = max - step;
 
-    const isGreaterThanValue: boolean = min > value;
-    const gap: number = max - min;
+    const isGreaterThanValue = min > value;
+    const gap = max - min;
 
     this.changedProps.min = softRounding(min);
 
     // update related properties
-    const hasStep: boolean = isDefined(this.changedProps.step);
+    const hasStep = isDefined(this.changedProps.step);
     if (!hasStep && step > gap) this.handleStep();
 
-    const hasValue: boolean = isDefined(this.changedProps.value);
+    const hasValue = isDefined(this.changedProps.value);
     if (!hasValue && isGreaterThanValue) this.handleValue();
   }
 
@@ -109,16 +109,16 @@ class Model extends Observable {
 
     if (max <= min) max = min + step;
 
-    const isLessThanValue: boolean = max < value;
-    const gap: number = max - min;
+    const isLessThanValue = max < value;
+    const gap = max - min;
 
     this.changedProps.max = softRounding(max);
 
     // update related properties
-    const hasStep: boolean = isDefined(this.changedProps.step);
+    const hasStep = isDefined(this.changedProps.step);
     if (!hasStep && step > gap) this.handleStep();
 
-    const hasValue: boolean = isDefined(this.changedProps.value);
+    const hasValue = isDefined(this.changedProps.value);
     if (!hasValue && isLessThanValue) this.handleValue();
   }
 
@@ -132,13 +132,13 @@ class Model extends Observable {
 
     if (step <= 0) step = 0.5;
 
-    const gap: number = max - min;
+    const gap = max - min;
     if (step > gap) step = gap;
 
     this.changedProps.step = softRounding(step);
 
     // update related properties
-    const hasValue: boolean = isDefined(this.changedProps.value);
+    const hasValue = isDefined(this.changedProps.value);
     if (!hasValue) this.handleValue();
   }
 
@@ -150,12 +150,12 @@ class Model extends Observable {
 
     const { min, max, step } = currentState;
 
-    const remainder: number = (value - min) % step;
+    const remainder = (value - min) % step;
 
     if (remainder !== 0) {
-      const halfStep: number = step / 2;
-      const belowValue: number = value - remainder;
-      const aboveValue: number = belowValue + step;
+      const halfStep = step / 2;
+      const belowValue = value - remainder;
+      const aboveValue = belowValue + step;
 
       value = (halfStep > remainder) ? belowValue : aboveValue;
     }

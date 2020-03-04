@@ -15,10 +15,10 @@ class Tip extends Toggler<TipOptions> {
   public update(options: Partial<TipOptions>): void {
     super.update(options);
 
-    const hasIsEnabled: boolean = isDefined(options.isEnabled);
+    const hasIsEnabled = isDefined(options.isEnabled);
     hasIsEnabled && this.toggle();
 
-    const hasText: boolean = isDefined(options.text);
+    const hasText = isDefined(options.text);
     hasText && this.options.isEnabled && this.setText();
   }
 

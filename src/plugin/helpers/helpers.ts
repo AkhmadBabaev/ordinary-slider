@@ -46,11 +46,11 @@ export function propertyFilter(
 
   properties.forEach((prop: string) => {
     let value: unknown = obj[prop];
-    let propName: string = prop;
+    let propName = prop;
 
     if (prop.includes(':')) {
-      const firstPart: string = prop.split(':')[0];
-      const secondPart: string = prop.split(':')[1];
+      const firstPart = prop.split(':')[0];
+      const secondPart = prop.split(':')[1];
 
       if (!firstPart.length) throw new SyntaxError('Invalid value');
       if (!secondPart.length) throw new SyntaxError('Invalid value');

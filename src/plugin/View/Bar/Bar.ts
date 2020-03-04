@@ -15,10 +15,10 @@ class Bar extends Toggler<BarOptions> {
   public update(options: Partial<BarOptions>): void {
     super.update(options);
 
-    const hasIsEnabled: boolean = isDefined(options.isEnabled);
+    const hasIsEnabled = isDefined(options.isEnabled);
     hasIsEnabled && this.toggle();
 
-    const hasWidth: boolean = isDefined(options.width);
+    const hasWidth = isDefined(options.width);
     hasWidth && this.options.isEnabled && this.setWidth();
   }
 
