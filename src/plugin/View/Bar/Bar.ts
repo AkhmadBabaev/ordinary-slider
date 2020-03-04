@@ -16,14 +16,14 @@ class Bar extends Toggler<BarOptions> {
     super.update(options);
 
     const hasIsEnabled = isDefined(options.isEnabled);
-    hasIsEnabled && this.toggle();
-
     const hasWidth = isDefined(options.width);
-    hasWidth && this.options.isEnabled && this.setWidth();
+
+    hasIsEnabled && this.toggle();
+    hasWidth && this.setWidth();
   }
 
   private setWidth(): void {
-    requestAnimationFrame(() => {
+    this.options.isEnabled && requestAnimationFrame(() => {
       this.element.style.width = this.options.width;
     });
   }

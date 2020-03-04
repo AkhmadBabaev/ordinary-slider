@@ -35,8 +35,8 @@ class View extends Observable {
     this.root.addEventListener('positionChanged', this.handlePositionChanged as EventListener);
 
     setAttributesAsData(this.root, this.options);
-    this.attributesObserver = this.createAttributesObserver();
 
+    this.attributesObserver = this.createAttributesObserver();
     this.handleTrack();
   }
 
@@ -54,6 +54,7 @@ class View extends Observable {
     const hasBar = isDefined(options.bar);
 
     const isTrackUpdated = hasMin || hasMax || hasValue || hasTip || hasBar;
+
     isTrackUpdated && this.handleTrack(options, 'update');
   }
 
@@ -83,12 +84,10 @@ class View extends Observable {
     function callback(options: any): void {
       Object.keys(options).forEach((record) => {
         const { attributeName, oldValue } = options[record];
-
         const property = attributeName.split('-')[1];
         let value: string | boolean = root.getAttribute(attributeName) as string;
 
         isBooleanSpy(oldValue) && (value = value === 'true');
-
         notify({ [property]: value });
       });
     }

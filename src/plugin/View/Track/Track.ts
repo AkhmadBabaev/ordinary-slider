@@ -27,11 +27,10 @@ class Track extends Simple<TrackOptions> {
     this.options.parent.append(this.element);
 
     this.setRatio('init');
-
-    window.addEventListener('resize', this.handleWindowResize);
-
     this.handleThumb();
     this.handleBar();
+
+    window.addEventListener('resize', this.handleWindowResize);
   }
 
   public update(options: Partial<TrackOptions>): void {
@@ -44,12 +43,11 @@ class Track extends Simple<TrackOptions> {
     const hasBar = isDefined(options.bar);
 
     const isBoundariesUpdated = hasMin || hasMax;
-    isBoundariesUpdated && this.setRatio();
-
     const isThumbUpdated = isBoundariesUpdated || hasValue || hasTip;
-    isThumbUpdated && this.handleThumb(options, 'update');
-
     const isBarUpdated = isBoundariesUpdated || hasValue || hasBar;
+
+    isBoundariesUpdated && this.setRatio();
+    isThumbUpdated && this.handleThumb(options, 'update');
     isBarUpdated && this.handleBar(options, 'update');
   }
 
@@ -97,9 +95,9 @@ class Track extends Simple<TrackOptions> {
     const isInit = !isDefined(todo);
     const isUpdate = todo === 'update';
 
-    const isWidthUpdated = isDefined(storage.min)
-      || isDefined(storage.max)
-      || isDefined(storage.value);
+    const isWidthUpdated = isDefined(storage.value)
+      || isDefined(storage.min)
+      || isDefined(storage.max);
 
     const { min, max, value } = this.options;
     const width = convertValueUnitToPercent({ min, max, value });

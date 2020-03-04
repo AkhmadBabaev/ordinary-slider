@@ -19,12 +19,12 @@ class Thumb extends Simple<ThumbOptions> {
 
   protected init(): void {
     this.createElement('div', { class: 'o-slider__thumb' });
-    this.element.addEventListener('mousedown', this.handleMouseDown);
 
     this.handleTip();
     this.setPosition();
 
     this.options.parent.append(this.element);
+    this.element.addEventListener('mousedown', this.handleMouseDown);
   }
 
   public update(options: Partial<ThumbOptions>): void {
@@ -35,9 +35,9 @@ class Thumb extends Simple<ThumbOptions> {
     const hasTip = isDefined(options.tip);
 
     const isPositionUpdated = hasValue || hasRatio;
-    isPositionUpdated && this.setPosition();
-
     const isTipUpdated = hasValue || hasTip;
+
+    isPositionUpdated && this.setPosition();
     isTipUpdated && this.handleTip(options, 'update');
   }
 
@@ -45,9 +45,7 @@ class Thumb extends Simple<ThumbOptions> {
     const { value, min, max } = this.options;
     const left = convertValueUnitToPercent({ min, max, value });
 
-    requestAnimationFrame(() => {
-      this.element.style.left = left;
-    });
+    requestAnimationFrame(() => { this.element.style.left = left; });
   }
 
   private handleMouseDown(mouseDownEvent: MouseEvent): void {
@@ -55,8 +53,8 @@ class Thumb extends Simple<ThumbOptions> {
     const target = mouseDownEvent.target as HTMLElement;
     const { offsetX, which } = mouseDownEvent;
 
-    const isLeftClick = which === 1;
-    if (!isLeftClick) return;
+    // if it isn't left click
+    if (!(which === 1)) return;
 
     currentTarget.classList.add('o-slider__thumb_active');
     document.body.classList.add('o-slider-grabbed');

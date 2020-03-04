@@ -23,9 +23,7 @@ declare global {
 
 (function selfInvokingFunction($): void {
   // eslint-disable-next-line no-param-reassign
-  $.fn.oSlider = function addToJqueryPrototype(
-    options: Partial<State> = {},
-  ): JQuery<object> | JQuery<HTMLElement> {
+  $.fn.oSlider = function init(options: Partial<State> = {}): JQuery<object> | JQuery<HTMLElement> {
     if (!isObject(options)) {
       throw new TypeError('Ordinary slider configuration should be an object');
     }

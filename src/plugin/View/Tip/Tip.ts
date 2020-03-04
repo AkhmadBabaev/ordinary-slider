@@ -16,14 +16,14 @@ class Tip extends Toggler<TipOptions> {
     super.update(options);
 
     const hasIsEnabled = isDefined(options.isEnabled);
-    hasIsEnabled && this.toggle();
-
     const hasText = isDefined(options.text);
-    hasText && this.options.isEnabled && this.setText();
+
+    hasIsEnabled && this.toggle();
+    hasText && this.setText();
   }
 
   private setText(): void {
-    requestAnimationFrame(() => {
+    this.options.isEnabled && requestAnimationFrame(() => {
       this.element.textContent = this.options.text;
     });
   }
