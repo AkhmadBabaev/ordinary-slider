@@ -59,7 +59,7 @@ class Thumb extends Simple<ThumbOptions> {
     if (!isLeftClick) return;
 
     currentTarget.classList.add('o-slider__thumb_active');
-    document.body.classList.add('o-slider_grabbed');
+    document.body.classList.add('o-slider-grabbed');
 
     const { min, ratio, parent } = this.options;
 
@@ -81,7 +81,7 @@ class Thumb extends Simple<ThumbOptions> {
 
     const handleMouseUp = (): void => {
       currentTarget.classList.remove('o-slider__thumb_active');
-      document.body.classList.remove('o-slider_grabbed');
+      document.body.classList.remove('o-slider-grabbed');
 
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);

@@ -202,13 +202,13 @@ class Model extends Observable {
     const hasBoundaries = hasMin && hasMax;
     const gap = hasBoundaries && (max - min);
 
-    const isMinGreaterThanMax = min >= max;
+    const isMinLessThanMax = min < max;
     const isStepGreaterThanGap = step > gap;
-    const isStepLessThanZero = step <= 0;
+    const isStepGreaterThanZero = step > 0;
     const isValueGreaterThanMax = value > max;
     const isValueLessThanMin = value < min;
 
-    if (hasBoundaries && isMinGreaterThanMax) {
+    if (hasBoundaries && !isMinLessThanMax) {
       throw new Error('Min should be less than max');
     }
 
@@ -216,7 +216,7 @@ class Model extends Observable {
       throw new Error('Step shouldn\'t be greater than (max - min)');
     }
 
-    if (hasStep && isStepLessThanZero) {
+    if (hasStep && !isStepGreaterThanZero) {
       throw new Error('Step should be greater than 0');
     }
 
