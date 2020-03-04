@@ -11,7 +11,7 @@
   "bugs": "https://github.com/AkhmadBabaev/ordinary-slider/issues",
   "scripts": {
     "test": "jest",
-    "prod": "rimraf ./dist && cross-env NODE_ENV=production webpack --config ./config/webpack.prod.js --progress",
+    "prod": "rimraf ./docs && cross-env NODE_ENV=production webpack --config ./config/webpack.prod.js --progress",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./config/webpack.dev.js",
     "start": "cross-env NODE_ENV=development webpack-dev-server --open --config ./config/webpack.dev.js"
   },

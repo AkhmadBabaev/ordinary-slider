@@ -7,7 +7,7 @@ class Paths {
     this.absInput = path.resolve(__dirname, this.input);
 
     // output
-    this.output = '../dist';
+    this.output = '../docs';
     this.absOutput = path.resolve(__dirname, this.output);
 
     // auxiliary
