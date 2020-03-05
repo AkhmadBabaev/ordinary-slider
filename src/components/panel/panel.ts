@@ -28,11 +28,11 @@ class Panel {
   }
 
   public getOptions(): Options {
-    return { ...this.slider.getState() } as Options;
+    return { ...this.slider.getSettings() } as Options;
   }
 
   public setOptions(options: Options): void {
-    this.slider.setState(options);
+    this.slider.setSettings(options);
   }
 
   public subscribe(callback: Function): void {
@@ -92,32 +92,32 @@ class Panel {
 
   private handleValueChanges(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.slider.setState({ value: Number(target.value) });
+    this.slider.setSettings({ value: Number(target.value) });
   }
 
   private handleMinChanges(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.slider.setState({ min: Number(target.value) });
+    this.slider.setSettings({ min: Number(target.value) });
   }
 
   private handleMaxChanges(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.slider.setState({ max: Number(target.value) });
+    this.slider.setSettings({ max: Number(target.value) });
   }
 
   private handleStepChanges(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.slider.setState({ step: Number(target.value) });
+    this.slider.setSettings({ step: Number(target.value) });
   }
 
   private handleBarChanges(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.slider.setState({ bar: target.checked });
+    this.slider.setSettings({ bar: target.checked });
   }
 
   private handleTipChanges(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.slider.setState({ tip: target.checked });
+    this.slider.setSettings({ tip: target.checked });
   }
 
   private handleSliderChanges(options: Partial<State>): void {
@@ -152,7 +152,7 @@ class Panel {
     const slider = this.element.querySelector('.panel__slider') as HTMLElement;
 
     this.slider = $(slider).oSlider();
-    this.handleSliderChanges(this.slider.getState());
+    this.handleSliderChanges(this.slider.getSettings());
     this.slider.subscribe(this.handleSliderChanges);
   }
 

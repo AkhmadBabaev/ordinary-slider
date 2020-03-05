@@ -14,8 +14,8 @@ declare global {
   interface JQuery {
     oSlider: (options?: Partial<State>) => JQuery<object> | JQuery<HTMLElement>;
     reset: () => void;
-    getState: () => State;
-    setState: (options: Partial<State>) => void;
+    getSettings: () => State;
+    setSettings: (options: Partial<State>) => void;
     subscribe: (callback: Function) => void;
     unsubscribe: (callback: Function) => void;
   }
@@ -41,8 +41,8 @@ declare global {
     const presenter = new Presenter(model, view);
 
     $first.reset = presenter.reset;
-    $first.getState = presenter.getState;
-    $first.setState = presenter.setState;
+    $first.getSettings = presenter.getState;
+    $first.setSettings = presenter.setState;
     $first.subscribe = presenter.subscribe;
     $first.unsubscribe = presenter.unsubscribe;
 
