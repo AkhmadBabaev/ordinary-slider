@@ -1,3 +1,21 @@
+/config/
+/src/
+/storage/
+
+.babelrc
+.editorconfig
+.eslintrc.yml
+.lintstagedrc.js
+
+postcss.config.js
+tsconfig.json
+setup-jest.js
+
+DEVELOPERS-GUIDE.md
+
+
+# FROM .gitignore
+
 # Project
 /coverage/
 

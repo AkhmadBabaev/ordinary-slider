@@ -1,0 +1,13 @@
+block fakeBlock
+
+-
+  /**
+  * Binds additional classes with component classes.
+  *
+  * @param {string} componentClasses - current component classes.
+  * @param {string} additionalClasses - classes to add to the component.
+  * @return {string} String containing current classes and additional classes.
+  */
+  function bindAdditionalClasses({ componentClasses, additionalClasses }) {
+    return `${componentClasses} ${additionalClasses}`;
+  }

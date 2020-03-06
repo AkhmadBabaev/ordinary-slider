@@ -7,11 +7,15 @@ class Paths {
     this.absInput = path.resolve(__dirname, this.input);
 
     // output
-    this.output = '../dist';
+    this.output = '../docs';
     this.absOutput = path.resolve(__dirname, this.output);
 
     // auxiliary
     this.auxiliary = 'auxiliary';
+
+    // components
+    this.components = 'components';
+    this.absComponents = path.resolve(__dirname, `${this.absInput}/${this.components}`);
 
     // markup
     this.markup = 'markup';

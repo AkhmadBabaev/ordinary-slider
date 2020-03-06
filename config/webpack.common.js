@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const paths = require('./paths');
@@ -7,10 +6,11 @@ module.exports = {
   context: paths.absInput,
   entry: {
     index: [`./${paths.input}/index`, `./${paths.input}/index.scss`],
+    'o-slider': [`./${paths.input}/plugin/o-slider`, `./${paths.input}/plugin/o-slider.scss`],
   },
   output: {
     path: paths.absOutput,
-    filename: `${paths.output}/[name].bundle.js`,
+    filename: `${paths.output}/[name].min.js`,
   },
   module: {
     rules: [
@@ -27,7 +27,7 @@ module.exports = {
       {
         test: /\.pug$/,
         loader: 'pug-loader',
-        options: { pretty: true },
+        options: { root: paths.absComponents, pretty: true },
       },
 
       // Favicons
@@ -44,11 +44,6 @@ module.exports = {
     extensions: ['.ts', '.js'],
   },
   plugins: [
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery',
-    }),
     new HtmlWebpackPlugin({
       template: `${paths.input}/index.pug`,
       filename: `${paths.output}/index.html`,

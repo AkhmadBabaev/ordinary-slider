@@ -1,4 +1,5 @@
 extends ./auxiliary/markup/layout
 
 block append content
-  .slider-carrier
+  +panel({ additionalClasses: 'page__panel', styles: '--l: 45%' })
+  +panel({ additionalClasses: 'page__panel', styles: '--l: 45%; --s: 25%' })

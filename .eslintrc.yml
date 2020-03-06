@@ -33,7 +33,7 @@ settings:
       config: "./config/webpack.common.js"
 
 ignorePatterns:
-  - "/dist"
+  - "/docs"
 
 rules:
   no-unused-expressions: off
@@ -46,3 +46,5 @@ rules:
     - error
     - allow:
       - warn
+
+  no-new: off
