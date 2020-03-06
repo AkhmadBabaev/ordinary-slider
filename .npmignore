@@ -1,0 +1,44 @@
+/config/
+/src/
+/storage/
+
+.babelrc
+.editorconfig
+.eslintrc.yml
+.lintstagedrc.js
+
+postcss.config.js
+tsconfig.json
+setup-jest.js
+
+DEVELOPERS-GUIDE.md
+
+
+# FROM .gitignore
+
+# Project
+/coverage/
+
+# Node
+lib-cov
+*.seed
+*.log
+*.dat
+*.out
+*.pid
+*.gz
+pids
+logs
+
+## Results
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+/node_modules/
+
+## System Files
+.DS_Store
+Thumbs.db
+
+# Sass
+.sass-cache/
