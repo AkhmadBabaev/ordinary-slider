@@ -64,14 +64,17 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn test"
     }
   },
   "jest": {
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
-    "setupFiles": ["./setup-jest.js"]
+    "setupFiles": [
+      "./setup-jest.js"
+    ]
   },
   "browserslist": {
     "production": [
