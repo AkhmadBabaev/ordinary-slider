@@ -1,5 +1,5 @@
 # Project
-/dist/
+/coverage/
 
 # Node
 lib-cov

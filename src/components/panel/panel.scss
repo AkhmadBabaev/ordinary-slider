@@ -1,0 +1,34 @@
+.panel {
+  &__slider {
+    max-width: 500px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 75px;
+  }
+
+  &__raw {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    & + & {
+      margin-top: 50px;
+    }
+  }
+
+  &__field {
+    width: 150px;
+    margin: .5em;
+  }
+
+  &__checkbox {
+    width: 80%;
+    margin: 1em;
+    text-align: center;
+
+    @media screen and (min-width: 700px) {
+      width: auto;
+    }
+  }
+}

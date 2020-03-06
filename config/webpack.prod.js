@@ -12,7 +12,7 @@ module.exports = merge(common, {
 
       {
         enforce: 'pre',
-        test: /\.js$/,
+        test: /\.(ts|js)$/,
         exclude: /node_modules/,
         loader: 'eslint-loader',
         options: { failOnError: true },
@@ -70,7 +70,7 @@ module.exports = merge(common, {
       },
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].bundle.css',
+      filename: '[name].min.css',
     }),
   ],
 });

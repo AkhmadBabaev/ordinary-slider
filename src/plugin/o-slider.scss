@@ -1,0 +1,63 @@
+.o-slider {
+  --slider-color-light: HSL(var(--h, 0), var(--s, 0%), calc(var(--l, 50%) + 25%));
+  --slider-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 50%));
+  --slider-color-dark: HSL(var(--h, 0), var(--s, 0%), calc(var(--l, 50%) - 10%));
+
+  font-size: 15px;
+
+  min-width: 200px;
+  height: 10px;
+  background-color: var(--slider-color-light);
+  box-sizing: border-box;
+
+  &__track {
+    height: 100%;
+    position: relative;
+  }
+
+  &__bar {
+    height: 100%;
+    width: 0;
+    background-color: var(--slider-color);
+  }
+
+  &__thumb {
+    text-align: center;
+    width: 10px;
+    height: 25px;
+    background-color: var(--slider-color);
+
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+
+    transform: translateX(-50%) translateY(50%);
+    cursor: grab;
+
+    &_active, &:hover {
+      --slider-color: var(--slider-color-dark);
+    }
+  }
+
+  &__tip {
+    color: #fff;
+    background-color: var(--slider-color);
+    vertical-align: bottom;
+    line-height: 1;
+
+    display: inline-block;
+    width: auto;
+    padding: .35em .5em;
+
+    position: absolute;
+    bottom: 35px;
+
+    transform: translateX(-50%);
+    user-select: none;
+    cursor: grab;
+  }
+}
+
+.o-slider-grabbed * {
+  cursor: grabbing;
+}

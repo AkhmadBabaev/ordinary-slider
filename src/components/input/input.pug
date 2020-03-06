@@ -1,0 +1,16 @@
+mixin input({ additionalClasses, mods, id, value, name, type, step, min, max, checked } = {})
+  -
+    const className = 'input';
+    const classes = generateClassList({ className, mods, additionalClasses })
+
+  input(
+    class= classes
+    id= id
+    type= type
+    name= name
+    value= value
+    step= step
+    min= min
+    max= max
+    checked= checked
+  )

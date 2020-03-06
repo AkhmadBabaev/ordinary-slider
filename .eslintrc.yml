@@ -1,8 +1,28 @@
-extends: "airbnb-base"
+extends:
+  - "airbnb-base"
+
+overrides:
+  -
+    files:
+      - "*.ts"
+
+    extends:
+      - "plugin:@typescript-eslint/recommended"
+
+    rules:
+      "@typescript-eslint/no-explicit-any": off
+      "@typescript-eslint/ban-ts-ignore": off
+
+parser: "@typescript-eslint/parser"
+
+plugins:
+  - "@typescript-eslint"
 
 env:
   browser: true
   node: true
+  jquery: true
+  jest: true
 
 globals:
   document: false
@@ -13,9 +33,18 @@ settings:
       config: "./config/webpack.common.js"
 
 ignorePatterns:
-  - "/dist"
+  - "/docs"
 
 rules:
+  no-unused-expressions: off
+
   import/no-extraneous-dependencies:
     - error
     - devDependencies: true
+
+  no-console:
+    - error
+    - allow:
+      - warn
+
+  no-new: off
