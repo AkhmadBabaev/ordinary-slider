@@ -3,15 +3,27 @@ mixin panel({ additionalClasses, mods, styles, options = {} } = {})
     const className = 'panel';
     const classes = generateClassList({ className, mods, additionalClasses })
 
+    const fieldsData = [
+      { title: 'min' },
+      { title: 'max' },
+      { title: 'step' },
+      { title: 'value' },
+    ];
+
+    const checkboxesData = [
+      { title: 'bar' },
+      { title: 'tip' },
+    ];
+
   div(class= classes style= styles)
     +slider({ additionalClasses: `${className}__slider`, options })
 
     div(class= `${className}__raw`)
-      +num-field({ additionalClasses: `${className}__field`, title: 'min', name: 'min' })
-      +num-field({ additionalClasses: `${className}__field`, title: 'max', name: 'max' })
-      +num-field({ additionalClasses: `${className}__field`, title: 'step', name: 'step' })
-      +num-field({ additionalClasses: `${className}__field`, title: 'value', name: 'value' })
+      each field in fieldsData
+        +num-field({
+          additionalClasses: `${className}__field`, title: field.title, name: field.title })
 
     div(class= `${className}__raw`)
-      +checkbox({ additionalClasses: `${className}__checkbox`, title: 'bar', name: 'bar' })
-      +checkbox({ additionalClasses: `${className}__checkbox`, title: 'tip', name: 'tip' })
+      each checkbox in checkboxesData
+        +checkbox({
+          additionalClasses: `${className}__checkbox`, title: checkbox.title, name: checkbox.title })
