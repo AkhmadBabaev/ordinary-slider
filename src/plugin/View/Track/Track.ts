@@ -80,7 +80,7 @@ class Track extends Simple<TrackOptions> {
     isDefined(storage.min) && (props.min = storage.min as number);
     isDefined(storage.max) && (props.max = storage.max as number);
     isDefined(storage.tip) && (props.tip = storage.tip as boolean);
-    isRatioUpdated && (props.ratio = storage.ratio as number);
+    isRatioUpdated && (props.ratio = this.options.ratio as number);
 
     isInit
       && (props.parent = this.element)
