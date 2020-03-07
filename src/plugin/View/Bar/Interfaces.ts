@@ -3,3 +3,5 @@ export interface BarOptions {
   isEnabled: boolean;
   width: string;
 }
+
+export type PBarOptions = Partial<BarOptions>;

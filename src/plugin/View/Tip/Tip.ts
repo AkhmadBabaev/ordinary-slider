@@ -1,6 +1,6 @@
 import Toggler from '../Templates/Toggler/Toggler';
 
-import { TipOptions } from './Interfaces';
+import { TipOptions, PTipOptions } from './Interfaces';
 
 import { isDefined } from '../../helpers/helpers';
 
@@ -12,7 +12,7 @@ class Tip extends Toggler<TipOptions> {
     this.options.parent.append(this.element);
   }
 
-  public update(options: Partial<TipOptions>): void {
+  public update(options: PTipOptions): void {
     super.update(options);
 
     const hasIsEnabled = isDefined(options.isEnabled);

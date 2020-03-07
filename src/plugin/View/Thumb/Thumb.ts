@@ -1,8 +1,8 @@
 import Simple from '../Templates/Simple/Simple';
 import Tip from '../Tip/Tip';
 
-import { ThumbOptions } from './Interfaces';
-import { TipOptions } from '../Tip/Interfaces';
+import { ThumbOptions, PThumbOptions } from './Interfaces';
+import { TipOptions, PTipOptions } from '../Tip/Interfaces';
 
 import {
   isDefined, convertValueUnitToPercent, throttle,
@@ -20,14 +20,14 @@ class Thumb extends Simple<ThumbOptions> {
   protected init(): void {
     this.createElement('div', { class: 'o-slider__thumb' });
 
-    this.handleTip();
+    this.tip = this.handleTip({ ...this.options }) as Tip;
     this.setPosition();
 
     this.options.parent.append(this.element);
     this.element.addEventListener('mousedown', this.handleMouseDown);
   }
 
-  public update(options: Partial<ThumbOptions>): void {
+  public update(options: PThumbOptions): void {
     super.update(options);
 
     const hasValue = isDefined(options.value);
@@ -38,7 +38,7 @@ class Thumb extends Simple<ThumbOptions> {
     const isTipUpdated = hasValue || hasTip;
 
     isPositionUpdated && this.setPosition();
-    isTipUpdated && this.handleTip(options, 'update');
+    isTipUpdated && this.tip.update(this.handleTip(options, 'update') as PTipOptions);
   }
 
   private setPosition(): void {
@@ -91,20 +91,20 @@ class Thumb extends Simple<ThumbOptions> {
     mouseDownEvent.preventDefault();
   }
 
-  private handleTip(options?: {}, todo?: string): void {
-    const storage = (options || this.options) as { [k: string]: unknown };
-    const props: Partial<TipOptions> = {};
-    const isInit = !isDefined(todo);
+  private handleTip(
+    options: { [k: string]: unknown },
+    todo: 'init' | 'update' = 'init',
+  ): Tip | PTipOptions {
+    const props: PTipOptions = {};
     const isUpdate = todo === 'update';
 
-    isDefined(storage.tip) && (props.isEnabled = storage.tip as boolean);
-    isDefined(storage.value) && (props.text = storage.value as string);
+    isDefined(options.tip) && (props.isEnabled = options.tip as boolean);
+    isDefined(options.value) && (props.text = options.value as string);
 
-    isInit
-      && (props.parent = this.element)
-      && (this.tip = new Tip(props as TipOptions));
+    if (isUpdate) return props;
 
-    isUpdate && this.tip.update(props);
+    props.parent = this.element;
+    return new Tip(props as TipOptions);
   }
 }
 

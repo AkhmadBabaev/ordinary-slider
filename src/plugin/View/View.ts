@@ -1,7 +1,7 @@
 import Observable from '../Observable/Observable';
 import Track from './Track/Track';
 
-import { TrackOptions } from './Track/Interfaces';
+import { TrackOptions, PTrackOptions } from './Track/Interfaces';
 import { State } from '../Model/Interfaces';
 
 import {
@@ -37,7 +37,7 @@ class View extends Observable {
     setAttributesAsData(this.root, this.options);
 
     this.attributesObserver = this.createAttributesObserver();
-    this.handleTrack();
+    this.track = this.handleTrack({ ...this.options }) as Track;
   }
 
   public applyState(options: Partial<State>): void {
@@ -55,7 +55,7 @@ class View extends Observable {
 
     const isTrackUpdated = hasMin || hasMax || hasValue || hasTip || hasBar;
 
-    isTrackUpdated && this.handleTrack(options, 'update');
+    isTrackUpdated && this.track.update(this.handleTrack(options, 'update') as PTrackOptions);
   }
 
   private handlePositionChanged(event: CustomEvent): void {
@@ -63,19 +63,19 @@ class View extends Observable {
     this.notify({ value });
   }
 
-  private handleTrack(options?: {}, todo?: string): void {
-    const storage = (options || this.options) as { [k: string]: unknown };
-    const isInit = !isDefined(todo);
+  private handleTrack(
+    options: { [k: string]: unknown },
+    todo: 'init' | 'update' = 'init',
+  ): Track | PTrackOptions {
     const isUpdate = todo === 'update';
 
     const propsList: string[] = ['min', 'max', 'value', 'tip', 'bar'];
-    const props: Partial<TrackOptions> = propertyFilter(storage, propsList);
+    const props: PTrackOptions = propertyFilter(options, propsList);
 
-    isInit
-      && (props.parent = this.root)
-      && (this.track = new Track(props as TrackOptions));
+    if (isUpdate) return props;
 
-    isUpdate && this.track.update(props);
+    props.parent = this.root;
+    return new Track(props as TrackOptions);
   }
 
   protected createAttributesObserver(): { [k: string]: Function } {

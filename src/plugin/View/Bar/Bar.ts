@@ -1,6 +1,6 @@
 import Toggler from '../Templates/Toggler/Toggler';
 
-import { BarOptions } from './Interfaces';
+import { BarOptions, PBarOptions } from './Interfaces';
 
 import { isDefined } from '../../helpers/helpers';
 
@@ -12,7 +12,7 @@ class Bar extends Toggler<BarOptions> {
     this.options.parent.prepend(this.element);
   }
 
-  public update(options: Partial<BarOptions>): void {
+  public update(options: PBarOptions): void {
     super.update(options);
 
     const hasIsEnabled = isDefined(options.isEnabled);

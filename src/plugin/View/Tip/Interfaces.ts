@@ -3,3 +3,5 @@ export interface TipOptions {
   isEnabled: boolean;
   text: string;
 }
+
+export type PTipOptions = Partial<TipOptions>;

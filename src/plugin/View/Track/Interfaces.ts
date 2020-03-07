@@ -8,3 +8,5 @@ export interface TrackOptions {
   tip: boolean;
   bar: boolean;
 }
+
+export type PTrackOptions = Partial<TrackOptions>;
