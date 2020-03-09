@@ -1,6 +1,6 @@
 import Model from './Model';
 
-import { State } from './Interfaces';
+import { State, PState } from './Interfaces';
 import defaultState from './defaultState';
 
 const testeeState: State = {
@@ -53,13 +53,13 @@ describe('Model', () => {
 
     test('shouldn\'t send repeated values', () => {
       class Fake {
-        something: Partial<State>;
+        something: PState;
 
         constructor() {
           this.doSomething = this.doSomething.bind(this);
         }
 
-        doSomething(value: Partial<State>): void {
+        doSomething(value: PState): void {
           this.something = value;
         }
       }

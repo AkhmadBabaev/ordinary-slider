@@ -1,4 +1,4 @@
-import { Model, State } from '../Model/Interfaces';
+import { Model, State, PState } from '../Model/Interfaces';
 import { View } from '../View/Interfaces';
 
 class Presenter {
@@ -27,7 +27,7 @@ class Presenter {
     this.model.unsubscribe(callback);
   }
 
-  public setState(options: Partial<State>): void {
+  public setState(options: PState): void {
     this.model.setState(options);
   }
 

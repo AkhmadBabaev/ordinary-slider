@@ -8,6 +8,7 @@ import { BarOptions, PBarOptions } from '../Bar/Interfaces';
 
 import {
   isDefined, convertValueUnitToPercent, debounce,
+  propertyFilter,
 } from '../../helpers/helpers';
 
 class Track extends Simple<TrackOptions> {
@@ -70,17 +71,14 @@ class Track extends Simple<TrackOptions> {
     options: { [k: string]: unknown },
     todo: 'init' | 'update' = 'init',
   ): Thumb | PThumbOptions {
-    const props: PThumbOptions = {};
     const isUpdate = todo === 'update';
 
-    const isRatioUpdated = isDefined(options.ratio)
-      || isDefined(options.min)
-      || isDefined(options.max);
+    const isBoundariesUpdated = isDefined(options.min) || isDefined(options.max);
+    const isRatioUpdated = isBoundariesUpdated || isDefined(options.ratio);
 
-    isDefined(options.value) && (props.value = options.value as number);
-    isDefined(options.min) && (props.min = options.min as number);
-    isDefined(options.max) && (props.max = options.max as number);
-    isDefined(options.tip) && (props.tip = options.tip as boolean);
+    const propsList: string[] = ['min', 'max', 'value', 'tip'];
+    const props: PThumbOptions = propertyFilter(options, propsList);
+
     isRatioUpdated && (props.ratio = this.options.ratio as number);
 
     if (isUpdate) return props;

@@ -1,6 +1,6 @@
 import Input from '../input/input';
 
-import { State } from '../../plugin/Model/Interfaces';
+import { PState } from '../../plugin/Model/Interfaces';
 
 type Options = { [k: string]: unknown };
 
@@ -120,7 +120,7 @@ class Panel {
     this.slider.setSettings({ tip: target.checked });
   }
 
-  private handleSliderChanges(options: Partial<State>): void {
+  private handleSliderChanges(options: PState): void {
     const { fields } = this;
 
     Object.keys(options).forEach((key) => {

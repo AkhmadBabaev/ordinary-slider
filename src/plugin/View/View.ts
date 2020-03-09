@@ -2,7 +2,7 @@ import Observable from '../Observable/Observable';
 import Track from './Track/Track';
 
 import { TrackOptions, PTrackOptions } from './Track/Interfaces';
-import { State } from '../Model/Interfaces';
+import { State, PState } from '../Model/Interfaces';
 
 import {
   isDefined, isBooleanSpy,
@@ -40,7 +40,7 @@ class View extends Observable {
     this.track = this.handleTrack({ ...this.options }) as Track;
   }
 
-  public applyState(options: Partial<State>): void {
+  public applyState(options: PState): void {
     this.options = { ...this.options, ...options };
 
     this.attributesObserver.unsubscribe();

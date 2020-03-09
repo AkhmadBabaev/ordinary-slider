@@ -1,7 +1,7 @@
 import Observable from '../Observable/Observable';
 import defaultState from './defaultState';
 
-import { State } from './Interfaces';
+import { State, PState } from './Interfaces';
 
 import {
   isObject, isBoolean, isNumber,
@@ -11,16 +11,16 @@ import {
 class Model extends Observable {
   private state: State = defaultState;
 
-  private changedProps: Partial<State>;
+  private changedProps: PState;
 
-  constructor(options: Partial<State> = {}) {
+  constructor(options: PState = {}) {
     super();
 
     this.setState = this.setState.bind(this);
     Object.keys(options).length && this.setState(options, false);
   }
 
-  public setState(properties: Partial<State>, notify = true): void {
+  public setState(properties: PState, notify = true): void {
     // no arguments
     if (!arguments.length) throw new Error('setState has not arguments');
 
