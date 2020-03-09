@@ -69,9 +69,9 @@ class Thumb extends Simple<ThumbOptions> {
       const position = clientX - parentX - shiftX;
       const value = position / ratio + min;
 
-      this.element.dispatchEvent(new CustomEvent('positionChanged', {
-        bubbles: true,
+      this.element.dispatchEvent(new CustomEvent('thumbmove', {
         detail: { value },
+        bubbles: true,
       }));
     };
 

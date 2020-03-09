@@ -25,14 +25,14 @@ class View extends Observable {
     this.options = options;
     this.applyState = this.applyState.bind(this);
 
-    this.handlePositionChanged = this.handlePositionChanged.bind(this);
+    this.handleThumbMove = this.handleThumbMove.bind(this);
     this.init();
   }
 
   private init(): void {
     this.root.innerHTML = '';
     !this.root.classList.contains('o-slider') && this.root.classList.add('o-slider');
-    this.root.addEventListener('positionChanged', this.handlePositionChanged as EventListener);
+    this.root.addEventListener('thumbmove', this.handleThumbMove as EventListener);
 
     setAttributesAsData(this.root, this.options);
 
@@ -58,7 +58,7 @@ class View extends Observable {
     isTrackUpdated && this.track.update(this.handleTrack(options, 'update') as PTrackOptions);
   }
 
-  private handlePositionChanged(event: CustomEvent): void {
+  private handleThumbMove(event: CustomEvent): void {
     const { value } = event.detail;
     this.notify({ value });
   }
