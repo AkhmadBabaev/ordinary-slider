@@ -1,4 +1,3 @@
-const HtmlBeautifyPlugin = require('html-beautify-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const merge = require('webpack-merge');
@@ -59,18 +58,6 @@ module.exports = merge(common, {
     builtAt: true,
   },
   plugins: [
-    new HtmlBeautifyPlugin({
-      config: {
-        html: {
-          indent_size: 2,
-          indent_with_tabs: false,
-          end_with_newline: true,
-          unformatted: ['p', 'i', 'b', 'span'],
-        },
-      },
-    }),
-    new MiniCssExtractPlugin({
-      filename: '[name].min.css',
-    }),
+    new MiniCssExtractPlugin({ filename: '[name].min.css' }),
   ],
 });
