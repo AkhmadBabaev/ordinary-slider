@@ -44,13 +44,6 @@ describe('Model', () => {
       expect(() => model.setState({ fake: 'property' })).toThrowError();
     });
 
-    test('throws error if called with multitude options that contradict each other', () => {
-      expect(() => model.setState({ min: 10, max: 5 })).toThrowError();
-      expect(() => model.setState({ min: 10, value: 5 })).toThrowError();
-      expect(() => model.setState({ value: 10, max: 5 })).toThrowError();
-      expect(() => model.setState({ min: 5, max: 10, step: 15 })).toThrowError();
-    });
-
     test('shouldn\'t send repeated values', () => {
       class Fake {
         something: PState;
@@ -84,26 +77,14 @@ describe('Model', () => {
   describe('State options', () => {
     afterEach(() => { model.setState(testeeState); });
 
-    describe('Min', () => {
-      test('shouldn\'t be greater than max', () => {
-        model.setState({ min: 101 });
-        expect(model.getState().min).toBe(99);
-      });
-
-      test('shouldn\'t be Infinity', () => {
-        expect(() => model.setState({ min: Infinity })).toThrowError();
-      });
+    test('Min shouldn\'t be greater than max', () => {
+      model.setState({ min: 101 });
+      expect(model.getState().min).toBe(99);
     });
 
-    describe('Max', () => {
-      test('shouldn\'t be less than min', () => {
-        model.setState({ max: -1 });
-        expect(model.getState().max).toBe(1);
-      });
-
-      test('shouldn\'t be Infinity', () => {
-        expect(() => model.setState({ max: Infinity })).toThrowError();
-      });
+    test('Max shouldn\'t be less than min', () => {
+      model.setState({ max: -1 });
+      expect(model.getState().max).toBe(1);
     });
 
     describe('Step', () => {
@@ -118,10 +99,6 @@ describe('Model', () => {
       test('shouldn\'t be greater than (max - min)', () => {
         model.setState({ step: 101 });
         expect(model.getState().step).toBe(100);
-      });
-
-      test('shouldn\'t be Infinity', () => {
-        expect(() => model.setState({ step: Infinity })).toThrowError();
       });
     });
 
@@ -144,10 +121,6 @@ describe('Model', () => {
 
         model.setState({ value: 2 });
         expect(model.getState().value).toBe(0);
-      });
-
-      test('shouldn\'t be Infinity', () => {
-        expect(() => model.setState({ value: Infinity })).toThrowError();
       });
     });
 

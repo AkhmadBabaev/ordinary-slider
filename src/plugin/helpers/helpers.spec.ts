@@ -1,7 +1,7 @@
 import {
   isNumber, propertyFilter, hasChild,
   throttle, debounce, convertValueUnitToPercent,
-  setAttributesAsData, isBooleanSpy,
+  setAttributesAsData, isBooleanSpy, objectReflection,
 } from './helpers';
 
 describe('isNumber', () => {
@@ -173,4 +173,11 @@ test('isBooleanSpy should check is value a boolean that looks like a string', ()
   expect(isBooleanSpy('false')).toBeTruthy();
   expect(isBooleanSpy('true')).toBeTruthy();
   expect(isBooleanSpy('hello')).toBeFalsy();
+});
+
+test('objectReflection make props order of object B like A', () => {
+  const a = { day: 'sunny', weather: 'warm', birds: true };
+  const b = { weather: 'cold', day: 'windy' };
+  const result = { day: 'windy', weather: 'cold' };
+  expect(objectReflection(a, b)).toEqual(result);
 });

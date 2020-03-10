@@ -122,3 +122,13 @@ export function setAttributesAsData(elem: HTMLElement, attrs: { [k: string]: any
 export function testHasInstance(elem: unknown, instance: unknown): void {
   expect(elem).toBeInstanceOf(instance);
 }
+
+export function objectReflection(a: object, b: object): object {
+  const result = { ...a, ...b };
+
+  Object.keys(a).forEach((key) => {
+    !Object.prototype.hasOwnProperty.call(b, key) && delete result[key as keyof object];
+  });
+
+  return result;
+}

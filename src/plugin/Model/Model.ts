@@ -5,13 +5,15 @@ import { State, PState } from './Interfaces';
 
 import {
   isObject, isBoolean, isNumber,
-  isDefined, softRounding,
+  isDefined, softRounding, objectReflection,
 } from '../helpers/helpers';
 
 class Model extends Observable {
   private state: State = defaultState;
 
-  private changedProps: PState;
+  private temporaryState: State;
+
+  private changes: PState;
 
   constructor(options: PState = {}) {
     super();
@@ -34,203 +36,144 @@ class Model extends Observable {
     if (!isBoolean(notify)) throw new TypeError('The second setState argument is not a boolean');
 
     // notify about unnecessary arguments
-    if (arguments.length > 2) {
-      console.warn(`
-        setState should contain no more than 2 arguments, remove unnecessary arguments
-      `);
-    }
+    if (arguments.length > 2) console.warn('setState should contain no more than 2 arguments');
 
-    // temporary storage for changed properties
-    this.changedProps = {};
+    // storage of changed properties
+    this.changes = objectReflection(this.getState(), properties);
 
-    // validate properties
-    Object.keys(properties).forEach((prop) => {
-      this.validateProp(prop, properties[prop as keyof State]);
-    });
+    // check and correct types of changes properties
+    this.validateChanges();
 
-    // when received more than one property
-    if (Object.keys(properties).length > 1) this.validateMultitudeProps();
+    // Delete duplicated values from changes properties
+    this.deleteDuplicates();
 
-    // Delete duplicated values from changed props
-    Object.keys(this.changedProps).forEach((prop: string) => {
-      const value = this.changedProps[prop as keyof State];
-      if (this.isDuplicateValue(prop, value as number | boolean)) {
-        delete this.changedProps[prop as keyof State];
-      }
-    });
+    // temporary storage contained old state and current changes
+    this.temporaryState = { ...this.getState(), ...this.changes } as State;
 
-    // handle properties
-    Object.keys(this.changedProps).forEach((prop) => { this.handleProp(prop); });
+    // handle gotten properties
+    Object.keys(this.changes).forEach((key) => this.handleProperty(key));
 
-    // notify subscribers if changedProps has properties
-    Object.keys(this.changedProps).length && notify && this.notify(this.changedProps);
+    // notify subscribers about state changes
+    Object.keys(this.changes).length && notify && this.notify(this.changes);
 
-    // set state
-    this.state = { ...this.getState(), ...this.changedProps };
+    // set as state
+    this.state = this.temporaryState;
 
     // this is no longer necessary
-    delete this.changedProps;
+    delete this.temporaryState;
+    delete this.changes;
   }
 
   public getState(): State {
     return this.state;
   }
 
+  public reset(): void {
+    this.setState(defaultState);
+  }
+
   private handleMin(): void {
-    const currentState = { ...this.getState(), ...this.changedProps };
-
-    let { min } = currentState;
-    if (!Number.isFinite(min)) throw new Error('Min is Infinity');
-
-    const { max, step, value } = currentState;
-
-    if (min >= max) min = max - step;
-
+    let { min } = this.temporaryState;
+    const { max, step, value } = this.temporaryState;
     const isGreaterThanValue = min > value;
     const gap = max - min;
 
-    this.changedProps.min = softRounding(min);
+    min >= max && (min = max - 1);
+    min = softRounding(min);
+
+    this.changes.min = min;
+    this.temporaryState.min = min;
 
     // update related properties
-    const hasStep = isDefined(this.changedProps.step);
-    if (!hasStep && step > gap) this.handleStep();
+    const isStepUpdated = isDefined(this.changes.step);
+    !isStepUpdated && (step > gap) && this.handleStep();
 
-    const hasValue = isDefined(this.changedProps.value);
-    if (!hasValue && isGreaterThanValue) this.handleValue();
+    const isValueUpdated = isDefined(this.changes.value);
+    !isValueUpdated && isGreaterThanValue && this.handleValue();
   }
 
   private handleMax(): void {
-    const currentState = { ...this.getState(), ...this.changedProps };
-
-    let { max } = currentState;
-    if (!Number.isFinite(max)) throw new Error('Max is Infinity');
-
-    const { min, step, value } = currentState;
-
-    if (max <= min) max = min + step;
-
+    let { max } = this.temporaryState;
+    const { min, step, value } = this.temporaryState;
     const isLessThanValue = max < value;
     const gap = max - min;
 
-    this.changedProps.max = softRounding(max);
+    max <= min && (max = min + 1);
+    max = softRounding(max);
+
+    this.changes.max = max;
+    this.temporaryState.max = max;
 
     // update related properties
-    const hasStep = isDefined(this.changedProps.step);
-    if (!hasStep && step > gap) this.handleStep();
+    const isStepUpdated = isDefined(this.changes.step);
+    !isStepUpdated && (step > gap) && this.handleStep();
 
-    const hasValue = isDefined(this.changedProps.value);
-    if (!hasValue && isLessThanValue) this.handleValue();
+    const isValueUpdated = isDefined(this.changes.value);
+    !isValueUpdated && isLessThanValue && this.handleValue();
   }
 
   private handleStep(): void {
-    const currentState = { ...this.getState(), ...this.changedProps };
-
-    let { step } = currentState;
-    if (!Number.isFinite(step)) throw new Error('Step is Infinity');
-
-    const { min, max } = currentState;
-
-    if (step <= 0) step = 0.5;
-
+    let { step } = this.temporaryState;
+    const { min, max } = this.temporaryState;
     const gap = max - min;
-    if (step > gap) step = gap;
 
-    this.changedProps.step = softRounding(step);
+    step <= 0 && (step = 0.5);
+    step > gap && (step = gap);
+    step = softRounding(step);
 
-    // update related properties
-    const hasValue = isDefined(this.changedProps.value);
-    if (!hasValue) this.handleValue();
+    this.changes.step = step;
+    this.temporaryState.step = step;
+
+    // update related property
+    const isValueUpdated = isDefined(this.changes.value);
+    !isValueUpdated && this.handleValue();
   }
 
   private handleValue(): void {
-    const currentState = { ...this.getState(), ...this.changedProps };
-
-    let { value } = currentState;
-    if (!Number.isFinite(value)) throw new Error('Value is Infinity');
-
-    const { min, max, step } = currentState;
-
+    let { value } = this.temporaryState;
+    const { min, max, step } = this.temporaryState;
     const remainder = (value - min) % step;
 
     if (remainder !== 0) {
       const halfStep = step / 2;
-      const belowValue = value - remainder;
-      const aboveValue = belowValue + step;
-
-      value = (halfStep > remainder) ? belowValue : aboveValue;
+      value = (halfStep > remainder)
+        ? value - remainder // below point
+        : value - remainder + step; // above point
     }
 
-    if (value < min) value = min;
-    if (value > max) value = max;
+    value < min && (value = min);
+    value > max && (value = max);
+    value = softRounding(value);
 
-    this.changedProps.value = softRounding(value);
+    this.changes.value = value;
+    this.temporaryState.value = value;
   }
 
-  private validateProp(prop: string, value: unknown): void {
-    let option: boolean | number;
+  private validateChanges(): void {
+    Object.keys(this.changes).forEach((prop) => {
+      const value = this.changes[prop as keyof State];
 
-    switch (prop) {
-      case 'value':
-      case 'min':
-      case 'max':
-      case 'step':
-        if (!isNumber(value)) throw new TypeError(`${prop} is not number`);
-        option = Number(value); break;
+      switch (prop) {
+        case 'value':
+        case 'step':
+        case 'min':
+        case 'max':
+          if (!isNumber(value)) throw new TypeError(`${prop} is not number`);
+          if (!Number.isFinite(value as number)) throw new Error(`${prop} is Infinity`);
+          this.changes[prop] = Number(value);
+          break;
 
-      case 'tip':
-      case 'bar':
-        if (!isBoolean(value)) throw new TypeError(`${prop} is not a boolean`);
-        option = value as boolean; break;
+        case 'tip':
+        case 'bar':
+          if (!isBoolean(value)) throw new TypeError(`${prop} is not a boolean`); break;
 
-      default: throw new Error(`${prop} is non existed property`);
-    }
-
-    this.changedProps = { ...this.changedProps, [prop]: option };
+        default: throw new Error(`${prop} is non existed property`);
+      }
+    });
   }
 
-  private validateMultitudeProps(): void {
-    const hasMin = isDefined(this.changedProps.min);
-    const hasMax = isDefined(this.changedProps.max);
-    const hasStep = isDefined(this.changedProps.step);
-    const hasValue = isDefined(this.changedProps.value);
-
-    const min = this.changedProps.min as number;
-    const max = this.changedProps.max as number;
-    const step = this.changedProps.step as number;
-    const value = this.changedProps.value as number;
-
-    const hasBoundaries = hasMin && hasMax;
-    const gap = hasBoundaries && (max - min);
-
-    const isMinLessThanMax = min < max;
-    const isStepGreaterThanGap = step > gap;
-    const isStepGreaterThanZero = step > 0;
-    const isValueGreaterThanMax = value > max;
-    const isValueLessThanMin = value < min;
-
-    if (hasBoundaries && !isMinLessThanMax) {
-      throw new Error('Min should be less than max');
-    }
-
-    if (hasStep && hasBoundaries && isStepGreaterThanGap) {
-      throw new Error('Step shouldn\'t be greater than (max - min)');
-    }
-
-    if (hasStep && !isStepGreaterThanZero) {
-      throw new Error('Step should be greater than 0');
-    }
-
-    if (hasValue && hasMax && isValueGreaterThanMax) {
-      throw new Error('Value shouldn\'t be greater than max');
-    }
-
-    if (hasValue && hasMin && isValueLessThanMin) {
-      throw new Error('Value shouldn\'t be less than min');
-    }
-  }
-
-  private handleProp(prop: string): void {
-    switch (prop) {
+  private handleProperty(property: string): void {
+    switch (property) {
       case 'value': this.handleValue(); break;
       case 'min': this.handleMin(); break;
       case 'max': this.handleMax(); break;
@@ -239,12 +182,11 @@ class Model extends Observable {
     }
   }
 
-  private isDuplicateValue(prop: string, value: number | boolean): boolean {
-    return this.getState()[prop as keyof State] === value;
-  }
-
-  public reset(): void {
-    this.setState(defaultState);
+  private deleteDuplicates(): void {
+    Object.keys(this.changes).forEach((key) => {
+      const value = this.changes[key as keyof State];
+      this.getState()[key as keyof State] === value && delete this.changes[key as keyof State];
+    });
   }
 }
 
