@@ -17,15 +17,23 @@ class Bar extends Toggler<BarOptions> {
 
     const hasIsEnabled = isDefined(options.isEnabled);
     const hasWidth = isDefined(options.width);
+    const hasShift = isDefined(options.shift);
+    const hasRange = isDefined(options.range);
 
     hasIsEnabled && this.toggle();
-    hasWidth && this.setWidth();
+    hasRange && this.handleRange();
+    (hasWidth || hasShift) && this.setWidth();
   }
 
   private setWidth(): void {
     this.options.isEnabled && requestAnimationFrame(() => {
       this.element.style.width = this.options.width;
+      this.options.range && (this.element.style.left = this.options.shift as string);
     });
+  }
+
+  private handleRange(): void {
+    !this.options.range && (this.element.style.left = '');
   }
 }
 

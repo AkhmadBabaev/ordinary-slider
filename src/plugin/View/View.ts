@@ -48,19 +48,29 @@ class View extends Observable {
     this.attributesObserver.subscribe();
 
     const hasFrom = isDefined(options.from);
+    const hasTo = isDefined(options.to);
     const hasMin = isDefined(options.min);
     const hasMax = isDefined(options.max);
     const hasTip = isDefined(options.tip);
     const hasBar = isDefined(options.bar);
+    const hasRange = isDefined(options.range);
 
-    const isTrackUpdated = hasMin || hasMax || hasFrom || hasTip || hasBar;
+    const isBoundariesUpdated = hasMin || hasMax;
+    const isValuesUpdated = hasFrom || hasTo;
+    const isTrackUpdated = isBoundariesUpdated || isValuesUpdated || hasTip || hasBar || hasRange;
 
     isTrackUpdated && this.track.update(this.handleTrack(options, 'update') as PTrackOptions);
   }
 
   private handleThumbMove(event: CustomEvent): void {
-    const { value } = event.detail;
-    this.notify({ from: value });
+    const { value, key } = event.detail;
+
+    const data: { [k: string]: unknown } = {};
+
+    key === 'thumb:0' && (data.from = value);
+    key === 'thumb:1' && (data.to = value);
+
+    this.notify(data);
   }
 
   private handleTrack(
@@ -69,7 +79,7 @@ class View extends Observable {
   ): Track | PTrackOptions {
     const isUpdate = todo === 'update';
 
-    const propsList: string[] = ['min', 'max', 'from', 'tip', 'bar'];
+    const propsList: string[] = ['min', 'max', 'from', 'to', 'tip', 'bar', 'range'];
     const props: PTrackOptions = propertyFilter(options, propsList);
 
     if (isUpdate) return props;

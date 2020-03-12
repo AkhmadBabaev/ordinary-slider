@@ -6,6 +6,7 @@ export interface ThumbOptions {
   value: number;
   ratio: number;
   tip: boolean;
+  key?: string;
 }
 
 export type PThumbOptions = Partial<ThumbOptions>;

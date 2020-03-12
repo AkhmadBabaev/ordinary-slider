@@ -68,7 +68,7 @@ class Thumb extends Toggler<ThumbOptions> {
       const value = position / ratio + min;
 
       this.element.dispatchEvent(new CustomEvent('thumbmove', {
-        detail: { value },
+        detail: { value, key: this.options.key },
         bubbles: true,
       }));
     };
