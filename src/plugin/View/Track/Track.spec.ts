@@ -14,6 +14,7 @@ const options: TrackOptions = {
   ratio: 3,
   tip: true,
   bar: true,
+  range: false,
 };
 
 const track = new Track(options as TrackOptions);
@@ -34,5 +35,13 @@ describe('Track', () => {
   test('contains element bar', () => {
     const isFounded = !!track.getElement().querySelector('.o-slider__bar');
     expect(isFounded).toBe(true);
+  });
+
+  test('if range set as true should contain 2 thumbs', () => {
+    const thumbs = track.getElement().querySelectorAll('.o-slider__thumb');
+
+    thumbs.forEach((thumb) => {
+      expect(hasChild(track.getElement(), thumb as HTMLElement)).toBeTruthy();
+    });
   });
 });

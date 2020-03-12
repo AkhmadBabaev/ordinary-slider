@@ -8,6 +8,7 @@ import { hasChild, testHasInstance } from '../../helpers/helpers';
 const options: BarOptions = {
   parent: document.body,
   isEnabled: true,
+  range: false,
   width: '5%',
 };
 
@@ -21,7 +22,7 @@ describe('Bar', () => {
     expect(hasChild(bar.getOptions().parent, bar.getElement())).toBe(true);
   });
 
-  test('handles width value', async () => {
+  test('handles value of property width', async () => {
     bar.update({ width: '10%' });
 
     await new Promise((resolve) => {
@@ -29,5 +30,23 @@ describe('Bar', () => {
     });
 
     expect(bar.getElement().style.width).toBe('10%');
+  });
+
+  test('shift should be handled if range set as true', async () => {
+    bar.update({ shift: '5%' });
+
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
+
+    expect(bar.getElement().style.left).toBeFalsy();
+
+    bar.update({ range: true, shift: '5%' });
+
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
+
+    expect(bar.getElement().style.left).toBe('5%');
   });
 });
