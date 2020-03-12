@@ -3,8 +3,10 @@ export interface State {
   max: number;
   step: number;
   from: number;
+  to?: number;
   tip: boolean;
   bar: boolean;
+  range: boolean;
 }
 
 export type PState = Partial<State>;

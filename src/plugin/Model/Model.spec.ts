@@ -10,6 +10,7 @@ const testeeState: State = {
   from: 0,
   tip: true,
   bar: true,
+  range: false,
 };
 
 const model = new Model(testeeState);
@@ -103,6 +104,8 @@ describe('Model', () => {
     });
 
     describe('From', () => {
+      afterEach(() => model.setState(testeeState));
+
       test('should be less than min', () => {
         model.setState({ from: -1 });
         expect(model.getState().from).toBe(0);
@@ -121,6 +124,48 @@ describe('Model', () => {
 
         model.setState({ from: 2 });
         expect(model.getState().from).toBe(0);
+      });
+
+      test('should be less than or equal to property To', () => {
+        model.setState({ from: 10, range: true });
+        model.setState({ to: 5 });
+        expect(model.getState().from).toBe(5);
+      });
+    });
+
+    describe('To', () => {
+      beforeEach(() => model.setState({ ...testeeState, range: true }));
+
+      test('should be less than min', () => {
+        model.setState({ to: -1 });
+        expect(model.getState().to).toBe(0);
+      });
+
+      test('should be greater than max', () => {
+        model.setState({ to: 101 });
+        expect(model.getState().to).toBe(100);
+      });
+
+      test('should adapt to step values', () => {
+        model.setState({ step: 10 });
+
+        model.setState({ to: 8 });
+        expect(model.getState().to).toBe(10);
+
+        model.setState({ to: 2 });
+        expect(model.getState().to).toBe(0);
+      });
+
+      test('should be greater than or equal to property from', () => {
+        model.setState({ to: 5 });
+        model.setState({ from: 10 });
+        expect(model.getState().to).toBe(10);
+      });
+
+      test('if range set as true and To is null or undefined, To should be equal to max', () => {
+        model.reset();
+        model.setState({ range: true });
+        expect(model.getState().to).toBe(100);
       });
     });
 
