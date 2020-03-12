@@ -1,4 +1,4 @@
-import Simple from '../Templates/Simple/Simple';
+import Toggler from '../Templates/Toggler/Toggler';
 import Tip from '../Tip/Tip';
 
 import { ThumbOptions, PThumbOptions } from './Interfaces';
@@ -8,14 +8,8 @@ import {
   isDefined, convertValueUnitToPercent, throttle,
 } from '../../helpers/helpers';
 
-class Thumb extends Simple<ThumbOptions> {
+class Thumb extends Toggler<ThumbOptions> {
   private tip: Tip;
-
-  constructor(options: ThumbOptions) {
-    super(options);
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.init();
-  }
 
   protected init(): void {
     this.createElement('div', { class: 'o-slider__thumb' });
@@ -24,12 +18,15 @@ class Thumb extends Simple<ThumbOptions> {
     this.setPosition();
 
     this.options.parent.append(this.element);
+
+    this.bindHandlers();
     this.element.addEventListener('mousedown', this.handleMouseDown);
   }
 
   public update(options: PThumbOptions): void {
     super.update(options);
 
+    const hasIsEnabled = isDefined(options.isEnabled);
     const hasValue = isDefined(options.value);
     const hasRatio = isDefined(options.ratio);
     const hasTip = isDefined(options.tip);
@@ -37,6 +34,7 @@ class Thumb extends Simple<ThumbOptions> {
     const isPositionUpdated = hasValue || hasRatio;
     const isTipUpdated = hasValue || hasTip;
 
+    hasIsEnabled && this.toggle();
     isPositionUpdated && this.setPosition();
     isTipUpdated && this.tip.update(this.handleTip(options, 'update') as PTipOptions);
   }
@@ -105,6 +103,10 @@ class Thumb extends Simple<ThumbOptions> {
 
     props.parent = this.element;
     return new Tip(props as TipOptions);
+  }
+
+  private bindHandlers(): void {
+    this.handleMouseDown = this.handleMouseDown.bind(this);
   }
 }
 

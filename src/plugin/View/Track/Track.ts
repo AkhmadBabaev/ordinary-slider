@@ -28,7 +28,7 @@ class Track extends Simple<TrackOptions> {
     this.options.parent.append(this.element);
 
     this.setRatio('init');
-    this.thumb = this.handleThumb({ ...this.options }) as Thumb;
+    this.thumb = this.handleThumb({ ...this.options, isEnabled: true }) as Thumb;
     this.bar = this.handleBar({ ...this.options }) as Bar;
 
     window.addEventListener('resize', this.handleWindowResize);
@@ -76,7 +76,7 @@ class Track extends Simple<TrackOptions> {
     const isBoundariesUpdated = isDefined(options.min) || isDefined(options.max);
     const isRatioUpdated = isBoundariesUpdated || isDefined(options.ratio);
 
-    const propsList: string[] = ['min', 'max', 'value', 'tip'];
+    const propsList: string[] = ['min', 'max', 'value', 'tip', 'isEnabled'];
     const props: PThumbOptions = propertyFilter(options, propsList);
 
     isRatioUpdated && (props.ratio = this.options.ratio as number);
