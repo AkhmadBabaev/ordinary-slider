@@ -47,20 +47,20 @@ class View extends Observable {
     setAttributesAsData(this.root, options);
     this.attributesObserver.subscribe();
 
-    const hasValue = isDefined(options.value);
+    const hasFrom = isDefined(options.from);
     const hasMin = isDefined(options.min);
     const hasMax = isDefined(options.max);
     const hasTip = isDefined(options.tip);
     const hasBar = isDefined(options.bar);
 
-    const isTrackUpdated = hasMin || hasMax || hasValue || hasTip || hasBar;
+    const isTrackUpdated = hasMin || hasMax || hasFrom || hasTip || hasBar;
 
     isTrackUpdated && this.track.update(this.handleTrack(options, 'update') as PTrackOptions);
   }
 
   private handleThumbMove(event: CustomEvent): void {
     const { value } = event.detail;
-    this.notify({ value });
+    this.notify({ from: value });
   }
 
   private handleTrack(
@@ -69,7 +69,7 @@ class View extends Observable {
   ): Track | PTrackOptions {
     const isUpdate = todo === 'update';
 
-    const propsList: string[] = ['min', 'max', 'value', 'tip', 'bar'];
+    const propsList: string[] = ['min', 'max', 'from', 'tip', 'bar'];
     const props: PTrackOptions = propertyFilter(options, propsList);
 
     if (isUpdate) return props;

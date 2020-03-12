@@ -7,7 +7,7 @@ import { ThumbOptions, PThumbOptions } from '../Thumb/Interfaces';
 import { BarOptions, PBarOptions } from '../Bar/Interfaces';
 
 import {
-  isDefined, convertValueUnitToPercent, debounce,
+  isDefined, convertSliderUnitToPercent, debounce,
   propertyFilter,
 } from '../../helpers/helpers';
 
@@ -37,15 +37,15 @@ class Track extends Simple<TrackOptions> {
   public update(options: PTrackOptions): void {
     super.update(options);
 
-    const hasValue = isDefined(options.value);
+    const hasFrom = isDefined(options.from);
     const hasMin = isDefined(options.min);
     const hasMax = isDefined(options.max);
     const hasTip = isDefined(options.tip);
     const hasBar = isDefined(options.bar);
 
     const isBoundariesUpdated = hasMin || hasMax;
-    const isThumbUpdated = isBoundariesUpdated || hasValue || hasTip;
-    const isBarUpdated = isBoundariesUpdated || hasValue || hasBar;
+    const isThumbUpdated = isBoundariesUpdated || hasFrom || hasTip;
+    const isBarUpdated = isBoundariesUpdated || hasFrom || hasBar;
 
     isBoundariesUpdated && this.setRatio();
     isThumbUpdated && this.thumb.update(this.handleThumb(options, 'update') as PThumbOptions);
@@ -76,7 +76,7 @@ class Track extends Simple<TrackOptions> {
     const isBoundariesUpdated = isDefined(options.min) || isDefined(options.max);
     const isRatioUpdated = isBoundariesUpdated || isDefined(options.ratio);
 
-    const propsList: string[] = ['min', 'max', 'value', 'tip', 'isEnabled'];
+    const propsList: string[] = ['min', 'max', 'from:value', 'tip', 'isEnabled'];
     const props: PThumbOptions = propertyFilter(options, propsList);
 
     isRatioUpdated && (props.ratio = this.options.ratio as number);
@@ -94,12 +94,12 @@ class Track extends Simple<TrackOptions> {
     const props: PBarOptions = {};
     const isUpdate = todo === 'update';
 
-    const isWidthUpdated = isDefined(options.value)
-      || isDefined(options.min)
-      || isDefined(options.max);
+    const isBoundariesUpdated = isDefined(options.min) || isDefined(options.max);
+    const isWidthUpdated = isBoundariesUpdated || isDefined(options.from);
 
-    const { min, max, value } = this.options;
-    const width = convertValueUnitToPercent({ min, max, value });
+
+    const { min, max, from } = this.options;
+    const width = convertSliderUnitToPercent({ min, max, value: from });
 
     isDefined(options.bar) && (props.isEnabled = options.bar as boolean);
     isWidthUpdated && (props.width = width);

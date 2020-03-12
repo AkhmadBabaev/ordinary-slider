@@ -69,18 +69,13 @@ class Model extends Observable {
   }
 
   public reset(): void {
-    Object.keys(this.state).forEach((key) => {
-      !Object.prototype.hasOwnProperty.call(defaultState, key)
-        && delete this.state[key as keyof State];
-    });
-
     this.setState(defaultState);
   }
 
   private handleMin(): void {
     let { min } = this.temporaryState;
-    const { max, step, value } = this.temporaryState;
-    const isGreaterThanValue = min > value;
+    const { max, step, from } = this.temporaryState;
+    const isGreaterThanFrom = min > from;
     const gap = max - min;
 
     min >= max && (min = max - 1);
@@ -93,14 +88,14 @@ class Model extends Observable {
     const isStepUpdated = isDefined(this.changes.step);
     !isStepUpdated && (step > gap) && this.handleStep();
 
-    const isValueUpdated = isDefined(this.changes.value);
-    !isValueUpdated && isGreaterThanValue && this.handleValue();
+    const isFromUpdated = isDefined(this.changes.from);
+    !isFromUpdated && isGreaterThanFrom && this.handleFrom();
   }
 
   private handleMax(): void {
     let { max } = this.temporaryState;
-    const { min, step, value } = this.temporaryState;
-    const isLessThanValue = max < value;
+    const { min, step, from } = this.temporaryState;
+    const isLessThanFrom = max < from;
     const gap = max - min;
 
     max <= min && (max = min + 1);
@@ -113,8 +108,8 @@ class Model extends Observable {
     const isStepUpdated = isDefined(this.changes.step);
     !isStepUpdated && (step > gap) && this.handleStep();
 
-    const isValueUpdated = isDefined(this.changes.value);
-    !isValueUpdated && isLessThanValue && this.handleValue();
+    const isFromUpdated = isDefined(this.changes.from);
+    !isFromUpdated && isLessThanFrom && this.handleFrom();
   }
 
   private handleStep(): void {
@@ -130,12 +125,12 @@ class Model extends Observable {
     this.temporaryState.step = step;
 
     // update related property
-    const isValueUpdated = isDefined(this.changes.value);
-    !isValueUpdated && this.handleValue();
+    const isFromUpdated = isDefined(this.changes.from);
+    !isFromUpdated && this.handleFrom();
   }
 
-  private handleValue(): void {
-    let { value } = this.temporaryState;
+  private handleFrom(): void {
+    let value = this.temporaryState.from;
     const { min, max, step } = this.temporaryState;
     const remainder = (value - min) % step;
 
@@ -150,8 +145,8 @@ class Model extends Observable {
     value > max && (value = max);
     value = softRounding(value);
 
-    this.changes.value = value;
-    this.temporaryState.value = value;
+    this.changes.from = value;
+    this.temporaryState.from = value;
   }
 
   private validateChanges(): void {
@@ -159,7 +154,7 @@ class Model extends Observable {
       const value = this.changes[prop as keyof State];
 
       switch (prop) {
-        case 'value':
+        case 'from':
         case 'step':
         case 'min':
         case 'max':
@@ -179,7 +174,7 @@ class Model extends Observable {
 
   private handleProperty(property: string): void {
     switch (property) {
-      case 'value': this.handleValue(); break;
+      case 'from': this.handleFrom(); break;
       case 'min': this.handleMin(); break;
       case 'max': this.handleMax(); break;
       case 'step': this.handleStep(); break;

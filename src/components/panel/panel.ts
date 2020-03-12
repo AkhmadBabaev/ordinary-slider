@@ -47,9 +47,9 @@ class Panel {
       const field = new Input(elem.querySelector('.input') as HTMLElement);
 
       switch (field.getAttribute('name')) {
-        case 'value':
-          this.fields.value = field;
-          field.getElement().addEventListener('change', this.handleValueChanges);
+        case 'from':
+          this.fields.from = field;
+          field.getElement().addEventListener('change', this.handleFromChanges);
           break;
 
         case 'min':
@@ -90,9 +90,9 @@ class Panel {
     });
   }
 
-  private handleValueChanges(event: Event): void {
+  private handleFromChanges(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.slider.setSettings({ value: Number(target.value) });
+    this.slider.setSettings({ from: Number(target.value) });
   }
 
   private handleMinChanges(event: Event): void {
@@ -127,7 +127,7 @@ class Panel {
       if (!Object.prototype.hasOwnProperty.call(fields, key)) return;
 
       switch (key) {
-        case 'value':
+        case 'from':
         case 'min':
         case 'max':
           fields[key].setAttribute('value', options[key] as number);
@@ -135,7 +135,7 @@ class Panel {
 
         case 'step':
           fields.step.setAttribute('value', options[key] as number);
-          fields.value.setAttribute('step', options[key] as number);
+          fields.from.setAttribute('step', options[key] as number);
           break;
 
         case 'bar':
@@ -162,7 +162,7 @@ class Panel {
 
   private bindHandlers(): void {
     this.handleSliderChanges = this.handleSliderChanges.bind(this);
-    this.handleValueChanges = this.handleValueChanges.bind(this);
+    this.handleFromChanges = this.handleFromChanges.bind(this);
     this.handleMinChanges = this.handleMinChanges.bind(this);
     this.handleMaxChanges = this.handleMaxChanges.bind(this);
     this.handleStepChanges = this.handleStepChanges.bind(this);

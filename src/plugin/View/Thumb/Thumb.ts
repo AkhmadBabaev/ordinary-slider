@@ -5,7 +5,7 @@ import { ThumbOptions, PThumbOptions } from './Interfaces';
 import { TipOptions, PTipOptions } from '../Tip/Interfaces';
 
 import {
-  isDefined, convertValueUnitToPercent, throttle,
+  isDefined, convertSliderUnitToPercent, throttle,
 } from '../../helpers/helpers';
 
 class Thumb extends Toggler<ThumbOptions> {
@@ -41,7 +41,7 @@ class Thumb extends Toggler<ThumbOptions> {
 
   private setPosition(): void {
     const { value, min, max } = this.options;
-    const left = convertValueUnitToPercent({ min, max, value });
+    const left = convertSliderUnitToPercent({ min, max, value });
 
     requestAnimationFrame(() => { this.element.style.left = left; });
   }

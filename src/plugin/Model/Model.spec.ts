@@ -7,7 +7,7 @@ const testeeState: State = {
   min: 0,
   max: 100,
   step: 1,
-  value: 0,
+  from: 0,
   tip: true,
   bar: true,
 };
@@ -63,14 +63,14 @@ describe('Model', () => {
 
       model.setState({
         min: 0, // the same
-        value: 10, // new
+        from: 10, // new
       });
 
-      expect(fake.something).toEqual({ value: 10 });
+      expect(fake.something).toEqual({ from: 10 });
 
       // clear changes
       model.unsubscribe(fake.doSomething);
-      model.setState({ value: testeeState.value });
+      model.setState({ from: testeeState.from });
     });
   });
 
@@ -102,25 +102,25 @@ describe('Model', () => {
       });
     });
 
-    describe('Value', () => {
+    describe('From', () => {
       test('should be less than min', () => {
-        model.setState({ value: -1 });
-        expect(model.getState().value).toBe(0);
+        model.setState({ from: -1 });
+        expect(model.getState().from).toBe(0);
       });
 
       test('should be greater than max', () => {
-        model.setState({ value: 101 });
-        expect(model.getState().value).toBe(100);
+        model.setState({ from: 101 });
+        expect(model.getState().from).toBe(100);
       });
 
       test('should adapt to step values', () => {
         model.setState({ step: 10 });
 
-        model.setState({ value: 8 });
-        expect(model.getState().value).toBe(10);
+        model.setState({ from: 8 });
+        expect(model.getState().from).toBe(10);
 
-        model.setState({ value: 2 });
-        expect(model.getState().value).toBe(0);
+        model.setState({ from: 2 });
+        expect(model.getState().from).toBe(0);
       });
     });
 

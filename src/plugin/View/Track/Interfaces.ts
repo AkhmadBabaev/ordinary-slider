@@ -2,7 +2,7 @@ export interface TrackOptions {
   parent: HTMLElement;
   min: number;
   max: number;
-  value: number;
+  from: number;
   ratio: number;
   trackWidth: number;
   tip: boolean;

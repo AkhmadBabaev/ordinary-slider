@@ -25,7 +25,7 @@ const options = {
   step: 1,
   bar: true,
   tip: true,
-  value: 10,
+  from: 10,
 };
 
 describe('Panel', () => {
