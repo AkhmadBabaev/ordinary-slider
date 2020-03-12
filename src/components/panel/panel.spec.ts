@@ -20,6 +20,7 @@ document.body.innerHTML = `
 const panel = new Panel(document.body.querySelector('.panel') as HTMLElement);
 
 const options = {
+  range: false,
   min: 0,
   max: 100,
   step: 1,
