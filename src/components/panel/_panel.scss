@@ -1,6 +1,6 @@
 .panel {
   &__slider {
-    max-width: 500px;
+    max-width: 25em;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -13,12 +13,12 @@
     justify-content: center;
 
     & + & {
-      margin-top: 50px;
+      margin-top: 3.125em;
     }
   }
 
   &__field {
-    width: 150px;
+    width: 9.4em;
     margin: .5em;
   }
 
@@ -27,7 +27,7 @@
     margin: 1em;
     text-align: center;
 
-    @media screen and (min-width: 700px) {
+    @media screen and (min-width: 43.8em) {
       width: auto;
     }
   }

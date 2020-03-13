@@ -24,6 +24,7 @@
   }
 
   &__input {
+    font-size: 0.812em;
     color: var(--field-color);
     width: 50%;
     height: 100%;
@@ -35,5 +36,10 @@
     flex-shrink: 1;
 
     box-sizing: border-box;
+
+    &::selection {
+      color: #fff;
+      background-color: var(--field-color);
+    }
   }
 }

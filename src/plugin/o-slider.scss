@@ -3,10 +3,8 @@
   --slider-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 50%));
   --slider-color-dark: HSL(var(--h, 0), var(--s, 0%), calc(var(--l, 50%) - 10%));
 
-  font-size: 15px;
-
-  min-width: 200px;
-  height: 10px;
+  min-width: 12.5em;
+  height: .62em;
   background-color: var(--slider-color-light);
   box-sizing: border-box;
 
@@ -24,8 +22,8 @@
 
   &__thumb {
     text-align: center;
-    width: 10px;
-    height: 25px;
+    width: .62em;
+    height: 1.6em;
     background-color: var(--slider-color);
 
     position: absolute;
@@ -42,6 +40,7 @@
   }
 
   &__tip {
+    font-size: .9em;
     color: #fff;
     background-color: var(--slider-color);
     vertical-align: bottom;
@@ -52,7 +51,7 @@
     padding: .35em .5em;
 
     position: absolute;
-    bottom: 35px;
+    bottom: 2.3em;
 
     transform: translateX(-50%);
     user-select: none;
