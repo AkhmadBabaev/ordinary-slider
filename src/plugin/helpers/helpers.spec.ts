@@ -1,6 +1,6 @@
 import {
   isNumber, propertyFilter, hasChild,
-  throttle, debounce, convertValueUnitToPercent,
+  throttle, debounce, convertSliderUnitToPercent,
   setAttributesAsData, isBooleanSpy, objectReflection,
 } from './helpers';
 
@@ -156,9 +156,9 @@ describe('hasChild', () => {
   });
 });
 
-test('convertValueUnitToPercent should convert value unit into percent', () => {
+test('convertSliderUnitToPercent should convert value unit into percent', () => {
   const [min, max, value] = [50, 100, 60];
-  expect(convertValueUnitToPercent({ min, max, value })).toBe('20%');
+  expect(convertSliderUnitToPercent({ min, max, value })).toBe('20%');
 });
 
 test('setDataAttributes should set attributes to element', () => {

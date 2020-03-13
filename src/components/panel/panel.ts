@@ -13,10 +13,12 @@ class Panel {
 
   constructor(elem: HTMLElement) {
     this.element = elem;
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSliderChanges = this.handleSliderChanges.bind(this);
     this.setOptions = this.setOptions.bind(this);
     this.getOptions = this.getOptions.bind(this);
     this.subscribe = this.subscribe.bind(this);
-    this.bindHandlers();
+
     this.init();
   }
 
@@ -40,49 +42,24 @@ class Panel {
   }
 
   private defineFields(): void {
-    const foundFields = this.element.querySelectorAll('.panel__field');
-    const foundCheckboxes = this.element.querySelectorAll('.panel__checkbox');
+    const foundFields = Array.from(this.element.querySelectorAll('.panel__field'));
+    const foundCheckboxes = Array.from(this.element.querySelectorAll('.panel__checkbox'));
 
-    foundFields.length && foundFields.forEach((elem) => {
-      const field = new Input(elem.querySelector('.input') as HTMLElement);
+    [...foundFields, ...foundCheckboxes].forEach((elem) => {
+      const field = new Input(elem.querySelector('.input') as HTMLInputElement);
+      const name = field.getAttribute('name');
 
-      switch (field.getAttribute('name')) {
-        case 'value':
-          this.fields.value = field;
-          field.getElement().addEventListener('change', this.handleValueChanges);
-          break;
-
+      switch (name) {
+        case 'from':
+        case 'to':
         case 'min':
-          this.fields.min = field;
-          field.getElement().addEventListener('change', this.handleMinChanges);
-          break;
-
         case 'max':
-          this.fields.max = field;
-          field.getElement().addEventListener('change', this.handleMaxChanges);
-          break;
-
         case 'step':
-          this.fields.step = field;
-          field.getElement().addEventListener('change', this.handleStepChanges);
-          break;
-
-        default: break;
-      }
-    });
-
-    foundCheckboxes.length && foundCheckboxes.forEach((elem) => {
-      const field = new Input(elem.querySelector('.input') as HTMLElement);
-
-      switch (field.getAttribute('name')) {
         case 'bar':
-          this.fields.bar = field;
-          field.getElement().addEventListener('change', this.handleBarChanges);
-          break;
-
         case 'tip':
-          this.fields.tip = field;
-          field.getElement().addEventListener('change', this.handleTipChanges);
+        case 'range':
+          this.fields[name] = field;
+          field.getElement().addEventListener('change', this.handleInputChange);
           break;
 
         default: break;
@@ -90,57 +67,50 @@ class Panel {
     });
   }
 
-  private handleValueChanges(event: Event): void {
+  private handleInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.slider.setSettings({ value: Number(target.value) });
-  }
+    const data = { [target.name]: target.type === 'checkbox' ? target.checked : Number(target.value) };
 
-  private handleMinChanges(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.slider.setSettings({ min: Number(target.value) });
-  }
-
-  private handleMaxChanges(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.slider.setSettings({ max: Number(target.value) });
-  }
-
-  private handleStepChanges(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.slider.setSettings({ step: Number(target.value) });
-  }
-
-  private handleBarChanges(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.slider.setSettings({ bar: target.checked });
-  }
-
-  private handleTipChanges(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.slider.setSettings({ tip: target.checked });
+    this.slider.setSettings(data);
   }
 
   private handleSliderChanges(options: PState): void {
     const { fields } = this;
+    const { range } = this.getOptions();
 
     Object.keys(options).forEach((key) => {
       if (!Object.prototype.hasOwnProperty.call(fields, key)) return;
 
       switch (key) {
-        case 'value':
+        case 'from':
+          fields[key].setAttribute('value', options[key] as number);
+          range && fields.to.setAttribute('min', options[key] as number);
+          break;
+
+        case 'to':
+          fields[key].setAttribute('value', options[key] as number);
+          fields.from.setAttribute('max', options[key] as number);
+          break;
+
         case 'min':
         case 'max':
           fields[key].setAttribute('value', options[key] as number);
           break;
 
         case 'step':
-          fields.step.setAttribute('value', options[key] as number);
-          fields.value.setAttribute('step', options[key] as number);
+          fields[key].setAttribute('value', options[key] as number);
+          fields.from.setAttribute('step', options[key] as number);
+          range && fields.to.setAttribute('step', options[key] as number);
           break;
 
         case 'bar':
         case 'tip':
           fields[key].setAttribute('checked', options[key] as boolean);
+          break;
+
+        case 'range':
+          fields[key].setAttribute('checked', options[key] as boolean);
+          options.range ? this.setFieldTo() : this.removeFieldTo();
           break;
 
         default: break;
@@ -160,14 +130,26 @@ class Panel {
     return this.element;
   }
 
-  private bindHandlers(): void {
-    this.handleSliderChanges = this.handleSliderChanges.bind(this);
-    this.handleValueChanges = this.handleValueChanges.bind(this);
-    this.handleMinChanges = this.handleMinChanges.bind(this);
-    this.handleMaxChanges = this.handleMaxChanges.bind(this);
-    this.handleStepChanges = this.handleStepChanges.bind(this);
-    this.handleBarChanges = this.handleBarChanges.bind(this);
-    this.handleTipChanges = this.handleTipChanges.bind(this);
+  private setFieldTo(): void {
+    const fromContainer = this.fields.from.getElement().closest('.panel__field');
+
+    const toContainer = fromContainer?.cloneNode(true) as HTMLElement;
+    const toTitle = toContainer.querySelector('.num-field__title') as HTMLElement;
+    toTitle.textContent = 'to';
+
+    this.fields.to = new Input(toContainer.querySelector('.input') as HTMLElement);
+    this.fields.to.setAttribute('name', 'to');
+    this.fields.to.getElement().addEventListener('change', this.handleInputChange);
+    fromContainer?.after(toContainer);
+
+    this.handleSliderChanges({ to: this.getOptions().to as number });
+  }
+
+  private removeFieldTo(): void {
+    const toContainer = this.fields.to?.getElement().closest('.panel__field');
+    toContainer?.remove();
+
+    delete this.fields.to;
   }
 }
 

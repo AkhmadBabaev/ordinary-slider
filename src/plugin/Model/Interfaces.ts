@@ -2,9 +2,11 @@ export interface State {
   min: number;
   max: number;
   step: number;
-  value: number;
+  from: number;
+  to?: number;
   tip: boolean;
   bar: boolean;
+  range: boolean;
 }
 
 export type PState = Partial<State>;

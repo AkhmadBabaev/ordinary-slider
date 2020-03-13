@@ -7,17 +7,18 @@ import { ThumbOptions, PThumbOptions } from '../Thumb/Interfaces';
 import { BarOptions, PBarOptions } from '../Bar/Interfaces';
 
 import {
-  isDefined, convertValueUnitToPercent, debounce,
+  isDefined, convertSliderUnitToPercent, debounce,
   propertyFilter,
 } from '../../helpers/helpers';
 
 class Track extends Simple<TrackOptions> {
-  private thumb: Thumb;
+  private thumbs: Thumb[] = [];
 
   private bar: Bar;
 
   constructor(options: TrackOptions) {
     super(options);
+    this.handleThumbMove = this.handleThumbMove.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
     this.handleWindowResize = debounce(this.handleWindowResize, 800);
     this.init();
@@ -28,28 +29,64 @@ class Track extends Simple<TrackOptions> {
     this.options.parent.append(this.element);
 
     this.setRatio('init');
-    this.thumb = this.handleThumb({ ...this.options }) as Thumb;
+    this.initThumbs();
     this.bar = this.handleBar({ ...this.options }) as Bar;
 
     window.addEventListener('resize', this.handleWindowResize);
+    this.element.addEventListener('thumbmove', this.handleThumbMove as EventListener);
   }
 
   public update(options: PTrackOptions): void {
     super.update(options);
 
-    const hasValue = isDefined(options.value);
+    const hasFrom = isDefined(options.from);
+    const hasTo = isDefined(options.to);
     const hasMin = isDefined(options.min);
     const hasMax = isDefined(options.max);
     const hasTip = isDefined(options.tip);
     const hasBar = isDefined(options.bar);
+    const hasRange = isDefined(options.range);
 
     const isBoundariesUpdated = hasMin || hasMax;
-    const isThumbUpdated = isBoundariesUpdated || hasValue || hasTip;
-    const isBarUpdated = isBoundariesUpdated || hasValue || hasBar;
+    const isValuesUpdated = hasFrom || hasTo;
+    const isThumbsUpdated = isBoundariesUpdated || isValuesUpdated || hasTip || hasRange;
+    const isBarUpdated = isBoundariesUpdated || isValuesUpdated || hasBar || hasRange;
 
     isBoundariesUpdated && this.setRatio();
-    isThumbUpdated && this.thumb.update(this.handleThumb(options, 'update') as PThumbOptions);
+    isThumbsUpdated && this.updateThumbs(options);
     isBarUpdated && this.bar.update(this.handleBar(options, 'update') as PBarOptions);
+  }
+
+  private initThumbs(): void {
+    const { options } = this;
+    const values = [options.from, options.to];
+
+    values.forEach((value, i) => {
+      const data = { ...options } as PThumbOptions;
+
+      data.value = value;
+      data.key = `thumb:${i}`;
+      data.isEnabled = (i === 0) ? true : options.range;
+
+      this.thumbs.push(this.handleThumb(data) as Thumb);
+    });
+  }
+
+  private updateThumbs(options: { [k: string]: unknown }): void {
+    const values = [options.from, options.to];
+    const { range } = this.options;
+
+    this.thumbs.forEach((thumb, i) => {
+      let data = { ...options };
+
+      isDefined(values[i]) ? (data.value = values[i]) : delete data.value;
+      if (!range && i > 0) data = {};
+
+      isDefined(options.range) && (i > 0) && (data.isEnabled = options.range);
+
+      if (!Object.keys(data).length) return;
+      thumb.update(this.handleThumb(data, 'update') as PThumbOptions);
+    });
   }
 
   private setRatio(todo?: string): void {
@@ -76,7 +113,7 @@ class Track extends Simple<TrackOptions> {
     const isBoundariesUpdated = isDefined(options.min) || isDefined(options.max);
     const isRatioUpdated = isBoundariesUpdated || isDefined(options.ratio);
 
-    const propsList: string[] = ['min', 'max', 'value', 'tip'];
+    const propsList: string[] = ['min', 'max', 'value', 'key', 'tip', 'isEnabled'];
     const props: PThumbOptions = propertyFilter(options, propsList);
 
     isRatioUpdated && (props.ratio = this.options.ratio as number);
@@ -93,21 +130,59 @@ class Track extends Simple<TrackOptions> {
   ): Bar | PBarOptions {
     const props: PBarOptions = {};
     const isUpdate = todo === 'update';
+    const {
+      min, max, from, to, range,
+    } = this.options;
 
-    const isWidthUpdated = isDefined(options.value)
-      || isDefined(options.min)
-      || isDefined(options.max);
+    const isBoundariesUpdated = isDefined(options.min) || isDefined(options.max);
+    const isValuesUpdated = isDefined(options.from) || isDefined(options.to);
+    const isWidthUpdated = isBoundariesUpdated || isValuesUpdated || isDefined(options.range);
 
-    const { min, max, value } = this.options;
-    const width = convertValueUnitToPercent({ min, max, value });
+    const width = range
+      ? `${(100 / (max - min)) * ((to as number) - from)}%`
+      : convertSliderUnitToPercent({ min, max, value: from });
 
     isDefined(options.bar) && (props.isEnabled = options.bar as boolean);
+    isDefined(options.range) && (props.range = options.range as boolean);
+
+    range && (props.shift = convertSliderUnitToPercent({ min, max, value: from }));
     isWidthUpdated && (props.width = width);
 
     if (isUpdate) return props;
 
     props.parent = this.element;
     return new Bar(props as BarOptions);
+  }
+
+  private handleThumbMove(event: CustomEvent): void {
+    if (!this.options.range) return;
+
+    const { value, key } = event.detail;
+    const { min, max } = this.options;
+    const values = this.thumbs.map((thumb) => thumb.getOptions().value);
+
+    const isFirstEqualToMin = values[0] === min;
+    const isSecondEqualToMax = values[1] === max;
+
+    const isFirstThumb = key === 'thumb:0';
+    const isSecondThumb = key === 'thumb:1';
+
+    const isGreaterThanSecondValue = value > values[1];
+    const isLessThanFirstValue = value < values[0];
+
+    const isFirstThumbBecomeSecond = isFirstThumb
+      && isGreaterThanSecondValue && !isSecondEqualToMax;
+
+    const isSecondThumbBecomeFirst = isSecondThumb
+      && isLessThanFirstValue && !isFirstEqualToMin;
+
+    this.element.lastElementChild !== event.target
+      && this.element.append(event.target as HTMLElement);
+
+    if (isFirstThumbBecomeSecond || isSecondThumbBecomeFirst) {
+      this.thumbs.reverse();
+      this.thumbs.forEach((thumb, i) => thumb.update({ key: `thumb:${i}` }));
+    }
   }
 }
 

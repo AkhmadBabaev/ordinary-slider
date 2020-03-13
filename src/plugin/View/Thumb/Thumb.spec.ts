@@ -1,5 +1,5 @@
 import Thumb from './Thumb';
-import Simple from '../Templates/Simple/Simple';
+import Toggler from '../Templates/Toggler/Toggler';
 
 import { ThumbOptions } from './Interfaces';
 
@@ -7,6 +7,7 @@ import { hasChild, testHasInstance } from '../../helpers/helpers';
 
 const options: ThumbOptions = {
   parent: document.body,
+  isEnabled: true,
   min: 0,
   max: 100,
   value: 0,
@@ -17,8 +18,8 @@ const options: ThumbOptions = {
 const thumb = new Thumb(options);
 
 describe('Thumb', () => {
-  test('is an instance of class Simple',
-    () => testHasInstance(thumb, Simple));
+  test('is an instance of class Toggler',
+    () => testHasInstance(thumb, Toggler));
 
   test('should be added to parent', () => {
     expect(hasChild(thumb.getOptions().parent, thumb.getElement())).toBe(true);

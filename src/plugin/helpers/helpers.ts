@@ -109,7 +109,7 @@ export function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
   return Object.keys(parent.children).some((x, i: number) => parent.children[i] === child);
 }
 
-export function convertValueUnitToPercent(
+export function convertSliderUnitToPercent(
   { min, max, value }: { [k: string]: number },
 ): string {
   return `${(100 / (max - min)) * (value - min)}%`;
