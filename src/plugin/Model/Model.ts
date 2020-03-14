@@ -98,8 +98,6 @@ class Model extends Observable {
 
     // update related properties
     const isStepUpdated = isDefined(this.changes.step);
-
-
     const isFromUpdated = isDefined(this.changes.from);
     const isToUpdated = isDefined(this.changes.from);
 
@@ -126,8 +124,6 @@ class Model extends Observable {
 
     // update related properties
     const isStepUpdated = isDefined(this.changes.step);
-
-
     const isFromUpdated = isDefined(this.changes.from);
     const isToUpdated = isDefined(this.changes.to);
 
@@ -215,6 +211,7 @@ class Model extends Observable {
         case 'tip':
         case 'bar':
         case 'range':
+        case 'vertical':
           if (!isBoolean(value)) throw new TypeError(`${prop} is not a boolean`); break;
 
         default: throw new Error(`${prop} is non existed property`);

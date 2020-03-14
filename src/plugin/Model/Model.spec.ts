@@ -11,6 +11,7 @@ const testeeState: State = {
   tip: true,
   bar: true,
   range: false,
+  vertical: false,
 };
 
 const model = new Model(testeeState);
