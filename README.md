@@ -105,6 +105,7 @@ $(selector).oSlider({
 | tip | boolean | true | добавить подсказку |
 | bar | boolean | true | добавить бар |
 | range | boolean | false | создать интервал |
+| vertical | boolean | false | сменить направление слайдера на вертикальное |
 
 ### Методы
 

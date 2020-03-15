@@ -58,6 +58,7 @@ class Panel {
         case 'bar':
         case 'tip':
         case 'range':
+        case 'vertical':
           this.fields[name] = field;
           field.getElement().addEventListener('change', this.handleInputChange);
           break;
@@ -105,12 +106,13 @@ class Panel {
 
         case 'bar':
         case 'tip':
+        case 'vertical':
           fields[key].setAttribute('checked', options[key] as boolean);
           break;
 
         case 'range':
-          fields[key].setAttribute('checked', options[key] as boolean);
           options.range ? this.setFieldTo() : this.removeFieldTo();
+          fields[key].setAttribute('checked', options[key] as boolean);
           break;
 
         default: break;
@@ -131,6 +133,7 @@ class Panel {
   }
 
   private setFieldTo(): void {
+    // Fixme: property to has ID the same as from ID
     const fromContainer = this.fields.from.getElement().closest('.panel__field');
 
     const toContainer = fromContainer?.cloneNode(true) as HTMLElement;
@@ -142,6 +145,7 @@ class Panel {
     this.fields.to.getElement().addEventListener('change', this.handleInputChange);
     fromContainer?.after(toContainer);
 
+    // Fixme: this line send property to as undefined and calls console warning
     this.handleSliderChanges({ to: this.getOptions().to as number });
   }
 

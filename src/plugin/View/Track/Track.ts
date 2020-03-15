@@ -46,12 +46,22 @@ class Track extends Simple<TrackOptions> {
     const hasTip = isDefined(options.tip);
     const hasBar = isDefined(options.bar);
     const hasRange = isDefined(options.range);
+    const hasVertical = isDefined(options.vertical);
 
     const isBoundariesUpdated = hasMin || hasMax;
     const isValuesUpdated = hasFrom || hasTo;
-    const isThumbsUpdated = isBoundariesUpdated || isValuesUpdated || hasTip || hasRange;
-    const isBarUpdated = isBoundariesUpdated || isValuesUpdated || hasBar || hasRange;
+    const isThumbsUpdated = isBoundariesUpdated
+      || isValuesUpdated
+      || hasTip
+      || hasRange
+      || hasVertical;
+    const isBarUpdated = isBoundariesUpdated
+      || isValuesUpdated
+      || hasBar
+      || hasRange
+      || hasVertical;
 
+    hasVertical && this.setRatio('init');
     isBoundariesUpdated && this.setRatio();
     isThumbsUpdated && this.updateThumbs(options);
     isBarUpdated && this.bar.update(this.handleBar(options, 'update') as PBarOptions);
@@ -74,14 +84,11 @@ class Track extends Simple<TrackOptions> {
 
   private updateThumbs(options: { [k: string]: unknown }): void {
     const values = [options.from, options.to];
-    const { range } = this.options;
 
     this.thumbs.forEach((thumb, i) => {
-      let data = { ...options };
+      const data = { ...options };
 
       isDefined(values[i]) ? (data.value = values[i]) : delete data.value;
-      if (!range && i > 0) data = {};
-
       isDefined(options.range) && (i > 0) && (data.isEnabled = options.range);
 
       if (!Object.keys(data).length) return;
@@ -90,15 +97,23 @@ class Track extends Simple<TrackOptions> {
   }
 
   private setRatio(todo?: string): void {
-    (todo === 'init') && (this.options.trackWidth = this.element.clientWidth);
+    if (todo === 'init') {
+      this.options.length = this.options.vertical
+        ? this.element.clientHeight
+        : this.element.clientWidth;
+    }
 
-    const { min, max, trackWidth } = this.options;
-    this.options.ratio = trackWidth / (max - min);
+    const { min, max, length } = this.options;
+    this.options.ratio = length / (max - min);
   }
 
   private handleWindowResize(): void {
     // track width was not changed
-    if (this.options.trackWidth === this.element.clientWidth) return;
+    const length = this.options.vertical
+      ? this.element.clientHeight
+      : this.element.clientWidth;
+
+    if (this.options.length === length) return;
 
     this.setRatio('init');
     this.handleThumb({ ratio: this.options.ratio }, 'update');
@@ -111,9 +126,11 @@ class Track extends Simple<TrackOptions> {
     const isUpdate = todo === 'update';
 
     const isBoundariesUpdated = isDefined(options.min) || isDefined(options.max);
-    const isRatioUpdated = isBoundariesUpdated || isDefined(options.ratio);
+    const isRatioUpdated = isBoundariesUpdated
+      || isDefined(options.ratio)
+      || isDefined(options.vertical);
 
-    const propsList: string[] = ['min', 'max', 'value', 'key', 'tip', 'isEnabled'];
+    const propsList: string[] = ['min', 'max', 'value', 'key', 'tip', 'isEnabled', 'vertical'];
     const props: PThumbOptions = propertyFilter(options, propsList);
 
     isRatioUpdated && (props.ratio = this.options.ratio as number);
@@ -138,15 +155,16 @@ class Track extends Simple<TrackOptions> {
     const isValuesUpdated = isDefined(options.from) || isDefined(options.to);
     const isWidthUpdated = isBoundariesUpdated || isValuesUpdated || isDefined(options.range);
 
-    const width = range
-      ? `${(100 / (max - min)) * ((to as number) - from)}%`
+    const length = range
+      ? (100 / (max - min)) * ((to as number) - from)
       : convertSliderUnitToPercent({ min, max, value: from });
 
     isDefined(options.bar) && (props.isEnabled = options.bar as boolean);
     isDefined(options.range) && (props.range = options.range as boolean);
+    isDefined(options.vertical) && (props.vertical = options.vertical as boolean);
 
-    range && (props.shift = convertSliderUnitToPercent({ min, max, value: from }));
-    isWidthUpdated && (props.width = width);
+    range && (props.shift = `${convertSliderUnitToPercent({ min, max, value: from })}%`);
+    isWidthUpdated && (props.length = `${length}%`);
 
     if (isUpdate) return props;
 

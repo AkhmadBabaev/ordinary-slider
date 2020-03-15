@@ -31,8 +31,9 @@ class View extends Observable {
 
   private init(): void {
     this.root.innerHTML = '';
-    !this.root.classList.contains('o-slider') && this.root.classList.add('o-slider');
     this.root.addEventListener('thumbmove', this.handleThumbMove as EventListener);
+    !this.root.classList.contains('o-slider') && this.root.classList.add('o-slider');
+    this.handleVertical();
 
     setAttributesAsData(this.root, this.options);
 
@@ -54,12 +55,24 @@ class View extends Observable {
     const hasTip = isDefined(options.tip);
     const hasBar = isDefined(options.bar);
     const hasRange = isDefined(options.range);
+    const hasVertical = isDefined(options.vertical);
 
-    const isBoundariesUpdated = hasMin || hasMax;
+    const isBoundariesUpdated = hasMin || hasMax || hasVertical;
     const isValuesUpdated = hasFrom || hasTo;
     const isTrackUpdated = isBoundariesUpdated || isValuesUpdated || hasTip || hasBar || hasRange;
 
+    hasVertical && this.handleVertical();
     isTrackUpdated && this.track.update(this.handleTrack(options, 'update') as PTrackOptions);
+  }
+
+  private handleVertical(): void {
+    if (this.options.vertical) {
+      this.root.classList.add('o-slider_vertical');
+      this.root.classList.remove('o-slider_horizontal');
+    } else {
+      this.root.classList.add('o-slider_horizontal');
+      this.root.classList.remove('o-slider_vertical');
+    }
   }
 
   private handleThumbMove(event: CustomEvent): void {
@@ -79,7 +92,7 @@ class View extends Observable {
   ): Track | PTrackOptions {
     const isUpdate = todo === 'update';
 
-    const propsList: string[] = ['min', 'max', 'from', 'to', 'tip', 'bar', 'range'];
+    const propsList: string[] = ['min', 'max', 'from', 'to', 'tip', 'bar', 'range', 'vertical'];
     const props: PTrackOptions = propertyFilter(options, propsList);
 
     if (isUpdate) return props;

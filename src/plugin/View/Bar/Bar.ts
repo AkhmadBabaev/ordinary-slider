@@ -16,24 +16,40 @@ class Bar extends Toggler<BarOptions> {
     super.update(options);
 
     const hasIsEnabled = isDefined(options.isEnabled);
-    const hasWidth = isDefined(options.width);
+    const hasLength = isDefined(options.length);
     const hasShift = isDefined(options.shift);
     const hasRange = isDefined(options.range);
+    const hasVertical = isDefined(options.vertical);
 
     hasIsEnabled && this.toggle();
+    hasVertical && this.handleVertical();
     hasRange && this.handleRange();
-    (hasWidth || hasShift) && this.setWidth();
+    (hasLength || hasShift || hasVertical) && this.setWidth();
+  }
+
+  private handleVertical(): void {
+    if (this.options.vertical) {
+      this.element.style.width = '';
+      this.element.style.left = '';
+    } else {
+      this.element.style.height = '';
+      this.element.style.bottom = '';
+    }
   }
 
   private setWidth(): void {
+    const side = this.options.vertical ? 'bottom' : 'left';
+    const dimension = this.options.vertical ? 'height' : 'width';
+
     this.options.isEnabled && requestAnimationFrame(() => {
-      this.element.style.width = this.options.width;
-      this.options.range && (this.element.style.left = this.options.shift as string);
+      this.element.style[dimension] = this.options.length;
+      this.options.range && (this.element.style[side] = this.options.shift as string);
     });
   }
 
   private handleRange(): void {
-    !this.options.range && (this.element.style.left = '');
+    const side = this.options.vertical ? 'bottom' : 'left';
+    !this.options.range && (this.element.style[side] = '');
   }
 }
 

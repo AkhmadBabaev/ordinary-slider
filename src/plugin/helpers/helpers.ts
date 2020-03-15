@@ -111,8 +111,8 @@ export function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
 
 export function convertSliderUnitToPercent(
   { min, max, value }: { [k: string]: number },
-): string {
-  return `${(100 / (max - min)) * (value - min)}%`;
+): number {
+  return (100 / (max - min)) * (value - min);
 }
 
 export function setAttributesAsData(elem: HTMLElement, attrs: { [k: string]: any }): void {

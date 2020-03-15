@@ -158,7 +158,7 @@ describe('hasChild', () => {
 
 test('convertSliderUnitToPercent should convert value unit into percent', () => {
   const [min, max, value] = [50, 100, 60];
-  expect(convertSliderUnitToPercent({ min, max, value })).toBe('20%');
+  expect(convertSliderUnitToPercent({ min, max, value })).toBe(20);
 });
 
 test('setDataAttributes should set attributes to element', () => {

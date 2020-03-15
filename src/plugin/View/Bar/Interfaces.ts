@@ -1,8 +1,9 @@
 export interface BarOptions {
   parent: HTMLElement;
   isEnabled: boolean;
+  vertical: boolean;
   range: boolean;
-  width: string;
+  length: string;
   shift?: string;
 }
 

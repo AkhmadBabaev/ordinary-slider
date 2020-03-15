@@ -1,10 +1,16 @@
 .panel {
   &__slider {
-    max-width: 25em;
-    width: 90%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 75px;
+  }
+
+  &__slider.o-slider_horizontal {
+    max-width: 25em;
+  }
+
+  &__slider.o-slider_vertical {
+    height: 18em;
   }
 
   &__raw {

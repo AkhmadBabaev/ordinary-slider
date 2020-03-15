@@ -1,6 +1,7 @@
 import { State } from './Interfaces';
 
 const defaultState: State = {
+  vertical: false,
   range: false,
   tip: true,
   bar: true,

@@ -5,10 +5,11 @@ export interface TrackOptions {
   from: number;
   to?: number;
   ratio: number;
-  trackWidth: number;
+  length: number;
   tip: boolean;
   bar: boolean;
   range: boolean;
+  vertical: boolean;
 }
 
 export type PTrackOptions = Partial<TrackOptions>;
