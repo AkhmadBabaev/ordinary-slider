@@ -8,6 +8,7 @@ import { hasChild, testHasInstance } from '../../helpers/helpers';
 const options: ThumbOptions = {
   parent: document.body,
   isEnabled: true,
+  vertical: false,
   min: 0,
   max: 100,
   value: 0,
@@ -25,14 +26,20 @@ describe('Thumb', () => {
     expect(hasChild(thumb.getOptions().parent, thumb.getElement())).toBe(true);
   });
 
-  test('handles position of value', async () => {
-    thumb.update({ value: 5 });
+  describe('Position', () => {
+    test('should be set as left if vertical is false', async () => {
+      thumb.update({ value: 5 });
 
-    await new Promise((resolve) => {
-      requestAnimationFrame(() => resolve());
+      await new Promise((res) => requestAnimationFrame(() => res()));
+      expect(thumb.getElement().style.left).toBe('5%');
     });
 
-    expect(thumb.getElement().style.left).toBe('5%');
+    test('should be set as bottom if vertical is false', async () => {
+      thumb.update({ vertical: true, value: 5 });
+
+      await new Promise((res) => requestAnimationFrame(() => res()));
+      expect(thumb.getElement().style.bottom).toBe('5%');
+    });
   });
 
   test('contains element tip', () => {

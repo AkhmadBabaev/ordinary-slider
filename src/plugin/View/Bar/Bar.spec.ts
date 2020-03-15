@@ -8,13 +8,16 @@ import { hasChild, testHasInstance } from '../../helpers/helpers';
 const options: BarOptions = {
   parent: document.body,
   isEnabled: true,
+  vertical: false,
   range: false,
-  width: '5%',
+  length: '10%',
 };
 
 const bar = new Bar(options);
 
 describe('Bar', () => {
+  afterEach(() => bar.update(options));
+
   test('is an instance of class Toggler',
     () => testHasInstance(bar, Toggler));
 
@@ -22,31 +25,41 @@ describe('Bar', () => {
     expect(hasChild(bar.getOptions().parent, bar.getElement())).toBe(true);
   });
 
-  test('handles value of property width', async () => {
-    bar.update({ width: '10%' });
-
-    await new Promise((resolve) => {
-      requestAnimationFrame(() => resolve());
+  describe('Option length', () => {
+    test('should be set as width if vertical is false', async () => {
+      await new Promise((res) => requestAnimationFrame(() => res()));
+      expect(bar.getElement().style.width).toBe('10%');
     });
 
-    expect(bar.getElement().style.width).toBe('10%');
+    test('should be set as height if vertical is true', async () => {
+      bar.update({ vertical: true });
+
+      await new Promise((res) => requestAnimationFrame(() => res()));
+      expect(bar.getElement().style.height).toBe('10%');
+    });
   });
 
-  test('shift should be handled if range set as true', async () => {
-    bar.update({ shift: '5%' });
+  describe('Option shift', () => {
+    test('should be set as left if vertical is false', async () => {
+      bar.update({ range: true, shift: '5%' });
 
-    await new Promise((resolve) => {
-      requestAnimationFrame(() => resolve());
+      await new Promise((res) => requestAnimationFrame(() => res()));
+      expect(bar.getElement().style.left).toBe('5%');
     });
 
-    expect(bar.getElement().style.left).toBeFalsy();
+    test('should be set as bottom if vertical is true', async () => {
+      bar.update({ range: true, vertical: true, shift: '5%' });
 
-    bar.update({ range: true, shift: '5%' });
-
-    await new Promise((resolve) => {
-      requestAnimationFrame(() => resolve());
+      await new Promise((res) => requestAnimationFrame(() => res()));
+      expect(bar.getElement().style.bottom).toBe('5%');
     });
 
-    expect(bar.getElement().style.left).toBe('5%');
+    test('shouldn\'t be set if range is false', async () => {
+      bar.update({ range: false });
+
+      await new Promise((res) => requestAnimationFrame(() => res()));
+      expect(bar.getElement().style.bottom).toBeFalsy();
+      expect(bar.getElement().style.left).toBeFalsy();
+    });
   });
 });

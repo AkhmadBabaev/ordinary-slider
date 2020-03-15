@@ -30,26 +30,38 @@ class Thumb extends Toggler<ThumbOptions> {
     const hasValue = isDefined(options.value);
     const hasRatio = isDefined(options.ratio);
     const hasTip = isDefined(options.tip);
+    const hasVertical = isDefined(options.vertical);
 
-    const isPositionUpdated = hasValue || hasRatio;
+    const isPositionUpdated = hasValue || hasRatio || hasVertical;
     const isTipUpdated = hasValue || hasTip;
 
     hasIsEnabled && this.toggle();
+    if (!this.options.isEnabled) return;
+
+    hasVertical && this.handleVertical();
     isPositionUpdated && this.setPosition();
     isTipUpdated && this.tip.update(this.handleTip(options, 'update') as PTipOptions);
   }
 
-  private setPosition(): void {
-    const { value, min, max } = this.options;
-    const left = convertSliderUnitToPercent({ min, max, value });
+  private handleVertical(): void {
+    this.options.vertical ? this.element.style.left = '' : this.element.style.bottom = '';
+  }
 
-    requestAnimationFrame(() => { this.element.style.left = left; });
+  private setPosition(): void {
+    const {
+      value, min, max, vertical,
+    } = this.options;
+
+    const position = convertSliderUnitToPercent({ min, max, value });
+    const side = vertical ? 'bottom' : 'left';
+
+    requestAnimationFrame(() => { this.element.style[side] = `${position}%`; });
   }
 
   private handleMouseDown(mouseDownEvent: MouseEvent): void {
     const currentTarget = mouseDownEvent.currentTarget as HTMLElement;
     const target = mouseDownEvent.target as HTMLElement;
-    const { offsetX, which } = mouseDownEvent;
+    const { offsetX, offsetY, which } = mouseDownEvent;
 
     // if it isn't left click
     if (!(which === 1)) return;
@@ -57,15 +69,23 @@ class Thumb extends Toggler<ThumbOptions> {
     currentTarget.classList.add('o-slider__thumb_active');
     document.body.classList.add('o-slider-grabbed');
 
-    const { min, ratio, parent } = this.options;
+    const {
+      min, max, ratio, parent, vertical,
+    } = this.options;
 
-    const width = target.clientWidth;
-    const shiftX = offsetX - (width / 2);
-    const parentX = parent.getBoundingClientRect().x;
+    const size = vertical ? target.clientHeight : target.clientWidth;
+    const offset = vertical ? offsetY : offsetX;
+    const shift = offset - (size / 2);
+    const parentBound = vertical
+      ? parent.getBoundingClientRect().y
+      : parent.getBoundingClientRect().x;
 
-    let handleMouseMove = ({ clientX }: MouseEvent): void => {
-      const position = clientX - parentX - shiftX;
-      const value = position / ratio + min;
+    let handleMouseMove = ({ clientX, clientY }: MouseEvent): void => {
+      const client = vertical ? clientY : clientX;
+      const position = client - parentBound - shift;
+      const value = vertical
+        ? max - position / ratio
+        : position / ratio + min;
 
       this.element.dispatchEvent(new CustomEvent('thumbmove', {
         detail: { value, key: this.options.key },

@@ -7,14 +7,15 @@ import { hasChild, testHasInstance } from '../../helpers/helpers';
 
 const options: TrackOptions = {
   parent: document.body,
+  vertical: false,
+  range: false,
+  tip: true,
+  bar: true,
   min: 0,
   max: 100,
   from: 0,
-  trackWidth: 300,
   ratio: 3,
-  tip: true,
-  bar: true,
-  range: false,
+  length: 300,
 };
 
 const track = new Track(options as TrackOptions);
