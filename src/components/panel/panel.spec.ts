@@ -21,11 +21,12 @@ const panel = new Panel(document.body.querySelector('.panel') as HTMLElement);
 
 const options = {
   range: false,
+  vertical: false,
+  tip: true,
+  bar: true,
   min: 0,
   max: 100,
   step: 1,
-  bar: true,
-  tip: true,
   from: 10,
 };
 
