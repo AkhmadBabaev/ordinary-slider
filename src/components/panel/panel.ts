@@ -133,15 +133,17 @@ class Panel {
   }
 
   private setFieldTo(): void {
-    // Fixme: property to has ID the same as from ID
+    // eslint-disable-next-line no-bitwise
+    const ID = `${(~~(Math.random() * 1e12)).toString(32)}`;
     const fromContainer = this.fields.from.getElement().closest('.panel__field');
-
     const toContainer = fromContainer?.cloneNode(true) as HTMLElement;
-    const toTitle = toContainer.querySelector('.num-field__title') as HTMLElement;
-    toTitle.textContent = 'to';
+
+    (toContainer.querySelector('.num-field__label') as HTMLElement).setAttribute('for', ID);
+    (toContainer.querySelector('.num-field__title') as HTMLElement).textContent = 'to';
 
     this.fields.to = new Input(toContainer.querySelector('.input') as HTMLElement);
     this.fields.to.setAttribute('name', 'to');
+    this.fields.to.setAttribute('id', ID);
     this.fields.to.getElement().addEventListener('change', this.handleInputChange);
     fromContainer?.after(toContainer);
   }
