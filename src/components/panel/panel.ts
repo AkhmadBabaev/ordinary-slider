@@ -144,9 +144,6 @@ class Panel {
     this.fields.to.setAttribute('name', 'to');
     this.fields.to.getElement().addEventListener('change', this.handleInputChange);
     fromContainer?.after(toContainer);
-
-    // Fixme: this line send property to as undefined and calls console warning
-    this.handleSliderChanges({ to: this.getOptions().to as number });
   }
 
   private removeFieldTo(): void {
