@@ -3,13 +3,6 @@ import Toggler from '../Templates/Toggler/Toggler';
 import { BarOptions, PBarOptions } from './Interfaces';
 
 class Bar extends Toggler<BarOptions> {
-  protected init(): void {
-    this.createElement('div', { class: 'o-slider__bar' });
-    this.setLength();
-
-    this.options.parent.prepend(this.element);
-  }
-
   public update(options: PBarOptions): void {
     super.update(options);
 
@@ -21,6 +14,13 @@ class Bar extends Toggler<BarOptions> {
     updates.has('vertical') && this.handleVertical();
     updates.has('range') && this.handleRange();
     (updates.has('length') || updates.has('shift') || updates.has('vertical')) && this.setLength();
+  }
+
+  protected init(): void {
+    this.createElement('div', { class: 'o-slider__bar' });
+    this.setLength();
+
+    this.options.parent.prepend(this.element);
   }
 
   private handleVertical(): void {

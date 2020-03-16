@@ -11,16 +11,6 @@ import {
 class Thumb extends Toggler<ThumbOptions> {
   private tip: Tip;
 
-  protected init(): void {
-    this.createElement('div', { class: 'o-slider__thumb' });
-    this.setPosition();
-    this.bindHandlers();
-
-    this.tip = this.handleTip({ ...this.options }) as Tip;
-    this.element.addEventListener('mousedown', this.handleMouseDown);
-    this.options.parent.append(this.element);
-  }
-
   public update(options: PThumbOptions): void {
     super.update(options);
 
@@ -35,6 +25,16 @@ class Thumb extends Toggler<ThumbOptions> {
     updates.has('vertical') && this.handleVertical();
     isPositionUpdated && this.setPosition();
     isTipUpdated && this.tip.update(this.handleTip(options, 'update') as PTipOptions);
+  }
+
+  protected init(): void {
+    this.createElement('div', { class: 'o-slider__thumb' });
+    this.setPosition();
+    this.bindEventHandlers();
+
+    this.tip = this.handleTip({ ...this.options }) as Tip;
+    this.element.addEventListener('mousedown', this.handleMouseDown);
+    this.options.parent.append(this.element);
   }
 
   private handleVertical(): void {
@@ -118,7 +118,7 @@ class Thumb extends Toggler<ThumbOptions> {
     return new Tip(props as TipOptions);
   }
 
-  private bindHandlers(): void {
+  private bindEventHandlers(): void {
     this.handleMouseDown = this.handleMouseDown.bind(this);
   }
 }

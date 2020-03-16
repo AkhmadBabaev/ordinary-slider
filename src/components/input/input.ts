@@ -8,10 +8,6 @@ class Input {
     this.init();
   }
 
-  protected init(): void {
-    !this.element.classList.contains('input') && this.element.classList.add('input');
-  }
-
   public getAttribute(name: string): string {
     return this.element.getAttribute(name) as string;
   }
@@ -27,6 +23,10 @@ class Input {
 
   public getElement(): HTMLElement {
     return this.element;
+  }
+
+  protected init(): void {
+    !this.element.classList.contains('input') && this.element.classList.add('input');
   }
 }
 

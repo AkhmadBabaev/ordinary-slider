@@ -3,13 +3,6 @@ import Toggler from '../Templates/Toggler/Toggler';
 import { TipOptions, PTipOptions } from './Interfaces';
 
 class Tip extends Toggler<TipOptions> {
-  protected init(): void {
-    this.createElement('div', { class: 'o-slider__tip' });
-    this.setText();
-
-    this.options.parent.append(this.element);
-  }
-
   public update(options: PTipOptions): void {
     super.update(options);
 
@@ -19,6 +12,13 @@ class Tip extends Toggler<TipOptions> {
     if (!this.options.isEnabled) return;
 
     updates.has('text') && this.setText();
+  }
+
+  protected init(): void {
+    this.createElement('div', { class: 'o-slider__tip' });
+    this.setText();
+
+    this.options.parent.append(this.element);
   }
 
   private setText(): void {
