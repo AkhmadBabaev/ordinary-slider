@@ -18,6 +18,7 @@ class Panel {
     this.setSettings = this.setSettings.bind(this);
     this.getSettings = this.getSettings.bind(this);
     this.subscribe = this.subscribe.bind(this);
+    this.unsubscribe = this.unsubscribe.bind(this);
 
     this.init();
   }
@@ -39,6 +40,10 @@ class Panel {
 
   public subscribe(callback: Function): void {
     this.slider.subscribe(callback);
+  }
+
+  public unsubscribe(callback: Function): void {
+    this.slider.unsubscribe(callback);
   }
 
   private defineFields(): void {

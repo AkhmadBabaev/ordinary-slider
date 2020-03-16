@@ -58,4 +58,14 @@ describe('Panel', () => {
 
     expect(callback).toHaveBeenCalled();
   });
+
+  test('unsubscribe stops notifications about updates', () => {
+    const callback = jest.fn();
+
+    panel.subscribe(callback);
+    panel.unsubscribe(callback);
+    panel.setSettings(options);
+
+    expect(callback).not.toHaveBeenCalled();
+  });
 });
