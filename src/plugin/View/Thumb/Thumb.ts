@@ -11,16 +11,6 @@ import {
 class Thumb extends Toggler<ThumbOptions> {
   private tip: Tip;
 
-  protected init(): void {
-    this.createElement('div', { class: 'o-slider__thumb' });
-    this.setPosition();
-    this.bindHandlers();
-
-    this.tip = this.handleTip({ ...this.options }) as Tip;
-    this.element.addEventListener('mousedown', this.handleMouseDown);
-    this.options.parent.append(this.element);
-  }
-
   public update(options: PThumbOptions): void {
     super.update(options);
 
@@ -35,6 +25,16 @@ class Thumb extends Toggler<ThumbOptions> {
     updates.has('vertical') && this.handleVertical();
     isPositionUpdated && this.setPosition();
     isTipUpdated && this.tip.update(this.handleTip(options, 'update') as PTipOptions);
+  }
+
+  protected init(): void {
+    this.createElement('div', { class: 'o-slider__thumb' });
+    this.setPosition();
+    this.bindEventHandlers();
+
+    this.tip = this.handleTip({ ...this.options }) as Tip;
+    this.element.addEventListener('mousedown', this.handleMouseDown);
+    this.options.parent.append(this.element);
   }
 
   private handleVertical(): void {
@@ -60,7 +60,7 @@ class Thumb extends Toggler<ThumbOptions> {
     // if it isn't left click
     if (!(which === 1)) return;
 
-    currentTarget.classList.add('o-slider__thumb_active');
+    currentTarget.classList.add('o-slider__thumb_is_active');
     document.body.classList.add('o-slider-grabbed');
 
     const {
@@ -90,7 +90,7 @@ class Thumb extends Toggler<ThumbOptions> {
     handleMouseMove = throttle(handleMouseMove, 50);
 
     const handleMouseUp = (): void => {
-      currentTarget.classList.remove('o-slider__thumb_active');
+      currentTarget.classList.remove('o-slider__thumb_is_active');
       document.body.classList.remove('o-slider-grabbed');
 
       document.removeEventListener('mousemove', handleMouseMove);
@@ -118,7 +118,7 @@ class Thumb extends Toggler<ThumbOptions> {
     return new Tip(props as TipOptions);
   }
 
-  private bindHandlers(): void {
+  private bindEventHandlers(): void {
     this.handleMouseDown = this.handleMouseDown.bind(this);
   }
 }

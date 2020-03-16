@@ -28,18 +28,6 @@ class View extends Observable {
     this.init();
   }
 
-  private init(): void {
-    this.root.innerHTML = '';
-    this.root.addEventListener('thumbmove', this.handleThumbMove as EventListener);
-    !this.root.classList.contains('o-slider') && this.root.classList.add('o-slider');
-
-    setAttributesAsData(this.root, this.options);
-    this.handleVertical();
-
-    this.attributesObserver = this.createAttributesObserver();
-    this.track = this.handleTrack({ ...this.options }) as Track;
-  }
-
   public applyState(options: PState): void {
     this.options = { ...this.options, ...options };
 
@@ -61,40 +49,26 @@ class View extends Observable {
     isTrackUpdated && this.track.update(this.handleTrack(options, 'update') as PTrackOptions);
   }
 
-  private handleVertical(): void {
+  private init(): void {
+    this.root.innerHTML = '';
+    this.root.addEventListener('thumbmove', this.handleThumbMove as EventListener);
+    !this.root.classList.contains('o-slider') && this.root.classList.add('o-slider');
+
+    setAttributesAsData(this.root, this.options);
+    this.handleVertical();
+
+    this.attributesObserver = this.createAttributesObserver();
+    this.track = this.handleTrack({ ...this.options }) as Track;
+  }
+
+  protected handleVertical(): void {
     if (this.options.vertical) {
-      this.root.classList.add('o-slider_vertical');
-      this.root.classList.remove('o-slider_horizontal');
+      this.root.classList.add('o-slider_is_vertical');
+      this.root.classList.remove('o-slider_is_horizontal');
     } else {
-      this.root.classList.add('o-slider_horizontal');
-      this.root.classList.remove('o-slider_vertical');
+      this.root.classList.add('o-slider_is_horizontal');
+      this.root.classList.remove('o-slider_is_vertical');
     }
-  }
-
-  private handleThumbMove(event: CustomEvent): void {
-    const { value, key } = event.detail;
-    const data: { [k: string]: unknown } = {};
-
-    key === 'thumb:0' && (data.from = value);
-    key === 'thumb:1' && (data.to = value);
-
-    this.notify(data);
-    event.stopPropagation();
-  }
-
-  private handleTrack(
-    options: { [k: string]: unknown },
-    todo: 'init' | 'update' = 'init',
-  ): Track | PTrackOptions {
-    const isUpdate = todo === 'update';
-
-    const propsList: string[] = ['min', 'max', 'from', 'to', 'tip', 'bar', 'range', 'vertical'];
-    const props: PTrackOptions = propertyFilter(options, propsList);
-
-    if (isUpdate) return props;
-
-    props.parent = this.root;
-    return new Track(props as TrackOptions);
   }
 
   protected createAttributesObserver(): { [k: string]: Function } {
@@ -125,6 +99,32 @@ class View extends Observable {
       subscribe: (): void => observer.observe(root, config),
       unsubscribe: (): void => observer.disconnect(),
     };
+  }
+
+  private handleThumbMove(event: CustomEvent): void {
+    const { value, key } = event.detail;
+    const data: { [k: string]: unknown } = {};
+
+    key === 'thumb:0' && (data.from = value);
+    key === 'thumb:1' && (data.to = value);
+
+    this.notify(data);
+    event.stopPropagation();
+  }
+
+  private handleTrack(
+    options: { [k: string]: unknown },
+    todo: 'init' | 'update' = 'init',
+  ): Track | PTrackOptions {
+    const isUpdate = todo === 'update';
+
+    const propsList: string[] = ['min', 'max', 'from', 'to', 'tip', 'bar', 'range', 'vertical'];
+    const props: PTrackOptions = propertyFilter(options, propsList);
+
+    if (isUpdate) return props;
+
+    props.parent = this.root;
+    return new Track(props as TrackOptions);
   }
 }
 

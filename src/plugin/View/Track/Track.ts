@@ -24,19 +24,6 @@ class Track extends Simple<TrackOptions> {
     this.init();
   }
 
-  protected init(): void {
-    this.createElement('div', { class: 'o-slider__track' });
-    this.options.parent.append(this.element);
-
-    this.setRatio('init');
-    this.initThumbs();
-
-    this.bar = this.handleBar({ ...this.options }) as Bar;
-    this.element.addEventListener('thumbmove', this.handleThumbMove as EventListener);
-
-    window.addEventListener('resize', this.handleWindowResize);
-  }
-
   public update(options: PTrackOptions): void {
     super.update(options);
 
@@ -59,6 +46,19 @@ class Track extends Simple<TrackOptions> {
     isBoundariesUpdated && this.setRatio();
     isThumbsUpdated && this.updateThumbs(options);
     isBarUpdated && this.bar.update(this.handleBar(options, 'update') as PBarOptions);
+  }
+
+  protected init(): void {
+    this.createElement('div', { class: 'o-slider__track' });
+    this.options.parent.append(this.element);
+
+    this.setRatio('init');
+    this.initThumbs();
+
+    this.bar = this.handleBar({ ...this.options }) as Bar;
+    this.element.addEventListener('thumbmove', this.handleThumbMove as EventListener);
+
+    window.addEventListener('resize', this.handleWindowResize);
   }
 
   private initThumbs(): void {

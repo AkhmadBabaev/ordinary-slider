@@ -17,15 +17,21 @@ mixin panel({ additionalClasses, mods, styles, options = {} } = {})
       { title: 'tip' },
     ];
 
-  div(class= classes style= styles)
-    +slider({ additionalClasses: `${className}__slider`, options })
+  div(class= `${classes} js-${className}` style= styles)
+    +slider({ additionalClasses: `${className}__slider js-${className}__slider`, options })
 
     div(class= `${className}__raw`)
       each field in fieldsData
         +num-field({
-          additionalClasses: `${className}__field`, title: field.title, name: field.title })
+          additionalClasses: `${className}__field js-${className}__field`,
+          title: field.title,
+          name: field.title,
+        })
 
     div(class= `${className}__raw`)
       each checkbox in checkboxesData
         +checkbox({
-          additionalClasses: `${className}__checkbox`, title: checkbox.title, name: checkbox.title })
+          additionalClasses: `${className}__checkbox js-${className}__checkbox`,
+          title: checkbox.title,
+          name: checkbox.title,
+        })

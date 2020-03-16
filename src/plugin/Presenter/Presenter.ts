@@ -14,11 +14,6 @@ class Presenter {
     this.init();
   }
 
-  private init(): void {
-    this.model.subscribe(this.view.applyState);
-    this.view.subscribe(this.model.setState);
-  }
-
   public subscribe(callback: Function): void {
     this.model.subscribe(callback);
   }
@@ -37,6 +32,11 @@ class Presenter {
 
   public reset(): void {
     this.model.reset();
+  }
+
+  private init(): void {
+    this.model.subscribe(this.view.applyState);
+    this.view.subscribe(this.model.setState);
   }
 }
 

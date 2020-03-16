@@ -9,7 +9,7 @@ class Panel {
 
   public fields: { [k: string]: Input } = {};
 
-  private slider: JQuery<object>;
+  private $slider: JQuery<object>;
 
   constructor(elem: HTMLElement) {
     this.element = elem;
@@ -23,32 +23,36 @@ class Panel {
     this.init();
   }
 
+  public getSettings(): Settings {
+    return { ...this.$slider.getSettings() } as Settings;
+  }
+
+  public setSettings(setting: Settings): void {
+    this.$slider.setSettings(setting);
+  }
+
+  public subscribe(callback: Function): void {
+    this.$slider.subscribe(callback);
+  }
+
+  public unsubscribe(callback: Function): void {
+    this.$slider.unsubscribe(callback);
+  }
+
+  public getElement(): HTMLElement {
+    return this.element;
+  }
+
   protected init(): void {
-    !this.element.classList.contains('panel') && this.element.classList.add('panel');
+    !this.element.classList.contains('panel') && this.element.classList.add('js-panel');
 
     this.defineFields();
     this.setSlider();
   }
 
-  public getSettings(): Settings {
-    return { ...this.slider.getSettings() } as Settings;
-  }
-
-  public setSettings(setting: Settings): void {
-    this.slider.setSettings(setting);
-  }
-
-  public subscribe(callback: Function): void {
-    this.slider.subscribe(callback);
-  }
-
-  public unsubscribe(callback: Function): void {
-    this.slider.unsubscribe(callback);
-  }
-
   private defineFields(): void {
-    const foundFields = Array.from(this.element.querySelectorAll('.panel__field'));
-    const foundCheckboxes = Array.from(this.element.querySelectorAll('.panel__checkbox'));
+    const foundFields = Array.from(this.element.querySelectorAll('.js-panel__field'));
+    const foundCheckboxes = Array.from(this.element.querySelectorAll('.js-panel__checkbox'));
 
     [...foundFields, ...foundCheckboxes].forEach((elem) => {
       const field = new Input(elem.querySelector('.input') as HTMLInputElement);
@@ -77,7 +81,7 @@ class Panel {
     const target = event.target as HTMLInputElement;
     const data = { [target.name]: target.type === 'checkbox' ? target.checked : Number(target.value) };
 
-    this.slider.setSettings(data);
+    this.$slider.setSettings(data);
   }
 
   private handleSliderChanges(options: PState): void {
@@ -132,21 +136,17 @@ class Panel {
   }
 
   private setSlider(): void {
-    const slider = this.element.querySelector('.panel__slider') as HTMLElement;
+    const slider = this.element.querySelector('.js-panel__slider') as HTMLElement;
 
-    this.slider = $(slider).oSlider();
-    this.slider.subscribe(this.handleSliderChanges);
-    this.handleSliderChanges(this.slider.getSettings());
-  }
-
-  public getElement(): HTMLElement {
-    return this.element;
+    this.$slider = $(slider).oSlider();
+    this.$slider.subscribe(this.handleSliderChanges);
+    this.handleSliderChanges(this.$slider.getSettings());
   }
 
   private setFieldTo(): void {
     // eslint-disable-next-line no-bitwise
     const ID = `${(~~(Math.random() * 1e12)).toString(32)}`;
-    const fromContainer = this.fields.from.getElement().closest('.panel__field');
+    const fromContainer = this.fields.from.getElement().closest('.js-panel__field');
     const toContainer = fromContainer?.cloneNode(true) as HTMLElement;
 
     (toContainer.querySelector('.num-field__label') as HTMLElement).setAttribute('for', ID);
@@ -161,7 +161,7 @@ class Panel {
   }
 
   private removeFieldTo(): void {
-    const toContainer = this.fields.to?.getElement().closest('.panel__field');
+    const toContainer = this.fields.to?.getElement().closest('.js-panel__field');
     toContainer?.remove();
 
     delete this.fields.to;
