@@ -60,7 +60,7 @@ class Thumb extends Toggler<ThumbOptions> {
     // if it isn't left click
     if (!(which === 1)) return;
 
-    currentTarget.classList.add('o-slider__thumb_active');
+    currentTarget.classList.add('o-slider__thumb_is_active');
     document.body.classList.add('o-slider-grabbed');
 
     const {
@@ -90,7 +90,7 @@ class Thumb extends Toggler<ThumbOptions> {
     handleMouseMove = throttle(handleMouseMove, 50);
 
     const handleMouseUp = (): void => {
-      currentTarget.classList.remove('o-slider__thumb_active');
+      currentTarget.classList.remove('o-slider__thumb_is_active');
       document.body.classList.remove('o-slider-grabbed');
 
       document.removeEventListener('mousemove', handleMouseMove);

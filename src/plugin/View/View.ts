@@ -63,11 +63,11 @@ class View extends Observable {
 
   private handleVertical(): void {
     if (this.options.vertical) {
-      this.root.classList.add('o-slider_vertical');
-      this.root.classList.remove('o-slider_horizontal');
+      this.root.classList.add('o-slider_is_vertical');
+      this.root.classList.remove('o-slider_is_horizontal');
     } else {
-      this.root.classList.add('o-slider_horizontal');
-      this.root.classList.remove('o-slider_vertical');
+      this.root.classList.add('o-slider_is_horizontal');
+      this.root.classList.remove('o-slider_is_vertical');
     }
   }
 

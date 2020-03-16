@@ -2,14 +2,14 @@
   &__slider {
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 75px;
+    margin-bottom: 4.7em;
   }
 
-  &__slider.o-slider_horizontal {
+  &__slider.o-slider_is_horizontal {
     max-width: 25em;
   }
 
-  &__slider.o-slider_vertical {
+  &__slider.o-slider_is_vertical {
     height: 18em;
   }
 
