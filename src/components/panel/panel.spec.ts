@@ -5,7 +5,7 @@ import defaultState from '../../plugin/Model/defaultState';
 
 document.body.innerHTML = `
   <div class="panel">
-    <div class="panel__slider"></div>
+    <div class="js-panel__slider"></div>
 
     <div class="panel__field">
       <input class="input" name="min" type="number">
