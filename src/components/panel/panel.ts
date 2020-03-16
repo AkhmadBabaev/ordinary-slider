@@ -123,6 +123,7 @@ class Panel {
 
         case 'range':
           options.range ? this.setFieldTo() : this.removeFieldTo();
+          !options.range && fields.from.getElement().removeAttribute('max');
           break;
 
         default: break;
