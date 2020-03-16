@@ -154,6 +154,7 @@ class Panel {
     this.fields.to = new Input(toContainer.querySelector('.input') as HTMLElement);
     this.fields.to.setAttribute('name', 'to');
     this.fields.to.setAttribute('id', ID);
+    this.fields.to.getElement().removeAttribute('max');
     this.fields.to.getElement().addEventListener('change', this.handleInputChange);
     fromContainer?.after(toContainer);
   }
