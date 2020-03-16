@@ -31,7 +31,7 @@ const options = {
 };
 
 describe('Panel', () => {
-  afterEach(() => panel.setOptions({ ...defaultState }));
+  afterEach(() => panel.setSettings({ ...defaultState }));
 
   test('getElement returns root element of panel', () => {
     const element = panel.getElement();
@@ -42,19 +42,19 @@ describe('Panel', () => {
   });
 
   test('getOptions returns current state of slider', () => {
-    expect(panel.getOptions()).toEqual(defaultState);
+    expect(panel.getSettings()).toEqual(defaultState);
   });
 
   test('setOptions sets options new options', () => {
-    panel.setOptions(options);
-    expect(panel.getOptions()).toEqual(options);
+    panel.setSettings(options);
+    expect(panel.getSettings()).toEqual(options);
   });
 
   test('subscribe should notify about updates', () => {
     const callback = jest.fn();
 
     panel.subscribe(callback);
-    panel.setOptions(options);
+    panel.setSettings(options);
 
     expect(callback).toHaveBeenCalled();
   });

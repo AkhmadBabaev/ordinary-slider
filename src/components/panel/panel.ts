@@ -2,7 +2,7 @@ import Input from '../input/input';
 
 import { PState } from '../../plugin/Model/Interfaces';
 
-type Options = { [k: string]: unknown };
+type Settings = { [k: string]: unknown };
 
 class Panel {
   private element: HTMLElement;
@@ -15,8 +15,8 @@ class Panel {
     this.element = elem;
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSliderChanges = this.handleSliderChanges.bind(this);
-    this.setOptions = this.setOptions.bind(this);
-    this.getOptions = this.getOptions.bind(this);
+    this.setSettings = this.setSettings.bind(this);
+    this.getSettings = this.getSettings.bind(this);
     this.subscribe = this.subscribe.bind(this);
 
     this.init();
@@ -29,12 +29,12 @@ class Panel {
     this.setSlider();
   }
 
-  public getOptions(): Options {
-    return { ...this.slider.getSettings() } as Options;
+  public getSettings(): Settings {
+    return { ...this.slider.getSettings() } as Settings;
   }
 
-  public setOptions(options: Options): void {
-    this.slider.setSettings(options);
+  public setSettings(setting: Settings): void {
+    this.slider.setSettings(setting);
   }
 
   public subscribe(callback: Function): void {
@@ -77,7 +77,7 @@ class Panel {
 
   private handleSliderChanges(options: PState): void {
     const { fields } = this;
-    const { range } = this.getOptions();
+    const { range } = this.getSettings();
 
     Object.keys(options).forEach((key) => {
       if (!Object.prototype.hasOwnProperty.call(fields, key)) return;
