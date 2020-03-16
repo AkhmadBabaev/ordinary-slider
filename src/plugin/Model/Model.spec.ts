@@ -17,9 +17,7 @@ const testeeState: State = {
 const model = new Model(testeeState);
 
 describe('Model', () => {
-  test('getState should return current state', () => {
-    expect(model.getState()).toEqual(testeeState);
-  });
+  test('getState should return current state', () => expect(model.getState()).toEqual(testeeState));
 
   describe('setState', () => {
     test('throws error if called without arguments', () => {
@@ -77,7 +75,7 @@ describe('Model', () => {
   });
 
   describe('State options', () => {
-    afterEach(() => { model.setState(testeeState); });
+    afterEach(() => model.setState(testeeState));
 
     test('Min shouldn\'t be greater than max', () => {
       model.setState({ min: 101 });

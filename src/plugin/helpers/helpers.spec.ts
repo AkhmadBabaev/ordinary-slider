@@ -6,43 +6,18 @@ import {
 
 describe('isNumber', () => {
   describe('Values that should be a number', () => {
-    test('1', () => {
-      expect(isNumber(1)).toBe(true);
-    });
-
-    test('0', () => {
-      expect(isNumber(0)).toBe(true);
-    });
-
-    test('-1', () => {
-      expect(isNumber(-1)).toBe(true);
-    });
-
-    test('\'1\'', () => {
-      expect(isNumber('1')).toBe(true);
-    });
-
-    test('Infinity', () => {
-      expect(isNumber(Infinity)).toBe(true);
-    });
+    test('1', () => expect(isNumber(1)).toBe(true));
+    test('0', () => expect(isNumber(0)).toBe(true));
+    test('-1', () => expect(isNumber(-1)).toBe(true));
+    test('\'1\'', () => expect(isNumber('1')).toBe(true));
+    test('Infinity', () => expect(isNumber(Infinity)).toBe(true));
   });
 
   describe('Values that shouldn\'t be a number', () => {
-    test('1px', () => {
-      expect(isNumber('1px')).toBe(false);
-    });
-
-    test('NaN', () => {
-      expect(isNumber(NaN)).toBe(false);
-    });
-
-    test('False', () => {
-      expect(isNumber(false)).toBe(false);
-    });
-
-    test('empty string', () => {
-      expect(isNumber('')).toBe(false);
-    });
+    test('1px', () => expect(isNumber('1px')).toBe(false));
+    test('NaN', () => expect(isNumber(NaN)).toBe(false));
+    test('false', () => expect(isNumber(false)).toBe(false));
+    test('empty string', () => expect(isNumber('')).toBe(false));
   });
 });
 
@@ -86,9 +61,7 @@ describe('throttle', () => {
     fn(3);
 
     expect(log).toBe(1);
-
     jest.advanceTimersByTime(1000);
-
     expect(log).toBe(3);
   });
 
@@ -103,7 +76,6 @@ describe('throttle', () => {
     fn(6);
 
     jest.advanceTimersByTime(400);
-
     expect(log).toBe(6);
   });
 });
@@ -130,14 +102,12 @@ describe('debounce', () => {
 
     fn();
     expect(fake.something).toBe(2);
-
     jest.advanceTimersByTime(500);
 
     fn();
     expect(fake.something).toBe(2);
 
     jest.advanceTimersByTime(1000);
-
     expect(fake.something).toBe(4);
   });
 });

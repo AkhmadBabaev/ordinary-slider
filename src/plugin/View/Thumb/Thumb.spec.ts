@@ -3,7 +3,7 @@ import Toggler from '../Templates/Toggler/Toggler';
 
 import { ThumbOptions } from './Interfaces';
 
-import { hasChild, testHasInstance } from '../../helpers/helpers';
+import { hasChild } from '../../helpers/helpers';
 
 const options: ThumbOptions = {
   parent: document.body,
@@ -19,11 +19,15 @@ const options: ThumbOptions = {
 const thumb = new Thumb(options);
 
 describe('Thumb', () => {
-  test('is an instance of class Toggler',
-    () => testHasInstance(thumb, Toggler));
+  test('is an instance of class Toggler', () => expect(thumb).toBeInstanceOf(Toggler));
 
   test('should be added to parent', () => {
-    expect(hasChild(thumb.getOptions().parent, thumb.getElement())).toBe(true);
+    expect(hasChild(thumb.getOptions().parent, thumb.getElement())).toBeTruthy();
+  });
+
+  test('contains element tip', () => {
+    const tip = thumb.getElement().querySelector('.o-slider__tip') as HTMLElement;
+    expect(hasChild(thumb.getElement(), tip)).toBeTruthy();
   });
 
   describe('Position', () => {
@@ -40,10 +44,5 @@ describe('Thumb', () => {
       await new Promise((res) => requestAnimationFrame(() => res()));
       expect(thumb.getElement().style.bottom).toBe('5%');
     });
-  });
-
-  test('contains element tip', () => {
-    const isFounded = !!thumb.getElement().querySelector('.o-slider__tip');
-    expect(isFounded).toBe(true);
   });
 });

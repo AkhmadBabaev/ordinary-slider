@@ -5,7 +5,7 @@ import { ThumbOptions, PThumbOptions } from './Interfaces';
 import { TipOptions, PTipOptions } from '../Tip/Interfaces';
 
 import {
-  isDefined, convertSliderUnitToPercent, throttle,
+  propertyFilter, convertSliderUnitToPercent, throttle,
 } from '../../helpers/helpers';
 
 class Thumb extends Toggler<ThumbOptions> {
@@ -13,32 +13,26 @@ class Thumb extends Toggler<ThumbOptions> {
 
   protected init(): void {
     this.createElement('div', { class: 'o-slider__thumb' });
+    this.setPosition();
+    this.bindHandlers();
 
     this.tip = this.handleTip({ ...this.options }) as Tip;
-    this.setPosition();
-
-    this.options.parent.append(this.element);
-
-    this.bindHandlers();
     this.element.addEventListener('mousedown', this.handleMouseDown);
+    this.options.parent.append(this.element);
   }
 
   public update(options: PThumbOptions): void {
     super.update(options);
 
-    const hasIsEnabled = isDefined(options.isEnabled);
-    const hasValue = isDefined(options.value);
-    const hasRatio = isDefined(options.ratio);
-    const hasTip = isDefined(options.tip);
-    const hasVertical = isDefined(options.vertical);
+    const updates = new Map(Object.entries(options));
 
-    const isPositionUpdated = hasValue || hasRatio || hasVertical;
-    const isTipUpdated = hasValue || hasTip;
-
-    hasIsEnabled && this.toggle();
+    updates.has('isEnabled') && this.toggle();
     if (!this.options.isEnabled) return;
 
-    hasVertical && this.handleVertical();
+    const isPositionUpdated = updates.has('value') || updates.has('ratio') || updates.has('vertical');
+    const isTipUpdated = updates.has('value') || updates.has('tip');
+
+    updates.has('vertical') && this.handleVertical();
     isPositionUpdated && this.setPosition();
     isTipUpdated && this.tip.update(this.handleTip(options, 'update') as PTipOptions);
   }
@@ -93,7 +87,7 @@ class Thumb extends Toggler<ThumbOptions> {
       }));
     };
 
-    handleMouseMove = throttle(handleMouseMove, 40);
+    handleMouseMove = throttle(handleMouseMove, 50);
 
     const handleMouseUp = (): void => {
       currentTarget.classList.remove('o-slider__thumb_active');
@@ -113,11 +107,10 @@ class Thumb extends Toggler<ThumbOptions> {
     options: { [k: string]: unknown },
     todo: 'init' | 'update' = 'init',
   ): Tip | PTipOptions {
-    const props: PTipOptions = {};
     const isUpdate = todo === 'update';
 
-    isDefined(options.tip) && (props.isEnabled = options.tip as boolean);
-    isDefined(options.value) && (props.text = options.value as string);
+    const propsList: string[] = ['tip:isEnabled', 'value:text'];
+    const props: PTipOptions = propertyFilter(options, propsList);
 
     if (isUpdate) return props;
 

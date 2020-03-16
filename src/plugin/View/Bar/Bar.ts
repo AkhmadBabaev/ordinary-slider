@@ -2,12 +2,10 @@ import Toggler from '../Templates/Toggler/Toggler';
 
 import { BarOptions, PBarOptions } from './Interfaces';
 
-import { isDefined } from '../../helpers/helpers';
-
 class Bar extends Toggler<BarOptions> {
   protected init(): void {
     this.createElement('div', { class: 'o-slider__bar' });
-    this.setWidth();
+    this.setLength();
 
     this.options.parent.prepend(this.element);
   }
@@ -15,16 +13,14 @@ class Bar extends Toggler<BarOptions> {
   public update(options: PBarOptions): void {
     super.update(options);
 
-    const hasIsEnabled = isDefined(options.isEnabled);
-    const hasLength = isDefined(options.length);
-    const hasShift = isDefined(options.shift);
-    const hasRange = isDefined(options.range);
-    const hasVertical = isDefined(options.vertical);
+    const updates = new Map(Object.entries(options));
 
-    hasIsEnabled && this.toggle();
-    hasVertical && this.handleVertical();
-    hasRange && this.handleRange();
-    (hasLength || hasShift || hasVertical) && this.setWidth();
+    updates.has('isEnabled') && this.toggle();
+    if (!this.options.isEnabled) return;
+
+    updates.has('vertical') && this.handleVertical();
+    updates.has('range') && this.handleRange();
+    (updates.has('length') || updates.has('shift') || updates.has('vertical')) && this.setLength();
   }
 
   private handleVertical(): void {
@@ -37,7 +33,7 @@ class Bar extends Toggler<BarOptions> {
     }
   }
 
-  private setWidth(): void {
+  private setLength(): void {
     const side = this.options.vertical ? 'bottom' : 'left';
     const dimension = this.options.vertical ? 'height' : 'width';
 

@@ -81,38 +81,43 @@ class Panel {
 
     Object.keys(options).forEach((key) => {
       if (!Object.prototype.hasOwnProperty.call(fields, key)) return;
+      const value = options[key as keyof PState] as number | boolean;
 
       switch (key) {
         case 'from':
-          fields[key].setAttribute('value', options[key] as number);
-          range && fields.to.setAttribute('min', options[key] as number);
-          break;
-
         case 'to':
-          fields[key].setAttribute('value', options[key] as number);
-          fields.from.setAttribute('max', options[key] as number);
-          break;
-
         case 'min':
         case 'max':
-          fields[key].setAttribute('value', options[key] as number);
-          break;
-
         case 'step':
-          fields[key].setAttribute('value', options[key] as number);
-          fields.from.setAttribute('step', options[key] as number);
-          range && fields.to.setAttribute('step', options[key] as number);
+          fields[key].setAttribute('value', value);
           break;
 
         case 'bar':
         case 'tip':
+        case 'range':
         case 'vertical':
-          fields[key].setAttribute('checked', options[key] as boolean);
+          fields[key].setAttribute('checked', value);
+          break;
+
+        default: break;
+      }
+
+      switch (key) {
+        case 'from':
+          range && fields.to.setAttribute('min', value);
+          break;
+
+        case 'to':
+          fields.from.setAttribute('max', value);
+          break;
+
+        case 'step':
+          fields.from.setAttribute('step', value);
+          range && fields.to.setAttribute('step', value);
           break;
 
         case 'range':
           options.range ? this.setFieldTo() : this.removeFieldTo();
-          fields[key].setAttribute('checked', options[key] as boolean);
           break;
 
         default: break;
@@ -124,8 +129,8 @@ class Panel {
     const slider = this.element.querySelector('.panel__slider') as HTMLElement;
 
     this.slider = $(slider).oSlider();
-    this.handleSliderChanges(this.slider.getSettings());
     this.slider.subscribe(this.handleSliderChanges);
+    this.handleSliderChanges(this.slider.getSettings());
   }
 
   public getElement(): HTMLElement {

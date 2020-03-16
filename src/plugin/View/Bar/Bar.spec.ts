@@ -3,7 +3,7 @@ import Toggler from '../Templates/Toggler/Toggler';
 
 import { BarOptions } from './Interfaces';
 
-import { hasChild, testHasInstance } from '../../helpers/helpers';
+import { hasChild } from '../../helpers/helpers';
 
 const options: BarOptions = {
   parent: document.body,
@@ -18,11 +18,10 @@ const bar = new Bar(options);
 describe('Bar', () => {
   afterEach(() => bar.update(options));
 
-  test('is an instance of class Toggler',
-    () => testHasInstance(bar, Toggler));
+  test('is an instance of class Toggler', () => expect(bar).toBeInstanceOf(Toggler));
 
   test('should be added to parent', () => {
-    expect(hasChild(bar.getOptions().parent, bar.getElement())).toBe(true);
+    expect(hasChild(bar.getOptions().parent, bar.getElement())).toBeTruthy();
   });
 
   describe('Option length', () => {

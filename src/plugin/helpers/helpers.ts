@@ -10,9 +10,7 @@ function compareType(type: string, value: unknown): boolean {
 }
 
 export function isNumber(value: unknown): boolean {
-  const result: unknown = (value as string).length
-    ? Number(value)
-    : value;
+  const result: unknown = (value as string).length ? Number(value) : value;
 
   if (Number.isNaN(result as number)) return false;
   return typeof result === 'number';
@@ -38,13 +36,10 @@ export function softRounding(num: number): number {
   return Number(num.toFixed(1));
 }
 
-export function propertyFilter(
-  obj: { [k: string]: any },
-  properties: string[],
-): { [k: string]: any } {
+export function propertyFilter(obj: { [k: string]: any }, props: string[]): { [k: string]: any } {
   const result: { [k: string]: unknown } = {};
 
-  properties.forEach((prop: string) => {
+  props.forEach((prop: string) => {
     let value: unknown = obj[prop];
     let propName = prop;
 
@@ -109,18 +104,12 @@ export function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
   return Object.keys(parent.children).some((x, i: number) => parent.children[i] === child);
 }
 
-export function convertSliderUnitToPercent(
-  { min, max, value }: { [k: string]: number },
-): number {
+export function convertSliderUnitToPercent({ min, max, value }: { [k: string]: number }): number {
   return (100 / (max - min)) * (value - min);
 }
 
 export function setAttributesAsData(elem: HTMLElement, attrs: { [k: string]: any }): void {
   Object.keys(attrs).forEach((key) => elem.setAttribute(`data-${key}`, attrs[key]));
-}
-
-export function testHasInstance(elem: unknown, instance: unknown): void {
-  expect(elem).toBeInstanceOf(instance);
 }
 
 export function objectReflection(a: object, b: object): object {

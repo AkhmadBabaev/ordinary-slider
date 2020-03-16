@@ -31,7 +31,7 @@ const options = {
 };
 
 describe('Panel', () => {
-  afterEach(() => { panel.setOptions({ ...defaultState }); });
+  afterEach(() => panel.setOptions({ ...defaultState }));
 
   test('getElement returns root element of panel', () => {
     const element = panel.getElement();

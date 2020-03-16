@@ -20,7 +20,7 @@ class Track extends Simple<TrackOptions> {
     super(options);
     this.handleThumbMove = this.handleThumbMove.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
-    this.handleWindowResize = debounce(this.handleWindowResize, 800);
+    this.handleWindowResize = debounce(this.handleWindowResize, 500);
     this.init();
   }
 
@@ -30,38 +30,32 @@ class Track extends Simple<TrackOptions> {
 
     this.setRatio('init');
     this.initThumbs();
+
     this.bar = this.handleBar({ ...this.options }) as Bar;
+    this.element.addEventListener('thumbmove', this.handleThumbMove as EventListener);
 
     window.addEventListener('resize', this.handleWindowResize);
-    this.element.addEventListener('thumbmove', this.handleThumbMove as EventListener);
   }
 
   public update(options: PTrackOptions): void {
     super.update(options);
 
-    const hasFrom = isDefined(options.from);
-    const hasTo = isDefined(options.to);
-    const hasMin = isDefined(options.min);
-    const hasMax = isDefined(options.max);
-    const hasTip = isDefined(options.tip);
-    const hasBar = isDefined(options.bar);
-    const hasRange = isDefined(options.range);
-    const hasVertical = isDefined(options.vertical);
+    const updates = new Map(Object.entries(options));
 
-    const isBoundariesUpdated = hasMin || hasMax;
-    const isValuesUpdated = hasFrom || hasTo;
-    const isThumbsUpdated = isBoundariesUpdated
-      || isValuesUpdated
-      || hasTip
-      || hasRange
-      || hasVertical;
-    const isBarUpdated = isBoundariesUpdated
-      || isValuesUpdated
-      || hasBar
-      || hasRange
-      || hasVertical;
+    const isBoundariesUpdated = updates.has('min') || updates.has('max');
+    const isValuesUpdated = updates.has('from') || updates.has('to');
 
-    hasVertical && this.setRatio('init');
+    const isThumbsUpdated = isBoundariesUpdated || isValuesUpdated
+      || updates.has('tip')
+      || updates.has('range')
+      || updates.has('vertical');
+
+    const isBarUpdated = isBoundariesUpdated || isValuesUpdated
+      || updates.has('bar')
+      || updates.has('range')
+      || updates.has('vertical');
+
+    updates.has('vertical') && this.setRatio('init');
     isBoundariesUpdated && this.setRatio();
     isThumbsUpdated && this.updateThumbs(options);
     isBarUpdated && this.bar.update(this.handleBar(options, 'update') as PBarOptions);
@@ -76,7 +70,7 @@ class Track extends Simple<TrackOptions> {
 
       data.value = value;
       data.key = `thumb:${i}`;
-      data.isEnabled = (i === 0) ? true : options.range;
+      data.isEnabled = (i === 0) || options.range;
 
       this.thumbs.push(this.handleThumb(data) as Thumb);
     });
@@ -145,26 +139,24 @@ class Track extends Simple<TrackOptions> {
     options: { [k: string]: unknown },
     todo: 'init' | 'update' = 'init',
   ): Bar | PBarOptions {
-    const props: PBarOptions = {};
     const isUpdate = todo === 'update';
     const {
       min, max, from, to, range,
     } = this.options;
 
+    const propsList: string[] = ['bar:isEnabled', 'range', 'vertical'];
+    const props: PBarOptions = propertyFilter(options, propsList);
+
     const isBoundariesUpdated = isDefined(options.min) || isDefined(options.max);
     const isValuesUpdated = isDefined(options.from) || isDefined(options.to);
-    const isWidthUpdated = isBoundariesUpdated || isValuesUpdated || isDefined(options.range);
+    const isLengthUpdated = isBoundariesUpdated || isValuesUpdated || isDefined(options.range);
 
     const length = range
       ? (100 / (max - min)) * ((to as number) - from)
       : convertSliderUnitToPercent({ min, max, value: from });
 
-    isDefined(options.bar) && (props.isEnabled = options.bar as boolean);
-    isDefined(options.range) && (props.range = options.range as boolean);
-    isDefined(options.vertical) && (props.vertical = options.vertical as boolean);
-
     range && (props.shift = `${convertSliderUnitToPercent({ min, max, value: from })}%`);
-    isWidthUpdated && (props.length = `${length}%`);
+    isLengthUpdated && (props.length = `${length}%`);
 
     if (isUpdate) return props;
 

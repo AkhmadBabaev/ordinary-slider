@@ -5,8 +5,7 @@ import { TrackOptions, PTrackOptions } from './Track/Interfaces';
 import { State, PState } from '../Model/Interfaces';
 
 import {
-  isDefined, isBooleanSpy,
-  propertyFilter, setAttributesAsData,
+  isBooleanSpy, propertyFilter, setAttributesAsData,
 } from '../helpers/helpers';
 
 class View extends Observable {
@@ -23,8 +22,8 @@ class View extends Observable {
 
     this.root = rootElem;
     this.options = options;
-    this.applyState = this.applyState.bind(this);
 
+    this.applyState = this.applyState.bind(this);
     this.handleThumbMove = this.handleThumbMove.bind(this);
     this.init();
   }
@@ -33,9 +32,9 @@ class View extends Observable {
     this.root.innerHTML = '';
     this.root.addEventListener('thumbmove', this.handleThumbMove as EventListener);
     !this.root.classList.contains('o-slider') && this.root.classList.add('o-slider');
-    this.handleVertical();
 
     setAttributesAsData(this.root, this.options);
+    this.handleVertical();
 
     this.attributesObserver = this.createAttributesObserver();
     this.track = this.handleTrack({ ...this.options }) as Track;
@@ -48,20 +47,17 @@ class View extends Observable {
     setAttributesAsData(this.root, options);
     this.attributesObserver.subscribe();
 
-    const hasFrom = isDefined(options.from);
-    const hasTo = isDefined(options.to);
-    const hasMin = isDefined(options.min);
-    const hasMax = isDefined(options.max);
-    const hasTip = isDefined(options.tip);
-    const hasBar = isDefined(options.bar);
-    const hasRange = isDefined(options.range);
-    const hasVertical = isDefined(options.vertical);
+    const updates = new Map(Object.entries(options));
 
-    const isBoundariesUpdated = hasMin || hasMax || hasVertical;
-    const isValuesUpdated = hasFrom || hasTo;
-    const isTrackUpdated = isBoundariesUpdated || isValuesUpdated || hasTip || hasBar || hasRange;
+    const isBoundariesUpdated = updates.has('min') || updates.has('max') || updates.has('vertical');
+    const isValuesUpdated = updates.has('from') || updates.has('to');
 
-    hasVertical && this.handleVertical();
+    const isTrackUpdated = isBoundariesUpdated || isValuesUpdated
+      || updates.has('tip')
+      || updates.has('bar')
+      || updates.has('range');
+
+    updates.has('vertical') && this.handleVertical();
     isTrackUpdated && this.track.update(this.handleTrack(options, 'update') as PTrackOptions);
   }
 
@@ -77,13 +73,13 @@ class View extends Observable {
 
   private handleThumbMove(event: CustomEvent): void {
     const { value, key } = event.detail;
-
     const data: { [k: string]: unknown } = {};
 
     key === 'thumb:0' && (data.from = value);
     key === 'thumb:1' && (data.to = value);
 
     this.notify(data);
+    event.stopPropagation();
   }
 
   private handleTrack(
