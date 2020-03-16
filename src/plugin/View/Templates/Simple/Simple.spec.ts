@@ -26,9 +26,7 @@ class Testee extends Simple<Options> {
 const testee = new Testee(testeeOptions);
 
 describe('Simple', () => {
-  test('createElement should create an element', () => {
-    expect(testee.getElement()).toBeInstanceOf(HTMLElement);
-  });
+  test('createElement should create an element', () => expect(testee.getElement()).toBeInstanceOf(HTMLElement));
 
   test('getElement should return valid element', () => {
     const element = testee.getElement();

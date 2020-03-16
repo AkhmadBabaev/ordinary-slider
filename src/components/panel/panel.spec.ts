@@ -5,7 +5,7 @@ import defaultState from '../../plugin/Model/defaultState';
 
 document.body.innerHTML = `
   <div class="panel">
-    <div class="panel__slider"></div>
+    <div class="js-panel__slider"></div>
 
     <div class="panel__field">
       <input class="input" name="min" type="number">
@@ -20,16 +20,18 @@ document.body.innerHTML = `
 const panel = new Panel(document.body.querySelector('.panel') as HTMLElement);
 
 const options = {
+  range: false,
+  vertical: false,
+  tip: true,
+  bar: true,
   min: 0,
   max: 100,
   step: 1,
-  bar: true,
-  tip: true,
-  value: 10,
+  from: 10,
 };
 
 describe('Panel', () => {
-  afterEach(() => { panel.setOptions({ ...defaultState }); });
+  afterEach(() => panel.setSettings({ ...defaultState }));
 
   test('getElement returns root element of panel', () => {
     const element = panel.getElement();
@@ -40,20 +42,30 @@ describe('Panel', () => {
   });
 
   test('getOptions returns current state of slider', () => {
-    expect(panel.getOptions()).toEqual(defaultState);
+    expect(panel.getSettings()).toEqual(defaultState);
   });
 
   test('setOptions sets options new options', () => {
-    panel.setOptions(options);
-    expect(panel.getOptions()).toEqual(options);
+    panel.setSettings(options);
+    expect(panel.getSettings()).toEqual(options);
   });
 
   test('subscribe should notify about updates', () => {
     const callback = jest.fn();
 
     panel.subscribe(callback);
-    panel.setOptions(options);
+    panel.setSettings(options);
 
     expect(callback).toHaveBeenCalled();
+  });
+
+  test('unsubscribe stops notifications about updates', () => {
+    const callback = jest.fn();
+
+    panel.subscribe(callback);
+    panel.unsubscribe(callback);
+    panel.setSettings(options);
+
+    expect(callback).not.toHaveBeenCalled();
   });
 });

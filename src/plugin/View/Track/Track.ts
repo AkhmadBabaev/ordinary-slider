@@ -2,24 +2,50 @@ import Simple from '../Templates/Simple/Simple';
 import Thumb from '../Thumb/Thumb';
 import Bar from '../Bar/Bar';
 
-import { TrackOptions } from './Interfaces';
-import { ThumbOptions } from '../Thumb/Interfaces';
-import { BarOptions } from '../Bar/Interfaces';
+import { TrackOptions, PTrackOptions } from './Interfaces';
+import { ThumbOptions, PThumbOptions } from '../Thumb/Interfaces';
+import { BarOptions, PBarOptions } from '../Bar/Interfaces';
 
 import {
-  isDefined, convertValueUnitToPercent, debounce,
+  isDefined, convertSliderUnitToPercent, debounce,
+  propertyFilter,
 } from '../../helpers/helpers';
 
 class Track extends Simple<TrackOptions> {
-  private thumb: Thumb;
+  private thumbs: Thumb[] = [];
 
   private bar: Bar;
 
   constructor(options: TrackOptions) {
     super(options);
+    this.handleThumbMove = this.handleThumbMove.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
-    this.handleWindowResize = debounce(this.handleWindowResize, 800);
+    this.handleWindowResize = debounce(this.handleWindowResize, 500);
     this.init();
+  }
+
+  public update(options: PTrackOptions): void {
+    super.update(options);
+
+    const updates = new Map(Object.entries(options));
+
+    const isBoundariesUpdated = updates.has('min') || updates.has('max');
+    const isValuesUpdated = updates.has('from') || updates.has('to');
+
+    const isThumbsUpdated = isBoundariesUpdated || isValuesUpdated
+      || updates.has('tip')
+      || updates.has('range')
+      || updates.has('vertical');
+
+    const isBarUpdated = isBoundariesUpdated || isValuesUpdated
+      || updates.has('bar')
+      || updates.has('range')
+      || updates.has('vertical');
+
+    updates.has('vertical') && this.setRatio('init');
+    isBoundariesUpdated && this.setRatio();
+    isThumbsUpdated && this.updateThumbs(options);
+    isBarUpdated && this.bar.update(this.handleBar(options, 'update') as PBarOptions);
   }
 
   protected init(): void {
@@ -27,89 +53,146 @@ class Track extends Simple<TrackOptions> {
     this.options.parent.append(this.element);
 
     this.setRatio('init');
-    this.handleThumb();
-    this.handleBar();
+    this.initThumbs();
+
+    this.bar = this.handleBar({ ...this.options }) as Bar;
+    this.element.addEventListener('thumbmove', this.handleThumbMove as EventListener);
 
     window.addEventListener('resize', this.handleWindowResize);
   }
 
-  public update(options: Partial<TrackOptions>): void {
-    super.update(options);
+  private initThumbs(): void {
+    const { options } = this;
+    const values = [options.from, options.to];
 
-    const hasValue = isDefined(options.value);
-    const hasMin = isDefined(options.min);
-    const hasMax = isDefined(options.max);
-    const hasTip = isDefined(options.tip);
-    const hasBar = isDefined(options.bar);
+    values.forEach((value, i) => {
+      const data = { ...options } as PThumbOptions;
 
-    const isBoundariesUpdated = hasMin || hasMax;
-    const isThumbUpdated = isBoundariesUpdated || hasValue || hasTip;
-    const isBarUpdated = isBoundariesUpdated || hasValue || hasBar;
+      data.value = value;
+      data.key = `thumb:${i}`;
+      data.isEnabled = (i === 0) || options.range;
 
-    isBoundariesUpdated && this.setRatio();
-    isThumbUpdated && this.handleThumb(options, 'update');
-    isBarUpdated && this.handleBar(options, 'update');
+      this.thumbs.push(this.handleThumb(data) as Thumb);
+    });
+  }
+
+  private updateThumbs(options: { [k: string]: unknown }): void {
+    const values = [options.from, options.to];
+
+    this.thumbs.forEach((thumb, i) => {
+      const data = { ...options };
+
+      isDefined(values[i]) ? (data.value = values[i]) : delete data.value;
+      isDefined(options.range) && (i > 0) && (data.isEnabled = options.range);
+
+      if (!Object.keys(data).length) return;
+      thumb.update(this.handleThumb(data, 'update') as PThumbOptions);
+    });
   }
 
   private setRatio(todo?: string): void {
-    (todo === 'init') && (this.options.trackWidth = this.element.clientWidth);
+    if (todo === 'init') {
+      this.options.length = this.options.vertical
+        ? this.element.clientHeight
+        : this.element.clientWidth;
+    }
 
-    const { min, max, trackWidth } = this.options;
-    this.options.ratio = trackWidth / (max - min);
+    const { min, max, length } = this.options;
+    this.options.ratio = length / (max - min);
   }
 
   private handleWindowResize(): void {
     // track width was not changed
-    if (this.options.trackWidth === this.element.clientWidth) return;
+    const length = this.options.vertical
+      ? this.element.clientHeight
+      : this.element.clientWidth;
+
+    if (this.options.length === length) return;
 
     this.setRatio('init');
     this.handleThumb({ ratio: this.options.ratio }, 'update');
   }
 
-  private handleThumb(options?: {}, todo?: string): void {
-    const storage = (options || this.options) as { [k: string]: unknown };
-    const props: Partial<ThumbOptions> = {};
-    const isInit = !isDefined(todo);
+  private handleThumb(
+    options: { [k: string]: unknown },
+    todo: 'init' | 'update' = 'init',
+  ): Thumb | PThumbOptions {
     const isUpdate = todo === 'update';
 
-    const isRatioUpdated = isDefined(storage.ratio)
-      || isDefined(storage.min)
-      || isDefined(storage.max);
+    const isBoundariesUpdated = isDefined(options.min) || isDefined(options.max);
+    const isRatioUpdated = isBoundariesUpdated
+      || isDefined(options.ratio)
+      || isDefined(options.vertical);
 
-    isDefined(storage.value) && (props.value = storage.value as number);
-    isDefined(storage.min) && (props.min = storage.min as number);
-    isDefined(storage.max) && (props.max = storage.max as number);
-    isDefined(storage.tip) && (props.tip = storage.tip as boolean);
+    const propsList: string[] = ['min', 'max', 'value', 'key', 'tip', 'isEnabled', 'vertical'];
+    const props: PThumbOptions = propertyFilter(options, propsList);
+
     isRatioUpdated && (props.ratio = this.options.ratio as number);
 
-    isInit
-      && (props.parent = this.element)
-      && (this.thumb = new Thumb(props as ThumbOptions));
+    if (isUpdate) return props;
 
-    isUpdate && this.thumb.update(props);
+    props.parent = this.element;
+    return new Thumb(props as ThumbOptions);
   }
 
-  private handleBar(options?: {}, todo?: string): void {
-    const storage = (options || this.options) as { [k: string]: unknown };
-    const props: Partial<BarOptions> = {};
-    const isInit = !isDefined(todo);
+  private handleBar(
+    options: { [k: string]: unknown },
+    todo: 'init' | 'update' = 'init',
+  ): Bar | PBarOptions {
     const isUpdate = todo === 'update';
+    const {
+      min, max, from, to, range,
+    } = this.options;
 
-    const isWidthUpdated = isDefined(storage.value)
-      || isDefined(storage.min)
-      || isDefined(storage.max);
+    const propsList: string[] = ['bar:isEnabled', 'range', 'vertical'];
+    const props: PBarOptions = propertyFilter(options, propsList);
 
-    const { min, max, value } = this.options;
-    const width = convertValueUnitToPercent({ min, max, value });
+    const isBoundariesUpdated = isDefined(options.min) || isDefined(options.max);
+    const isValuesUpdated = isDefined(options.from) || isDefined(options.to);
+    const isLengthUpdated = isBoundariesUpdated || isValuesUpdated || isDefined(options.range);
 
-    isDefined(storage.bar) && (props.isEnabled = storage.bar as boolean);
-    isWidthUpdated && (props.width = width);
+    const length = range
+      ? (100 / (max - min)) * ((to as number) - from)
+      : convertSliderUnitToPercent({ min, max, value: from });
 
-    isInit
-      && (props.parent = this.element)
-      && (this.bar = new Bar(props as BarOptions));
+    range && (props.shift = `${convertSliderUnitToPercent({ min, max, value: from })}%`);
+    isLengthUpdated && (props.length = `${length}%`);
 
-    isUpdate && this.bar.update(props);
+    if (isUpdate) return props;
+
+    props.parent = this.element;
+    return new Bar(props as BarOptions);
+  }
+
+  private handleThumbMove(event: CustomEvent): void {
+    if (!this.options.range) return;
+
+    const { value, key } = event.detail;
+    const { min, max } = this.options;
+    const values = this.thumbs.map((thumb) => thumb.getOptions().value);
+
+    const isFirstEqualToMin = values[0] === min;
+    const isSecondEqualToMax = values[1] === max;
+
+    const isFirstThumb = key === 'thumb:0';
+    const isSecondThumb = key === 'thumb:1';
+
+    const isGreaterThanSecondValue = value > values[1];
+    const isLessThanFirstValue = value < values[0];
+
+    const isFirstThumbBecomeSecond = isFirstThumb
+      && isGreaterThanSecondValue && !isSecondEqualToMax;
+
+    const isSecondThumbBecomeFirst = isSecondThumb
+      && isLessThanFirstValue && !isFirstEqualToMin;
+
+    this.element.lastElementChild !== event.target
+      && this.element.append(event.target as HTMLElement);
+
+    if (isFirstThumbBecomeSecond || isSecondThumbBecomeFirst) {
+      this.thumbs.reverse();
+      this.thumbs.forEach((thumb, i) => thumb.update({ key: `thumb:${i}` }));
+    }
   }
 }
 

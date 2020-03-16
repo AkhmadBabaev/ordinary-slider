@@ -20,10 +20,7 @@ describe('Input', () => {
   test('setAttribute should set specified attribute', async () => {
     input.setAttribute('type', 'number');
 
-    await new Promise((resolve) => {
-      requestAnimationFrame(() => resolve());
-    });
-
+    await new Promise((res) => requestAnimationFrame(() => res()));
     expect(input.getAttribute('type')).toBe('number');
   });
 });

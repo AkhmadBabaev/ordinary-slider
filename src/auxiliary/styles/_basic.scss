@@ -72,14 +72,18 @@ input {
   }
 
   &__container {
-    padding-top: 100px;
-    padding-bottom: 100px;
+    padding-top: 8em;
+    padding-bottom: 8em;
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    justify-content: space-around;
   }
 }
 
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 62.5rem;
   padding-right: 1rem;
   padding-left: 1rem;
   margin: auto;

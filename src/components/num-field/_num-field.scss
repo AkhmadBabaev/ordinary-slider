@@ -14,6 +14,8 @@
     height: 100%;
     width: 5em;
     min-width: auto;
+    padding-left: .3em;
+    padding-right: .3em;
     box-sizing: border-box;
     cursor: pointer;
   }
@@ -21,9 +23,12 @@
   &__title {
     margin: auto;
     user-select: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   &__input {
+    font-size: 0.812em;
     color: var(--field-color);
     width: 50%;
     height: 100%;
@@ -35,5 +40,10 @@
     flex-shrink: 1;
 
     box-sizing: border-box;
+
+    &::selection {
+      color: #fff;
+      background-color: var(--field-color);
+    }
   }
 }

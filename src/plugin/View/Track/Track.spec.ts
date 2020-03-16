@@ -3,36 +3,44 @@ import Simple from '../Templates/Simple/Simple';
 
 import { TrackOptions } from './Interfaces';
 
-import { hasChild, testHasInstance } from '../../helpers/helpers';
+import { hasChild } from '../../helpers/helpers';
 
 const options: TrackOptions = {
   parent: document.body,
-  min: 0,
-  max: 100,
-  value: 0,
-  trackWidth: 300,
-  ratio: 3,
+  vertical: false,
+  range: false,
   tip: true,
   bar: true,
+  min: 0,
+  max: 100,
+  from: 0,
+  ratio: 3,
+  length: 300,
 };
 
 const track = new Track(options as TrackOptions);
 
 describe('Track', () => {
-  test('is an instance of class Simple',
-    () => testHasInstance(track, Simple));
+  test('is an instance of class Simple', () => expect(track).toBeInstanceOf(Simple));
 
   test('should be added to parent', () => {
-    expect(hasChild(track.getOptions().parent, track.getElement())).toBe(true);
+    expect(hasChild(track.getOptions().parent, track.getElement())).toBeTruthy();
   });
 
   test('contains element thumb', () => {
-    const isFounded = !!track.getElement().querySelector('.o-slider__thumb');
-    expect(isFounded).toBe(true);
+    const thumb = track.getElement().querySelector('.o-slider__thumb') as HTMLElement;
+    expect(hasChild(track.getElement(), thumb)).toBeTruthy();
   });
 
   test('contains element bar', () => {
-    const isFounded = !!track.getElement().querySelector('.o-slider__bar');
-    expect(isFounded).toBe(true);
+    const bar = track.getElement().querySelector('.o-slider__bar') as HTMLElement;
+    expect(hasChild(track.getElement(), bar)).toBeTruthy();
+  });
+
+  test('if range set as true should contain 2 thumbs', () => {
+    const thumbs = track.getElement().querySelectorAll('.o-slider__thumb');
+    thumbs.forEach((thumb) => {
+      expect(hasChild(track.getElement(), thumb as HTMLElement)).toBeTruthy();
+    });
   });
 });

@@ -1,6 +1,6 @@
-import { State } from '../Model/Interfaces';
+import { PState } from '../Model/Interfaces';
 
 export interface View {
-  applyState: (data: Partial<State>) => void;
+  applyState: (data: PState) => void;
   subscribe: (cb: Function) => void;
 }

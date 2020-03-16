@@ -3,30 +3,29 @@ import Observable from '../Observable/Observable';
 
 import defaultState from '../Model/defaultState';
 
-import { testHasInstance } from '../helpers/helpers';
+import { hasChild } from '../helpers/helpers';
 
 const view = new View(document.body, defaultState);
 
 describe('View', () => {
-  test('is an instance of class Observable',
-    () => testHasInstance(view, Observable));
+  test('is an instance of class Observable', () => expect(view).toBeInstanceOf(Observable));
 
   test('should be merged into parent', () => {
-    document.body.classList.contains('o-slider');
+    expect(document.body.classList.contains('o-slider')).toBeTruthy();
   });
 
   test('contains element track', () => {
-    const isFounded = !!document.body.querySelector('.o-slider__track');
-    expect(isFounded).toBe(true);
+    const track = document.body.querySelector('.o-slider__track') as HTMLElement;
+    expect(hasChild(document.body, track)).toBeTruthy();
   });
 
-  test('should react to custom event *positionChanged', () => {
-    const thumbElem: HTMLElement | null = document.body.querySelector('.o-slider__thumb');
+  test('should react to custom event *thumbmove', () => {
+    const thumb: HTMLElement | null = document.body.querySelector('.o-slider__thumb');
     view.notify = jest.fn();
 
-    (thumbElem as HTMLElement).dispatchEvent(new CustomEvent('positionChanged', {
-      bubbles: true,
+    (thumb as HTMLElement).dispatchEvent(new CustomEvent('thumbmove', {
       detail: { value: 5 },
+      bubbles: true,
     }));
 
     expect(view.notify).toHaveBeenCalled();

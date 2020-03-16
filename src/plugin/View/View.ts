@@ -1,12 +1,11 @@
 import Observable from '../Observable/Observable';
 import Track from './Track/Track';
 
-import { TrackOptions } from './Track/Interfaces';
-import { State } from '../Model/Interfaces';
+import { TrackOptions, PTrackOptions } from './Track/Interfaces';
+import { State, PState } from '../Model/Interfaces';
 
 import {
-  isDefined, isBooleanSpy,
-  propertyFilter, setAttributesAsData,
+  isBooleanSpy, propertyFilter, setAttributesAsData,
 } from '../helpers/helpers';
 
 class View extends Observable {
@@ -23,59 +22,53 @@ class View extends Observable {
 
     this.root = rootElem;
     this.options = options;
-    this.applyState = this.applyState.bind(this);
 
-    this.handlePositionChanged = this.handlePositionChanged.bind(this);
+    this.applyState = this.applyState.bind(this);
+    this.handleThumbMove = this.handleThumbMove.bind(this);
     this.init();
   }
 
-  private init(): void {
-    this.root.innerHTML = '';
-    !this.root.classList.contains('o-slider') && this.root.classList.add('o-slider');
-    this.root.addEventListener('positionChanged', this.handlePositionChanged as EventListener);
-
-    setAttributesAsData(this.root, this.options);
-
-    this.attributesObserver = this.createAttributesObserver();
-    this.handleTrack();
-  }
-
-  public applyState(options: Partial<State>): void {
+  public applyState(options: PState): void {
     this.options = { ...this.options, ...options };
 
     this.attributesObserver.unsubscribe();
     setAttributesAsData(this.root, options);
     this.attributesObserver.subscribe();
 
-    const hasValue = isDefined(options.value);
-    const hasMin = isDefined(options.min);
-    const hasMax = isDefined(options.max);
-    const hasTip = isDefined(options.tip);
-    const hasBar = isDefined(options.bar);
+    const updates = new Map(Object.entries(options));
 
-    const isTrackUpdated = hasMin || hasMax || hasValue || hasTip || hasBar;
+    const isBoundariesUpdated = updates.has('min') || updates.has('max') || updates.has('vertical');
+    const isValuesUpdated = updates.has('from') || updates.has('to');
 
-    isTrackUpdated && this.handleTrack(options, 'update');
+    const isTrackUpdated = isBoundariesUpdated || isValuesUpdated
+      || updates.has('tip')
+      || updates.has('bar')
+      || updates.has('range');
+
+    updates.has('vertical') && this.handleVertical();
+    isTrackUpdated && this.track.update(this.handleTrack(options, 'update') as PTrackOptions);
   }
 
-  private handlePositionChanged(event: CustomEvent): void {
-    const { value } = event.detail;
-    this.notify({ value });
+  private init(): void {
+    this.root.innerHTML = '';
+    this.root.addEventListener('thumbmove', this.handleThumbMove as EventListener);
+    !this.root.classList.contains('o-slider') && this.root.classList.add('o-slider');
+
+    setAttributesAsData(this.root, this.options);
+    this.handleVertical();
+
+    this.attributesObserver = this.createAttributesObserver();
+    this.track = this.handleTrack({ ...this.options }) as Track;
   }
 
-  private handleTrack(options?: {}, todo?: string): void {
-    const storage = (options || this.options) as { [k: string]: unknown };
-    const isInit = !isDefined(todo);
-    const isUpdate = todo === 'update';
-
-    const propsList: string[] = ['min', 'max', 'value', 'tip', 'bar'];
-    const props: Partial<TrackOptions> = propertyFilter(storage, propsList);
-
-    isInit
-      && (props.parent = this.root)
-      && (this.track = new Track(props as TrackOptions));
-
-    isUpdate && this.track.update(props);
+  protected handleVertical(): void {
+    if (this.options.vertical) {
+      this.root.classList.add('o-slider_is_vertical');
+      this.root.classList.remove('o-slider_is_horizontal');
+    } else {
+      this.root.classList.add('o-slider_is_horizontal');
+      this.root.classList.remove('o-slider_is_vertical');
+    }
   }
 
   protected createAttributesObserver(): { [k: string]: Function } {
@@ -106,6 +99,32 @@ class View extends Observable {
       subscribe: (): void => observer.observe(root, config),
       unsubscribe: (): void => observer.disconnect(),
     };
+  }
+
+  private handleThumbMove(event: CustomEvent): void {
+    const { value, key } = event.detail;
+    const data: { [k: string]: unknown } = {};
+
+    key === 'thumb:0' && (data.from = value);
+    key === 'thumb:1' && (data.to = value);
+
+    this.notify(data);
+    event.stopPropagation();
+  }
+
+  private handleTrack(
+    options: { [k: string]: unknown },
+    todo: 'init' | 'update' = 'init',
+  ): Track | PTrackOptions {
+    const isUpdate = todo === 'update';
+
+    const propsList: string[] = ['min', 'max', 'from', 'to', 'tip', 'bar', 'range', 'vertical'];
+    const props: PTrackOptions = propertyFilter(options, propsList);
+
+    if (isUpdate) return props;
+
+    props.parent = this.root;
+    return new Track(props as TrackOptions);
   }
 }
 

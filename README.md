@@ -73,14 +73,14 @@ $(() => {
 
 ```javascript
 $(selector).oSlider({
-  value: 50,
+  from: 50,
 });
 ```
 
 Тоже самое что и выше только с помощью дата атрибутов
 
 ```html
-<div class="o-slider" data-value="50"></div>
+<div class="o-slider" data-from="50"></div>
 
 <script>
   $('.o-slider').oSlider();
@@ -100,9 +100,12 @@ $(selector).oSlider({
 | min | number | 0 | минимальное значение |
 | max | number | 100 | максимальное значение |
 | step | number | 1 | размера шага |
-| value | number | 0 | позиция слайдера |
+| from | number | 0 | позиция ползунка, если `range: true` то нижняя граница интервала |
+| to | number | null | верхняя граница интервала, этот параметр не имеет смысла если `range: false` |
 | tip | boolean | true | добавить подсказку |
 | bar | boolean | true | добавить бар |
+| range | boolean | false | создать интервал |
+| vertical | boolean | false | сменить направление слайдера на вертикальное |
 
 ### Методы
 
@@ -123,10 +126,10 @@ const $slider = $(selector).oSlider();
 
 $slider.setSettings({
   min: 10,
-  value: 20,
+  from: 20,
 });
 
-console.log($slider.getSettings()); // {  min: 10, value: 20, ...rest }
+console.log($slider.getSettings()); // {  min: 10, from: 20, ...rest }
 ```
 
 #### subscribe(callback)
@@ -143,12 +146,12 @@ $slider.subscribe((changedSettings) => {
   console.log(changedSettings);
 });
 
-// изменяем value
+// изменяем from
 $slider.setSettings({
-  value: 10,
+  from: 10,
 });
 
-// console.log выдаст { value: 10 }
+// console.log выдаст { from: 10 }
 ```
 
 #### unsubscribe(callback)
@@ -168,9 +171,9 @@ $slider.subscribe(cb);
 // отписываем cb
 $slider.unsubscribe(cb)
 
-// изменяем value
+// изменяем from
 $slider.setSettings({
-  value: 10,
+  from: 10,
 });
 
 // console.log не выполнится, так как функция cb удалена из подписчиков
@@ -178,14 +181,14 @@ $slider.setSettings({
 
 #### reset()
 
-Сбрасывает к настройкам по умолчанию
+Сбрасывает к настройкам по умолчанию.
 
 ```javascript
 const $slider = $(selector).oSlider({
   tip: false, // изменяем дефолтную конфигурацию
 });
 
-// возвращаем в прежнее состояние
+// возвращаем в дефолтным настройкам
 $slider.reset();
 ```
 

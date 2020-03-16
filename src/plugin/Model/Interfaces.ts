@@ -1,15 +1,20 @@
 export interface State {
+  vertical: boolean;
+  range: boolean;
+  bar: boolean;
+  tip: boolean;
   min: number;
   max: number;
   step: number;
-  value: number;
-  tip: boolean;
-  bar: boolean;
+  from: number;
+  to?: number;
 }
+
+export type PState = Partial<State>;
 
 export interface Model {
   reset: () => void;
-  setState: (data: Partial<State>, notify?: boolean) => void;
+  setState: (data: PState, notify?: boolean) => void;
   getState: () => State;
   subscribe: (cb: Function) => void;
   unsubscribe: (cb: Function) => void;

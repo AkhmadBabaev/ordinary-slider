@@ -1,4 +1,4 @@
-import { Model, State } from '../Model/Interfaces';
+import { Model, State, PState } from '../Model/Interfaces';
 import { View } from '../View/Interfaces';
 
 class Presenter {
@@ -14,11 +14,6 @@ class Presenter {
     this.init();
   }
 
-  private init(): void {
-    this.model.subscribe(this.view.applyState);
-    this.view.subscribe(this.model.setState);
-  }
-
   public subscribe(callback: Function): void {
     this.model.subscribe(callback);
   }
@@ -27,7 +22,7 @@ class Presenter {
     this.model.unsubscribe(callback);
   }
 
-  public setState(options: Partial<State>): void {
+  public setState(options: PState): void {
     this.model.setState(options);
   }
 
@@ -37,6 +32,11 @@ class Presenter {
 
   public reset(): void {
     this.model.reset();
+  }
+
+  private init(): void {
+    this.model.subscribe(this.view.applyState);
+    this.view.subscribe(this.model.setState);
   }
 }
 

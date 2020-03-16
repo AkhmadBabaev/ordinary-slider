@@ -1,48 +1,23 @@
 import {
   isNumber, propertyFilter, hasChild,
-  throttle, debounce, convertValueUnitToPercent,
-  setAttributesAsData, isBooleanSpy,
+  throttle, debounce, convertSliderUnitToPercent,
+  setAttributesAsData, isBooleanSpy, objectReflection,
 } from './helpers';
 
 describe('isNumber', () => {
   describe('Values that should be a number', () => {
-    test('1', () => {
-      expect(isNumber(1)).toBe(true);
-    });
-
-    test('0', () => {
-      expect(isNumber(0)).toBe(true);
-    });
-
-    test('-1', () => {
-      expect(isNumber(-1)).toBe(true);
-    });
-
-    test('\'1\'', () => {
-      expect(isNumber('1')).toBe(true);
-    });
-
-    test('Infinity', () => {
-      expect(isNumber(Infinity)).toBe(true);
-    });
+    test('1', () => expect(isNumber(1)).toBe(true));
+    test('0', () => expect(isNumber(0)).toBe(true));
+    test('-1', () => expect(isNumber(-1)).toBe(true));
+    test('\'1\'', () => expect(isNumber('1')).toBe(true));
+    test('Infinity', () => expect(isNumber(Infinity)).toBe(true));
   });
 
   describe('Values that shouldn\'t be a number', () => {
-    test('1px', () => {
-      expect(isNumber('1px')).toBe(false);
-    });
-
-    test('NaN', () => {
-      expect(isNumber(NaN)).toBe(false);
-    });
-
-    test('False', () => {
-      expect(isNumber(false)).toBe(false);
-    });
-
-    test('empty string', () => {
-      expect(isNumber('')).toBe(false);
-    });
+    test('1px', () => expect(isNumber('1px')).toBe(false));
+    test('NaN', () => expect(isNumber(NaN)).toBe(false));
+    test('false', () => expect(isNumber(false)).toBe(false));
+    test('empty string', () => expect(isNumber('')).toBe(false));
   });
 });
 
@@ -86,9 +61,7 @@ describe('throttle', () => {
     fn(3);
 
     expect(log).toBe(1);
-
     jest.advanceTimersByTime(1000);
-
     expect(log).toBe(3);
   });
 
@@ -103,7 +76,6 @@ describe('throttle', () => {
     fn(6);
 
     jest.advanceTimersByTime(400);
-
     expect(log).toBe(6);
   });
 });
@@ -130,14 +102,12 @@ describe('debounce', () => {
 
     fn();
     expect(fake.something).toBe(2);
-
     jest.advanceTimersByTime(500);
 
     fn();
     expect(fake.something).toBe(2);
 
     jest.advanceTimersByTime(1000);
-
     expect(fake.something).toBe(4);
   });
 });
@@ -156,9 +126,9 @@ describe('hasChild', () => {
   });
 });
 
-test('convertValueUnitToPercent should convert value unit into percent', () => {
+test('convertSliderUnitToPercent should convert value unit into percent', () => {
   const [min, max, value] = [50, 100, 60];
-  expect(convertValueUnitToPercent({ min, max, value })).toBe('20%');
+  expect(convertSliderUnitToPercent({ min, max, value })).toBe(20);
 });
 
 test('setDataAttributes should set attributes to element', () => {
@@ -173,4 +143,11 @@ test('isBooleanSpy should check is value a boolean that looks like a string', ()
   expect(isBooleanSpy('false')).toBeTruthy();
   expect(isBooleanSpy('true')).toBeTruthy();
   expect(isBooleanSpy('hello')).toBeFalsy();
+});
+
+test('objectReflection make props order of object B like A', () => {
+  const a = { day: 'sunny', weather: 'warm', birds: true };
+  const b = { weather: 'cold', day: 'windy' };
+  const result = { day: 'windy', weather: 'cold' };
+  expect(objectReflection(a, b)).toEqual(result);
 });

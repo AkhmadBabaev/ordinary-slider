@@ -1,5 +1,23 @@
 extends ./auxiliary/markup/layout
 
 block append content
-  +panel({ additionalClasses: 'page__panel', styles: '--l: 45%' })
-  +panel({ additionalClasses: 'page__panel', styles: '--l: 45%; --s: 25%' })
+
+  -
+    const panelsData = [
+      {
+        styles: '--h: 255; --s: 10%; --l: 40%',
+        options: { min: -50, max: 50, step: 10 },
+      },
+      {
+        styles: '--h: 170; --s: 15%; --l: 45%',
+        options: { range: "true", from: 30, to: 70 },
+      },
+      {
+        styles: '--s: 15%; --l: 45%',
+        options: { vertical: "true", max: 10, step: 2.5, from: 0 },
+      },
+    ];
+
+  each panel in panelsData
+    +panel({ additionalClasses: 'page__panel', styles: panel.styles, options: panel.options })
+
