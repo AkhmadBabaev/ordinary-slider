@@ -9,11 +9,11 @@ const options: ThumbOptions = {
   parent: document.body,
   isEnabled: true,
   vertical: false,
+  tip: false,
   min: 0,
   max: 100,
   value: 0,
   ratio: 3,
-  tip: true,
 };
 
 const thumb = new Thumb(options);
@@ -25,7 +25,14 @@ describe('Thumb', () => {
     expect(hasChild(thumb.getOptions().parent, thumb.getElement())).toBeTruthy();
   });
 
-  test('contains element tip', () => {
+  test('shouldn\'t contain element tip if tip set as false', () => {
+    const tip = thumb.getElement().querySelector('.o-slider__tip') as HTMLElement;
+    expect(hasChild(thumb.getElement(), tip)).toBeFalsy();
+  });
+
+  test('contains element tip if tip set as true', () => {
+    thumb.update({ tip: true });
+
     const tip = thumb.getElement().querySelector('.o-slider__tip') as HTMLElement;
     expect(hasChild(thumb.getElement(), tip)).toBeTruthy();
   });

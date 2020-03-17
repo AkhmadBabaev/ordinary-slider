@@ -9,8 +9,8 @@ const options: TrackOptions = {
   parent: document.body,
   vertical: false,
   range: false,
-  tip: true,
-  bar: true,
+  tip: false,
+  bar: false,
   min: 0,
   max: 100,
   from: 0,
@@ -32,7 +32,14 @@ describe('Track', () => {
     expect(hasChild(track.getElement(), thumb)).toBeTruthy();
   });
 
-  test('contains element bar', () => {
+  test('shouldn\'t contain element bar if bar set as false', () => {
+    const bar = track.getElement().querySelector('.o-slider__bar') as HTMLElement;
+    expect(hasChild(track.getElement(), bar)).toBeFalsy();
+  });
+
+  test('contains element bar if bar set as true', () => {
+    track.update({ bar: true });
+
     const bar = track.getElement().querySelector('.o-slider__bar') as HTMLElement;
     expect(hasChild(track.getElement(), bar)).toBeTruthy();
   });

@@ -20,10 +20,10 @@ document.body.innerHTML = `
 const panel = new Panel(document.body.querySelector('.js-panel') as HTMLElement);
 
 const options = {
-  range: false,
   vertical: false,
-  tip: true,
-  bar: true,
+  range: false,
+  tip: false,
+  bar: false,
   min: 0,
   max: 100,
   step: 1,
