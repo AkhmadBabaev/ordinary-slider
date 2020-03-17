@@ -4,20 +4,20 @@ import Panel from './panel';
 import defaultState from '../../plugin/Model/defaultState';
 
 document.body.innerHTML = `
-  <div class="panel">
+  <div class="js-panel">
     <div class="js-panel__slider"></div>
 
-    <div class="panel__field">
+    <div class="js-panel__field">
       <input class="input" name="min" type="number">
     </div>
 
-    <div class="panel__checkbox">
+    <div class="js-panel__checkbox">
       <input class="input" name="bar" type="checkbox">
     </div>
   </div>
 `;
 
-const panel = new Panel(document.body.querySelector('.panel') as HTMLElement);
+const panel = new Panel(document.body.querySelector('.js-panel') as HTMLElement);
 
 const options = {
   range: false,
@@ -38,7 +38,7 @@ describe('Panel', () => {
 
     expect(element).toBeInstanceOf(HTMLElement);
     expect(element.tagName).toBe('DIV');
-    expect(element.classList.contains('panel')).toBeTruthy();
+    expect(element.classList.contains('js-panel')).toBeTruthy();
   });
 
   test('getOptions returns current state of slider', () => {
