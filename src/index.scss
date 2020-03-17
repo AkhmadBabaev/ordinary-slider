@@ -8,6 +8,7 @@
   Components
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
 
+@import './components/panel-list/panel-list';
 @import './components/panel/panel';
 @import './components/checkbox/checkbox';
 @import './components/num-field/num-field';
@@ -15,9 +16,3 @@
 /* ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   Additional Styles
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
-
-.page {
-  &__panel {
-    & + & { margin-top: 8em; }
-  }
-}
