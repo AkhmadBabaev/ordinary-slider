@@ -102,8 +102,8 @@ $(selector).oSlider({
 | step | number | 1 | размера шага |
 | from | number | 0 | позиция ползунка, если `range: true` то нижняя граница интервала |
 | to | number | null | верхняя граница интервала, этот параметр не имеет смысла если `range: false` |
-| tip | boolean | true | добавить подсказку |
-| bar | boolean | true | добавить бар |
+| tip | boolean | false | добавить подсказку |
+| bar | boolean | false | добавить бар |
 | range | boolean | false | создать интервал |
 | vertical | boolean | false | сменить направление слайдера на вертикальное |
 

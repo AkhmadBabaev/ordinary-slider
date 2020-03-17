@@ -1,0 +1,11 @@
+mixin panel-list({ additionalClasses, mods } = {})
+  -
+    const className = 'panel-list';
+    const classes = generateClassList({ className, mods, additionalClasses })
+    const panelsData = require('./components/panel-list/data.json');
+
+
+  div(class= classes)
+
+    each panel in panelsData
+      +panel({ additionalClasses: `${className}__panel`, styles: panel.styles, options: panel.options })

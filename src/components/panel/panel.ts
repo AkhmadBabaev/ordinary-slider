@@ -13,13 +13,13 @@ class Panel {
 
   constructor(elem: HTMLElement) {
     this.element = elem;
+
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSliderChanges = this.handleSliderChanges.bind(this);
     this.setSettings = this.setSettings.bind(this);
     this.getSettings = this.getSettings.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.unsubscribe = this.unsubscribe.bind(this);
-
     this.init();
   }
 
@@ -44,8 +44,6 @@ class Panel {
   }
 
   protected init(): void {
-    !this.element.classList.contains('panel') && this.element.classList.add('js-panel');
-
     this.defineFields();
     this.setSlider();
   }

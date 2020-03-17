@@ -8,8 +8,8 @@ const testeeState: State = {
   max: 100,
   step: 1,
   from: 0,
-  tip: true,
-  bar: true,
+  tip: false,
+  bar: false,
   range: false,
   vertical: false,
 };

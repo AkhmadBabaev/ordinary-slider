@@ -51,8 +51,8 @@ class View extends Observable {
 
   private init(): void {
     this.root.innerHTML = '';
+    this.root.classList.add('o-slider');
     this.root.addEventListener('thumbmove', this.handleThumbMove as EventListener);
-    !this.root.classList.contains('o-slider') && this.root.classList.add('o-slider');
 
     setAttributesAsData(this.root, this.options);
     this.handleVertical();
