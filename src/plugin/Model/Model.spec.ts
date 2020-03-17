@@ -116,13 +116,22 @@ describe('Model', () => {
       });
 
       test('should adapt to step values', () => {
-        model.setState({ step: 10 });
+        model.setState({ step: 30 });
 
-        model.setState({ from: 8 });
-        expect(model.getState().from).toBe(10);
+        model.setState({ from: 30 });
+        expect(model.getState().from).toBe(30);
 
-        model.setState({ from: 2 });
+        model.setState({ from: 20 });
+        expect(model.getState().from).toBe(30);
+
+        model.setState({ from: 10 });
         expect(model.getState().from).toBe(0);
+
+        model.setState({ from: 96 });
+        expect(model.getState().from).toBe(100);
+
+        model.setState({ from: 94 });
+        expect(model.getState().from).toBe(90);
       });
 
       test('should be less than or equal to property To', () => {
@@ -146,13 +155,22 @@ describe('Model', () => {
       });
 
       test('should adapt to step values', () => {
-        model.setState({ step: 10 });
+        model.setState({ step: 30 });
 
-        model.setState({ to: 8 });
-        expect(model.getState().to).toBe(10);
+        model.setState({ to: 30 });
+        expect(model.getState().to).toBe(30);
 
-        model.setState({ to: 2 });
+        model.setState({ to: 20 });
+        expect(model.getState().to).toBe(30);
+
+        model.setState({ to: 10 });
         expect(model.getState().to).toBe(0);
+
+        model.setState({ to: 96 });
+        expect(model.getState().to).toBe(100);
+
+        model.setState({ to: 94 });
+        expect(model.getState().to).toBe(90);
       });
 
       test('should be greater than or equal to property from', () => {

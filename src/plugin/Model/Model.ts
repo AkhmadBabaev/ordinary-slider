@@ -154,14 +154,18 @@ class Model extends Observable {
 
   private handleValue(param: number): number {
     let value = param;
-    const { min, max, step } = this.temporaryState;
+    let { step } = this.temporaryState;
+    const { min, max } = this.temporaryState;
     const remainder = (value - min) % step;
 
     if (remainder !== 0) {
+      const lowerStepBound = value - remainder;
+      const upperStepBound = lowerStepBound + step;
+
+      upperStepBound > max && (step = max - lowerStepBound);
+
       const halfStep = step / 2;
-      value = (halfStep > remainder)
-        ? value - remainder // below point
-        : value - remainder + step; // above point
+      value = (halfStep > remainder) ? lowerStepBound : upperStepBound;
     }
 
     value < min && (value = min);
