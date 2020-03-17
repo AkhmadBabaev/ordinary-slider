@@ -26,7 +26,7 @@ class Input {
   }
 
   protected init(): void {
-    !this.element.classList.contains('input') && this.element.classList.add('input');
+    this.element.classList.add('input');
   }
 }
 
