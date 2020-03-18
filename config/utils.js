@@ -1,11 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/newline-after-import */
 const ip = require('ip');
 const packageJson = require('../package.json');
 
 /**
- * Gets network ip address.
- *
  * @return {string} network ip address.
  */
 function getNetworkIp() {
