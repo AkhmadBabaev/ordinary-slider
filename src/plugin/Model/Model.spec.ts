@@ -77,14 +77,26 @@ describe('Model', () => {
   describe('State options', () => {
     afterEach(() => model.setState(testeeState));
 
-    test('Min shouldn\'t be greater than max', () => {
-      model.setState({ min: 101 });
-      expect(model.getState().min).toBe(99);
+    describe('Min', () => {
+      test('shouldn\'t be greater than max', () => {
+        model.setState({ min: 101 });
+        expect(model.getState().min).toBe(99);
+      });
+
+      test('throws error if get Infinity value', () => {
+        expect(() => model.setState({ min: Infinity })).toThrowError();
+      });
     });
 
-    test('Max shouldn\'t be less than min', () => {
-      model.setState({ max: -1 });
-      expect(model.getState().max).toBe(1);
+    describe('Max', () => {
+      test('shouldn\'t be less than min', () => {
+        model.setState({ max: -1 });
+        expect(model.getState().max).toBe(1);
+      });
+
+      test('throws error if get Infinity value', () => {
+        expect(() => model.setState({ max: Infinity })).toThrowError();
+      });
     });
 
     describe('Step', () => {
@@ -99,6 +111,10 @@ describe('Model', () => {
       test('shouldn\'t be greater than (max - min)', () => {
         model.setState({ step: 101 });
         expect(model.getState().step).toBe(100);
+      });
+
+      test('throws error if get Infinity value', () => {
+        expect(() => model.setState({ step: Infinity })).toThrowError();
       });
     });
 
@@ -138,6 +154,10 @@ describe('Model', () => {
         model.setState({ from: 10, range: true });
         model.setState({ to: 5 });
         expect(model.getState().from).toBe(5);
+      });
+
+      test('throws error if get Infinity value', () => {
+        expect(() => model.setState({ from: Infinity })).toThrowError();
       });
     });
 
@@ -183,6 +203,10 @@ describe('Model', () => {
         model.reset();
         model.setState({ range: true });
         expect(model.getState().to).toBe(100);
+      });
+
+      test('throws error if get Infinity value', () => {
+        expect(() => model.setState({ to: Infinity })).toThrowError();
       });
     });
 

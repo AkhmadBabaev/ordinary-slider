@@ -208,7 +208,7 @@ class Model extends Observable {
         case 'min':
         case 'max':
           if (!isNumber(value)) throw new TypeError(`${prop} is not number`);
-          if (!Number.isFinite(value as number)) throw new Error(`${prop} is Infinity`);
+          if (!Number.isFinite(Number(value))) throw new Error(`${prop} is Infinity`);
           this.changes[prop] = Number(value);
           break;
 
