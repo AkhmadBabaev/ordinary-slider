@@ -1,6 +1,6 @@
 import Model from './Model';
 
-import { State, PState } from './Interfaces';
+import { State } from './Interfaces';
 import defaultState from './defaultState';
 
 const testeeState: State = {
@@ -42,35 +42,6 @@ describe('Model', () => {
     test('throws error if called with unknowns properties', () => {
       // @ts-ignore
       expect(() => model.setState({ fake: 'property' })).toThrowError();
-    });
-
-    test('shouldn\'t send repeated values', () => {
-      class Fake {
-        something: PState;
-
-        constructor() {
-          this.doSomething = this.doSomething.bind(this);
-        }
-
-        doSomething(value: PState): void {
-          this.something = value;
-        }
-      }
-
-      const fake = new Fake();
-
-      model.subscribe(fake.doSomething);
-
-      model.setState({
-        min: 0, // the same
-        from: 10, // new
-      });
-
-      expect(fake.something).toEqual({ from: 10 });
-
-      // clear changes
-      model.unsubscribe(fake.doSomething);
-      model.setState({ from: testeeState.from });
     });
   });
 

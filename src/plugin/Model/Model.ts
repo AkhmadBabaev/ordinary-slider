@@ -44,9 +44,6 @@ class Model extends Observable {
     // check and correct types of changes properties
     this.validateChanges();
 
-    // Delete duplicated values from changes properties
-    this.deleteDuplicates();
-
     // temporary storage contained old state and current changes
     this.temporaryState = { ...this.getState(), ...this.changes } as State;
 
@@ -56,11 +53,11 @@ class Model extends Observable {
     // sort values From|To in changes and temporary state
     this.sortFromTo();
 
-    // notify subscribers about state changes
-    Object.keys(this.changes).length && notify && this.notify(this.changes);
-
     // set as state
     this.state = this.temporaryState;
+
+    // notify subscribers about state changes
+    Object.keys(this.changes).length && notify && this.notify(this.changes);
 
     // this is no longer necessary
     delete this.temporaryState;
@@ -234,13 +231,6 @@ class Model extends Observable {
       case 'step': this.handleStep(); break;
       default: break;
     }
-  }
-
-  private deleteDuplicates(): void {
-    Object.keys(this.changes).forEach((key) => {
-      const value = this.changes[key as keyof State];
-      this.getState()[key as keyof State] === value && delete this.changes[key as keyof State];
-    });
   }
 
   private sortFromTo(): void {

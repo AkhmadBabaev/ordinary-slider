@@ -95,8 +95,9 @@
     user-select: none;
     cursor: grab;
   }
-}
 
-.o-slider-grabbed * {
-  cursor: grabbing;
+  &-grabbed {
+    cursor: grabbing;
+    & > * { pointer-events: none; }
+  }
 }

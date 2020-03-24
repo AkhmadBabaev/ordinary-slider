@@ -1,5 +1,5 @@
 import Bar from './Bar';
-import Toggler from '../Templates/Toggler/Toggler';
+import Simple from '../Templates/Simple/Simple';
 
 import { BarOptions } from './Interfaces';
 
@@ -7,58 +7,41 @@ import { hasChild } from '../../helpers/helpers';
 
 const options: BarOptions = {
   parent: document.body,
-  isEnabled: true,
   vertical: false,
-  range: false,
   length: '10%',
+  shift: '5%',
 };
 
-const bar = new Bar(options);
+let bar: Bar;
 
 describe('Bar', () => {
-  afterEach(() => bar.update(options));
+  beforeEach(() => { bar = new Bar(options); });
 
-  test('is an instance of class Toggler', () => expect(bar).toBeInstanceOf(Toggler));
+  test('is an instance of class Simple', () => expect(bar).toBeInstanceOf(Simple));
 
   test('should be added to parent', () => {
     expect(hasChild(bar.getOptions().parent, bar.getElement())).toBeTruthy();
   });
 
   describe('Option length', () => {
-    test('should be set as width if vertical is false', async () => {
-      await new Promise((res) => requestAnimationFrame(() => res()));
+    test('should be set as width if vertical is false', () => {
       expect(bar.getElement().style.width).toBe('10%');
     });
 
-    test('should be set as height if vertical is true', async () => {
-      bar.update({ vertical: true });
-
-      await new Promise((res) => requestAnimationFrame(() => res()));
+    test('should be set as height if vertical is true', () => {
+      bar.render({ ...bar.getOptions(), vertical: true });
       expect(bar.getElement().style.height).toBe('10%');
     });
   });
 
   describe('Option shift', () => {
-    test('should be set as left if vertical is false', async () => {
-      bar.update({ range: true, shift: '5%' });
-
-      await new Promise((res) => requestAnimationFrame(() => res()));
+    test('should be set as left if vertical is false', () => {
       expect(bar.getElement().style.left).toBe('5%');
     });
 
-    test('should be set as bottom if vertical is true', async () => {
-      bar.update({ range: true, vertical: true, shift: '5%' });
-
-      await new Promise((res) => requestAnimationFrame(() => res()));
+    test('should be set as bottom if vertical is true', () => {
+      bar.render({ ...bar.getOptions(), vertical: true });
       expect(bar.getElement().style.bottom).toBe('5%');
-    });
-
-    test('shouldn\'t be set if range is false', async () => {
-      bar.update({ range: false });
-
-      await new Promise((res) => requestAnimationFrame(() => res()));
-      expect(bar.getElement().style.bottom).toBeFalsy();
-      expect(bar.getElement().style.left).toBeFalsy();
     });
   });
 });

@@ -1,12 +1,10 @@
 export interface ThumbOptions {
   parent: HTMLElement;
-  isEnabled: boolean;
+  isActive?: boolean;
   vertical: boolean;
-  min: number;
-  max: number;
-  value: number;
-  ratio: number;
   tip: boolean;
+  value: number;
+  position: string;
   key?: string;
 }
 
