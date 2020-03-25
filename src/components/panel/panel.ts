@@ -2,6 +2,8 @@ import Input from '../input/input';
 
 import { PState } from '../../plugin/Model/Interfaces';
 
+import { isDefined } from '../../plugin/helpers/helpers';
+
 type Settings = { [k: string]: unknown };
 
 class Panel {
@@ -16,19 +18,15 @@ class Panel {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSliderChanges = this.handleSliderChanges.bind(this);
-    this.getSettings = this.getSettings.bind(this);
-    this.setSettings = this.setSettings.bind(this);
+    this.settings = this.settings.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.unsubscribe = this.unsubscribe.bind(this);
     this.init();
   }
 
-  public getSettings(): Settings {
-    return { ...this.$slider.oSlider('getSettings') } as Settings;
-  }
-
-  public setSettings(settings: Settings): void {
-    this.$slider.oSlider('setSettings', settings);
+  public settings(options?: Settings): Settings | void {
+    if (isDefined(options)) this.$slider.oSlider('settings', options);
+    return this.$slider.oSlider('settings') as PState as Settings;
   }
 
   public subscribe(callback: Function): void {
@@ -79,11 +77,11 @@ class Panel {
     const target = event.target as HTMLInputElement;
     const data = { [target.name]: target.type === 'checkbox' ? target.checked : Number(target.value) };
 
-    this.setSettings(data);
+    this.settings(data);
   }
 
   private handleSliderChanges(options: PState): void {
-    const { range } = this.getSettings() as Settings;
+    const { range } = this.settings() as Settings;
     const { fields } = this;
 
     Object.keys(options).forEach((key) => {
@@ -138,7 +136,7 @@ class Panel {
 
     this.$slider = $(slider).oSlider() as JQuery<object>;
     this.subscribe(this.handleSliderChanges);
-    this.handleSliderChanges(this.getSettings() as Settings);
+    this.handleSliderChanges(this.settings() as Settings);
   }
 
   private setFieldTo(): void {

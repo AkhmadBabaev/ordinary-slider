@@ -4,7 +4,7 @@ import Presenter from './Presenter/Presenter';
 
 import { State, PState } from './Model/Interfaces';
 
-import { isObject } from './helpers/helpers';
+import { isObject, isDefined } from './helpers/helpers';
 
 declare global {
   interface Window {
@@ -58,8 +58,9 @@ declare global {
     const options = params[1];
 
     switch (method) {
-      case 'getSettings': return $firstElement.data('oSlider').getState() as State;
-      case 'setSettings': $firstElement.data('oSlider').setState(options as PState); break;
+      case 'settings':
+        if (!isDefined(options)) return $firstElement.data('oSlider').getState() as State;
+        $firstElement.data('oSlider').setState(options as PState); break;
       case 'subscribe': $firstElement.data('oSlider').subscribe(options as Function); break;
       case 'unsubscribe': $firstElement.data('oSlider').unsubscribe(options as Function); break;
       default: break;

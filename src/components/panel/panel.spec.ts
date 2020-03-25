@@ -31,7 +31,7 @@ const options = {
 };
 
 describe('Panel', () => {
-  afterEach(() => panel.setSettings({ ...defaultState }));
+  afterEach(() => panel.settings({ ...defaultState }));
 
   test('getElement returns root element of panel', () => {
     const element = panel.getElement();
@@ -41,20 +41,22 @@ describe('Panel', () => {
     expect(element.classList.contains('js-panel')).toBeTruthy();
   });
 
-  test('Method getSettings returns current state of slider', () => {
-    expect(panel.getSettings()).toEqual(defaultState);
-  });
+  describe('Method settings', () => {
+    test('returns current state of slider', () => {
+      expect(panel.settings()).toEqual(defaultState);
+    });
 
-  test('Method setSettings sets new options', () => {
-    panel.setSettings(options);
-    expect(panel.getSettings()).toEqual(options);
+    test('sets new options', () => {
+      panel.settings(options);
+      expect(panel.settings()).toEqual(options);
+    });
   });
 
   test('subscribe should notify about updates', () => {
     const callback = jest.fn();
 
     panel.subscribe(callback);
-    panel.setSettings(options);
+    panel.settings(options);
 
     expect(callback).toHaveBeenCalled();
   });
@@ -64,7 +66,7 @@ describe('Panel', () => {
 
     panel.subscribe(callback);
     panel.unsubscribe(callback);
-    panel.setSettings(options);
+    panel.settings(options);
 
     expect(callback).not.toHaveBeenCalled();
   });
