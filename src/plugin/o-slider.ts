@@ -12,38 +12,59 @@ declare global {
   }
 
   interface JQuery {
-    oSlider: (options?: PState) => JQuery<object> | JQuery<HTMLElement>;
-    getSettings: () => State;
-    setSettings: (options: PState) => void;
-    subscribe: (callback: Function) => void;
-    unsubscribe: (callback: Function) => void;
+    oSlider: (
+      ...params: [(PState | string)?, (PState | Function)?],
+    ) => JQuery<object> | JQuery<HTMLElement> | State;
   }
 }
 
 (function selfInvokingFunction($): void {
-  // eslint-disable-next-line no-param-reassign
-  $.fn.oSlider = function init(options: PState = {}): JQuery<object> | JQuery<HTMLElement> {
-    if (!isObject(options)) {
-      throw new TypeError('Ordinary slider configuration should be an object');
-    }
-
+  function init(
+    this: JQuery,
+    options: PState = {},
+    $firstElement: JQuery<HTMLElement>,
+  ): void {
     if (!this.length) {
       throw new ReferenceError('Connection to non-existent element');
     }
 
-    const $first = $(this).first();
+    if (!isObject(options)) {
+      throw new TypeError('oSlider configuration should be an object');
+    }
 
-    const element = $first[0];
-    const data = $(element).data();
+    const htmlElement = $firstElement[0];
+    const data = $(htmlElement).data();
     const model: Model = new Model({ ...options, ...data });
-    const view: View = new View(element, model.getState());
+    const view: View = new View(htmlElement, model.getState());
     const presenter = new Presenter(model, view);
 
-    $first.getSettings = presenter.getState;
-    $first.setSettings = presenter.setState;
-    $first.subscribe = presenter.subscribe;
-    $first.unsubscribe = presenter.unsubscribe;
+    $firstElement.data('oSlider', presenter);
+  }
 
-    return $first;
+  // eslint-disable-next-line no-param-reassign
+  $.fn.oSlider = function oSlider(
+    ...params: [(PState | string)?, (PState | Function)?]
+  ): JQuery<object> | JQuery<HTMLElement> | State {
+    const $firstElement = $(this).first();
+
+    if (!arguments.length) {
+      const settings = params[0] as PState;
+      init.call(this, settings, $firstElement);
+      return $(this).first();
+    }
+
+    if (!(typeof params[0] === 'string')) throw new TypeError('oSlider methodd name should be a string');
+    const method = params[0];
+    const options = params[1];
+
+    switch (method) {
+      case 'getSettings': return $firstElement.data('oSlider').getState() as State;
+      case 'setSettings': $firstElement.data('oSlider').setState(options as PState); break;
+      case 'subscribe': $firstElement.data('oSlider').subscribe(options as Function); break;
+      case 'unsubscribe': $firstElement.data('oSlider').unsubscribe(options as Function); break;
+      default: break;
+    }
+
+    return $(this).first();
   };
 }($));

@@ -16,27 +16,27 @@ class Panel {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSliderChanges = this.handleSliderChanges.bind(this);
-    this.setSettings = this.setSettings.bind(this);
     this.getSettings = this.getSettings.bind(this);
+    this.setSettings = this.setSettings.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.unsubscribe = this.unsubscribe.bind(this);
     this.init();
   }
 
   public getSettings(): Settings {
-    return { ...this.$slider.getSettings() } as Settings;
+    return { ...this.$slider.oSlider('getSettings') } as Settings;
   }
 
-  public setSettings(setting: Settings): void {
-    this.$slider.setSettings(setting);
+  public setSettings(settings: Settings): void {
+    this.$slider.oSlider('setSettings', settings);
   }
 
   public subscribe(callback: Function): void {
-    this.$slider.subscribe(callback);
+    this.$slider.oSlider('subscribe', callback);
   }
 
   public unsubscribe(callback: Function): void {
-    this.$slider.unsubscribe(callback);
+    this.$slider.oSlider('unsubscribe', callback);
   }
 
   public getElement(): HTMLElement {
@@ -79,12 +79,12 @@ class Panel {
     const target = event.target as HTMLInputElement;
     const data = { [target.name]: target.type === 'checkbox' ? target.checked : Number(target.value) };
 
-    this.$slider.setSettings(data);
+    this.setSettings(data);
   }
 
   private handleSliderChanges(options: PState): void {
+    const { range } = this.getSettings() as Settings;
     const { fields } = this;
-    const { range } = this.getSettings();
 
     Object.keys(options).forEach((key) => {
       if (!Object.prototype.hasOwnProperty.call(fields, key)) return;
@@ -136,9 +136,9 @@ class Panel {
   private setSlider(): void {
     const slider = this.element.querySelector('.js-panel__slider') as HTMLElement;
 
-    this.$slider = $(slider).oSlider();
-    this.$slider.subscribe(this.handleSliderChanges);
-    this.handleSliderChanges(this.$slider.getSettings());
+    this.$slider = $(slider).oSlider() as JQuery<object>;
+    this.subscribe(this.handleSliderChanges);
+    this.handleSliderChanges(this.getSettings() as Settings);
   }
 
   private setFieldTo(): void {

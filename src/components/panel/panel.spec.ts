@@ -41,11 +41,11 @@ describe('Panel', () => {
     expect(element.classList.contains('js-panel')).toBeTruthy();
   });
 
-  test('getOptions returns current state of slider', () => {
+  test('Method getSettings returns current state of slider', () => {
     expect(panel.getSettings()).toEqual(defaultState);
   });
 
-  test('setOptions sets options new options', () => {
+  test('Method setSettings sets new options', () => {
     panel.setSettings(options);
     expect(panel.getSettings()).toEqual(options);
   });
