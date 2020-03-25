@@ -108,10 +108,6 @@ export function convertSliderUnitToPercent({ min, max, value }: { [k: string]: n
   return (100 / (max - min)) * (value - min);
 }
 
-export function setAttributesAsData(elem: HTMLElement, attrs: { [k: string]: any }): void {
-  Object.keys(attrs).forEach((key) => elem.setAttribute(`data-${key}`, attrs[key]));
-}
-
 export function objectReflection(a: object, b: object): object {
   const result = { ...a, ...b };
 
@@ -120,4 +116,31 @@ export function objectReflection(a: object, b: object): object {
   });
 
   return result;
+}
+
+export function asyncRender(fn: Function): (options: {}) => Promise<void> {
+  let isRendering = false;
+  let context: unknown;
+  let updates: {} | null;
+
+  async function wrapper(this: unknown, options: {}): Promise<void> {
+    if (isRendering) {
+      updates = { ...updates, ...options };
+      context = this;
+      return;
+    }
+
+    isRendering = true;
+    await fn.call(this, options);
+    isRendering = false;
+
+
+    if (updates) {
+      wrapper.call(context, updates);
+      context = null;
+      updates = null;
+    }
+  }
+
+  return wrapper;
 }

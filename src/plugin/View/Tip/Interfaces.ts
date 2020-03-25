@@ -1,7 +1,4 @@
 export interface TipOptions {
   parent: HTMLElement;
-  isEnabled: boolean;
-  text: string;
+  value: string | number;
 }
-
-export type PTipOptions = Partial<TipOptions>;

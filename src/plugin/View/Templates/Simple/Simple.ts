@@ -1,16 +1,16 @@
 abstract class Simple<T> {
-  protected options: T;
-
   protected element: HTMLElement;
 
+  protected options: T;
+
   constructor(options: T) {
-    this.options = options;
-    this.update = this.update.bind(this);
+    this.getElement = this.getElement.bind(this);
+    this.getOptions = this.getOptions.bind(this);
+    this.render = this.render.bind(this);
+    this.render(options);
   }
 
-  public update(options: Partial<T>): void {
-    this.options = { ...this.options, ...options };
-  }
+  public abstract render(options: T): void;
 
   public getElement(): HTMLElement {
     return this.element;
@@ -20,12 +20,9 @@ abstract class Simple<T> {
     return this.options;
   }
 
-  protected createElement(name: string, attributes?: { [k: string]: unknown }): void {
+  protected createElement(name: string, attrs?: { [k: string]: unknown }): void {
     const tag = document.createElement(name);
-
-    attributes && Object.keys(attributes).forEach((key) => {
-      tag.setAttribute(key, attributes[key] as string);
-    });
+    attrs && Object.keys(attrs).forEach((key) => tag.setAttribute(key, attrs[key] as string));
 
     this.element = tag;
   }

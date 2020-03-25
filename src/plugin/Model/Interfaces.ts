@@ -13,7 +13,6 @@ export interface State {
 export type PState = Partial<State>;
 
 export interface Model {
-  reset: () => void;
   setState: (data: PState, notify?: boolean) => void;
   getState: () => State;
   subscribe: (cb: Function) => void;

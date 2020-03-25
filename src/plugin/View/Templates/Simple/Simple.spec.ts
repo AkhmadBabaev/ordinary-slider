@@ -2,23 +2,17 @@ import Simple from './Simple';
 
 interface Options {
   parent: HTMLElement;
-  sun: boolean;
-  weather: string;
+  sunny: boolean;
 }
 
 const testeeOptions: Options = {
   parent: document.body,
-  sun: true,
-  weather: 'windy',
+  sunny: true,
 };
 
 class Testee extends Simple<Options> {
-  constructor(options: Options) {
-    super(options);
-    this.init();
-  }
-
-  init(): void {
+  render(options: Options): void {
+    this.options = options;
     this.createElement('div', { class: 'testee' });
   }
 }
@@ -35,10 +29,7 @@ describe('Simple', () => {
     expect(element.classList.contains('testee')).toBe(true);
   });
 
-  test('update should put updated values to the options', () => {
-    testee.update({ sun: false, weather: 'rain' });
-
-    expect(testee.getOptions().sun).toBe(false);
-    expect(testee.getOptions().weather).toBe('rain');
+  test('getOptions should return current options', () => {
+    expect(testee.getOptions()).toEqual(testeeOptions);
   });
 });

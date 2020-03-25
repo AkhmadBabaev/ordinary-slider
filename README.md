@@ -2,7 +2,7 @@ Ordinary slider
 ===============
 
 Это ещё один обыкновенный слайдер.
-Оценить слайдер в действии можно открыв [превью](https://akhmadbabaev.github.io/ordinary-slider/).
+Опробовать слайдер в действии можно открыв [превью](https://akhmadbabaev.github.io/ordinary-slider/).
 
 
 ## 🏷️ Содержание
@@ -18,7 +18,7 @@ Ordinary slider
 
 Для работы слайдера необходима библиотека [jQuery](https://jquery.com/) версии 3.1.^.
 
->  Библиотека  jQuery должна быть загружена на страницу раньше слайдера.
+>  Библиотека jQuery должна быть загружена на страницу раньше слайдера.
 
 
 ##  <a name="installation"></a> 💾 Установка
@@ -109,30 +109,28 @@ $(selector).oSlider({
 
 ### Методы
 
-#### getSettings()
+#### oSlider('settings', [options])
 
-Возвращает объект настроек слайдера.
+Вызов без **options** возвращает объект настроек слайдера.
 
 ```javascript
-const sliderSettings = $(selector).oSlider().getSettings(); 
+const sliderSettings = $(selector).oSlider('settings'); 
 ```
 
-#### setSettings(settings)
-
-Позволяет изменять параметры слайдера после инициализации.
+Аргумент **options** позволяет изменять параметры слайдера.
 
 ```javascript
 const $slider = $(selector).oSlider();
 
-$slider.setSettings({
+$slider.oSlider('settings', {
   min: 10,
   from: 20,
 });
 
-console.log($slider.getSettings()); // {  min: 10, from: 20, ...rest }
+console.log($slider.oSlider('settings')); // {  min: 10, from: 20, ...rest }
 ```
 
-#### subscribe(callback)
+#### oSlider('subscribe', callback)
 
 Запускает callback функцию при каждом изменении значений настроек,
 передает объект только с измененными свойствами в аргументы
@@ -142,19 +140,19 @@ callback функции.
 const $slider = $(selector).oSlider();
 
 // подписываем функцию
-$slider.subscribe((changedSettings) => {
+$slider.oSlider('subscribe', (changedSettings) => {
   console.log(changedSettings);
 });
 
 // изменяем from
-$slider.setSettings({
+$slider.oSlider('settings', {
   from: 10,
 });
 
 // console.log выдаст { from: 10 }
 ```
 
-#### unsubscribe(callback)
+#### oSlider('unsubscribe', callback)
 
 Прекращает запуск callback функции при изменениях значений настроек.
 
@@ -166,31 +164,19 @@ const cb = ((changedSettings) => {
 });
 
 // подписываем cb
-$slider.subscribe(cb);
+$slider.oSlider('subscribe', cb);
 
 // отписываем cb
-$slider.unsubscribe(cb)
+$slider.oSlider('unsubscribe', cb);
 
 // изменяем from
-$slider.setSettings({
+$slider.oSlider('settings', {
   from: 10,
 });
 
 // console.log не выполнится, так как функция cb удалена из подписчиков
 ```
 
-#### reset()
-
-Сбрасывает к настройкам по умолчанию.
-
-```javascript
-const $slider = $(selector).oSlider({
-  tip: false, // изменяем дефолтную конфигурацию
-});
-
-// возвращаем в дефолтным настройкам
-$slider.reset();
-```
 
 ##  <a name="license"></a> 📃 Лицензия
 

@@ -1,7 +1,7 @@
 import {
   isNumber, propertyFilter, hasChild,
   throttle, debounce, convertSliderUnitToPercent,
-  setAttributesAsData, isBooleanSpy, objectReflection,
+  isBooleanSpy, objectReflection,
 } from './helpers';
 
 describe('isNumber', () => {
@@ -129,14 +129,6 @@ describe('hasChild', () => {
 test('convertSliderUnitToPercent should convert value unit into percent', () => {
   const [min, max, value] = [50, 100, 60];
   expect(convertSliderUnitToPercent({ min, max, value })).toBe(20);
-});
-
-test('setDataAttributes should set attributes to element', () => {
-  document.body.innerHTML = '';
-  setAttributesAsData(document.body, { value: 50, min: 10 });
-
-  expect(document.body.getAttribute('data-value')).toBe('50');
-  expect(document.body.getAttribute('data-min')).toBe('10');
 });
 
 test('isBooleanSpy should check is value a boolean that looks like a string', () => {

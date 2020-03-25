@@ -10,7 +10,7 @@ class Presenter {
     this.subscribe = this.subscribe.bind(this);
     this.unsubscribe = this.unsubscribe.bind(this);
     this.setState = this.setState.bind(this);
-    this.reset = this.reset.bind(this);
+    this.ViewNotifier = this.ViewNotifier.bind(this);
     this.init();
   }
 
@@ -30,13 +30,21 @@ class Presenter {
     return this.model.getState();
   }
 
-  public reset(): void {
-    this.model.reset();
+  private init(): void {
+    this.model.subscribe(this.ViewNotifier);
+    this.view.subscribe(this.model.setState);
   }
 
-  private init(): void {
-    this.model.subscribe(this.view.applyState);
-    this.view.subscribe(this.model.setState);
+  private ViewNotifier(options: PState): void {
+    const viewOptions = this.view.getOptions();
+    const stateChanges = options;
+
+    Object.keys(stateChanges).forEach((key) => {
+      const value = stateChanges[key as keyof State];
+      (viewOptions[key as keyof State] === value) && delete stateChanges[key as keyof State];
+    });
+
+    Object.keys(stateChanges).length && this.view.render(stateChanges);
   }
 }
 

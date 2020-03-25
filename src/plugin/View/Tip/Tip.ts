@@ -1,30 +1,23 @@
-import Toggler from '../Templates/Toggler/Toggler';
+import Simple from '../Templates/Simple/Simple';
 
-import { TipOptions, PTipOptions } from './Interfaces';
+import { TipOptions } from './Interfaces';
 
-class Tip extends Toggler<TipOptions> {
-  public update(options: PTipOptions): void {
-    super.update(options);
+class Tip extends Simple<TipOptions> {
+  public render(options: TipOptions): void {
+    this.options = options;
 
-    const updates = new Map(Object.entries(options));
-
-    updates.has('isEnabled') && this.toggle();
-    if (!this.options.isEnabled) return;
-
-    updates.has('text') && this.setText();
-  }
-
-  protected init(): void {
     this.createElement('div', { class: 'o-slider__tip' });
-    this.setText();
+    this.setValue();
 
-    this.options.parent.append(this.element);
+    this.addToParent();
   }
 
-  private setText(): void {
-    this.options.isEnabled && requestAnimationFrame(() => {
-      this.element.textContent = this.options.text;
-    });
+  private setValue(): void {
+    this.element.textContent = String(this.options.value);
+  }
+
+  private addToParent(): void {
+    this.options.parent.append(this.element);
   }
 }
 

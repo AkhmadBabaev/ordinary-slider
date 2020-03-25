@@ -1,6 +1,7 @@
-import { PState } from '../Model/Interfaces';
+import { State, PState } from '../Model/Interfaces';
 
 export interface View {
-  applyState: (data: PState) => void;
+  getOptions: () => State;
+  render: (data: PState) => void;
   subscribe: (cb: Function) => void;
 }
