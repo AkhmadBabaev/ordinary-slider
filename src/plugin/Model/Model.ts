@@ -68,15 +68,6 @@ class Model extends Observable {
     return this.state;
   }
 
-  public reset(): void {
-    Object.keys(this.state).forEach((key) => {
-      !Object.prototype.hasOwnProperty.call(defaultState, key)
-        && delete this.state[key as keyof State];
-    });
-
-    this.setState(defaultState);
-  }
-
   private handleMin(): void {
     let { min } = this.temporaryState;
     const {

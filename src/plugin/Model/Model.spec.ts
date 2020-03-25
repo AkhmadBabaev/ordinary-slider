@@ -1,7 +1,6 @@
 import Model from './Model';
 
 import { State } from './Interfaces';
-import defaultState from './defaultState';
 
 const testeeState: State = {
   min: 0,
@@ -171,20 +170,13 @@ describe('Model', () => {
       });
 
       test('if range set as true and To is null or undefined, To should be equal to max', () => {
-        model.reset();
-        model.setState({ range: true });
-        expect(model.getState().to).toBe(100);
+        const newModel = new Model({ ...testeeState, range: true });
+        expect(newModel.getState().to).toBe(100);
       });
 
       test('throws error if get Infinity value', () => {
         expect(() => model.setState({ to: Infinity })).toThrowError();
       });
-    });
-
-    test('reset should return state to default values', () => {
-      model.setState({ min: 10, max: 20 });
-      model.reset();
-      expect(model.getState()).toEqual(defaultState);
     });
   });
 });

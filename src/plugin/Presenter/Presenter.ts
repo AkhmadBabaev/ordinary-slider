@@ -10,7 +10,6 @@ class Presenter {
     this.subscribe = this.subscribe.bind(this);
     this.unsubscribe = this.unsubscribe.bind(this);
     this.setState = this.setState.bind(this);
-    this.reset = this.reset.bind(this);
     this.ViewNotifier = this.ViewNotifier.bind(this);
     this.init();
   }
@@ -29,10 +28,6 @@ class Presenter {
 
   public getState(): State {
     return this.model.getState();
-  }
-
-  public reset(): void {
-    this.model.reset();
   }
 
   private init(): void {
