@@ -121,8 +121,7 @@ class View extends Observable {
   }
 
   private setSliderLength(): void {
-    const { min, max, vertical } = this.updates;
-    if (!isDefined(min) || !isDefined(max) || !isDefined(vertical)) return;
+    if (!isDefined(this.options.vertical)) return;
     this.sliderLength = this.getSliderLength();
   }
 
