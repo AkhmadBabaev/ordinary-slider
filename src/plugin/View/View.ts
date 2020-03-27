@@ -148,25 +148,53 @@ class View extends Observable {
   }
 
   private handleThumbMove(event: CustomEvent): void {
-    const { position, element, isActive } = event.detail;
+    const { position, element } = event.detail;
     const { min, max, vertical } = this.options;
-
-    const data: { [k: string]: number } = {};
 
     const value = vertical
       ? max - position / this.ratio
       : position / this.ratio + min;
 
-    const isFirstThumb = element.dataset.key === 'thumb:0';
-    const isSecondThumb = element.dataset.key === 'thumb:1';
+    const isTrack = element.dataset.name === 'track';
+    const isThumb = element.dataset.name === 'thumb';
+    let data: { [k: string]: unknown } = {};
 
-    isSecondThumb && (data.to = value);
-    isFirstThumb && (data.from = value);
+    isTrack && (data = this.handleThumbMoveFromTrack(value));
+    isThumb && (data = this.handleThumbMoveFromThumbs(element, value, event.detail.isActive));
 
-    isActive && this.handleActiveThumbIndex(element.dataset.key);
     this.notify(data);
-
     event.stopPropagation();
+  }
+
+  private handleThumbMoveFromTrack(value: number): { [k: string]: number } {
+    const data: { [k: string]: number } = {};
+    const [first, second] = this.getValues();
+
+    if (!this.options.range) return { from: value };
+
+    const distanceToFirst = value - first;
+    const distanceToSecond = second - value;
+
+    distanceToFirst >= distanceToSecond
+      ? data.to = value
+      : data.from = value;
+
+    return data;
+  }
+
+  private handleThumbMoveFromThumbs(
+    thumb: HTMLElement,
+    value: number,
+    isActive: boolean,
+  ): { [k: string]: number } {
+    const data: { [k: string]: number } = {};
+    const { key } = thumb.dataset;
+
+    key === 'thumb:0' && (data.from = value);
+    key === 'thumb:1' && (data.to = value);
+
+    isActive && this.handleActiveThumbIndex(key as string);
+    return data;
   }
 
   private handleActiveThumbIndex(key: string): void {

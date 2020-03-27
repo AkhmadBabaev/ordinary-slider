@@ -136,12 +136,12 @@ describe('Model', () => {
 
       test('should be greater than min', () => {
         model.setState({ to: -1 });
-        expect(model.getState().from).toBeGreaterThan(model.getState().min);
+        expect(model.getState().to).toBeGreaterThan(model.getState().min);
       });
 
       test('should be less than or equal to max', () => {
         model.setState({ to: 101 });
-        expect(model.getState().from).toBeLessThanOrEqual(model.getState().max);
+        expect(model.getState().to).toBeLessThanOrEqual(model.getState().max);
       });
 
       test('should adapt to step values', () => {

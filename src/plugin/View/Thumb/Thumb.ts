@@ -91,6 +91,7 @@ class Thumb extends Simple<ThumbOptions> {
   }
 
   private addToParent(): void {
+    this.element.dataset.name = 'thumb';
     this.options.parent.append(this.element);
   }
 }
