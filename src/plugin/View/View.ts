@@ -159,32 +159,9 @@ class View extends Observable {
       : position / this.ratio + min;
 
     const isFirstThumb = element.dataset.key === 'thumb:0';
+    const isSecondThumb = element.dataset.key === 'thumb:1';
 
-    if (this.options.range) {
-      const values = this.getValues();
-
-      const isSecondThumb = element.dataset.key === 'thumb:1';
-
-      const isFirstEqualToMin = values[0] === min;
-      const isSecondEqualToMax = values[1] === max;
-
-      const isGreaterThanSecondValue = value > values[1];
-      const isLessThanFirstValue = value < values[0];
-
-      const isFirstThumbBecomeSecond = isFirstThumb
-        && isGreaterThanSecondValue
-        && !isSecondEqualToMax;
-
-      const isSecondThumbBecomeFirst = isSecondThumb
-        && isLessThanFirstValue
-        && !isFirstEqualToMin;
-
-      isFirstThumbBecomeSecond && (element.dataset.key = 'thumb:1');
-      isSecondThumbBecomeFirst && (element.dataset.key = 'thumb:0');
-
-      isSecondThumb && (data.to = value);
-    }
-
+    isSecondThumb && (data.to = value);
     isFirstThumb && (data.from = value);
 
     isActive && this.handleActiveThumbIndex(element.dataset.key);
