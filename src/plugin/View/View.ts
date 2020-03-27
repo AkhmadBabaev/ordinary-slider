@@ -36,7 +36,7 @@ class View extends Observable {
     this.getOptions = this.getOptions.bind(this);
     this.handleThumbMove = this.handleThumbMove.bind(this);
     this.handleThumbStop = this.handleThumbStop.bind(this);
-    this.handleWindowResize = debounce(this.handleWindowResize.bind(this), 500);
+    this.handleWindowResize = debounce(this.handleWindowResize.bind(this), 150);
     this.render = asyncRender(this.render);
 
     this.setComponentClass();
