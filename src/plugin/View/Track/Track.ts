@@ -8,6 +8,8 @@ import { BarOptions, PBarOptions } from '../Bar/Interfaces';
 
 import { convertSliderUnitToPercent, propertyFilter, isDefined } from '../../helpers/helpers';
 
+import { EVENT_THUMBMOVE } from '../constants';
+
 class Track extends Simple<TrackOptions> {
   public render(options: TrackOptions): void {
     this.options = options;
@@ -16,6 +18,7 @@ class Track extends Simple<TrackOptions> {
     this.createThumbs();
     this.createBar();
 
+    this.addListener();
     this.addToParent();
   }
 
@@ -34,7 +37,7 @@ class Track extends Simple<TrackOptions> {
       const individualProps: PThumbOptions = {};
       const position = convertSliderUnitToPercent({ min, max, value });
 
-      individualProps.key = `thumb:${index}`;
+      individualProps.key = String(index);
       individualProps.position = `${position}%`;
       individualProps.value = value;
       isDefined(active) && (active === index) && (individualProps.isActive = true);
@@ -71,7 +74,26 @@ class Track extends Simple<TrackOptions> {
     new Bar(props as BarOptions);
   }
 
+  private handleClick(event: MouseEvent): void {
+    const client = this.options.vertical ? event.clientY : event.clientX;
+    const bound = this.options.vertical
+      ? this.element.getBoundingClientRect().y
+      : this.element.getBoundingClientRect().x;
+
+    const position = client - bound;
+
+    this.element.dispatchEvent(new CustomEvent(EVENT_THUMBMOVE, {
+      detail: { position, element: this.element },
+      bubbles: true,
+    }));
+  }
+
+  private addListener(): void {
+    this.element.addEventListener('click', this.handleClick.bind(this));
+  }
+
   private addToParent(): void {
+    this.element.dataset.name = 'track';
     this.options.parent.append(this.element);
   }
 }

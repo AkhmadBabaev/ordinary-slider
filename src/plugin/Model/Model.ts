@@ -50,8 +50,8 @@ class Model extends Observable {
     // handle gotten properties
     Object.keys(this.changes).forEach((key) => this.handleProperty(key));
 
-    // sort values From|To in changes and temporary state
-    this.sortFromTo();
+    // correct from and to values
+    this.correctFromTo();
 
     // set as state
     this.state = this.temporaryState;
@@ -176,15 +176,6 @@ class Model extends Observable {
     this.temporaryState.to = to;
   }
 
-  private handleRange(): void {
-    if (!this.temporaryState.range || isDefined(this.temporaryState.to)) return;
-
-    const to = this.handleValue(this.temporaryState.max);
-
-    this.changes.to = to;
-    this.temporaryState.to = to;
-  }
-
   private validateChanges(): void {
     Object.keys(this.changes).forEach((prop) => {
       const value = this.changes[prop as keyof State];
@@ -214,7 +205,6 @@ class Model extends Observable {
 
   private handleProperty(property: string): void {
     switch (property) {
-      case 'range': this.handleRange(); break;
       case 'from': this.handleFrom(); break;
       case 'to': this.handleTo(); break;
       case 'min': this.handleMin(); break;
@@ -224,13 +214,48 @@ class Model extends Observable {
     }
   }
 
-  private sortFromTo(): void {
+  correctFromTo(): void {
     if (!this.temporaryState.range) return;
+    if (this.temporaryState.from < (this.temporaryState.to as number)) return;
 
-    const values = [this.temporaryState.from, this.temporaryState.to as number];
-    values.sort((a, b) => a - b);
+    let { from, to } = this.temporaryState;
+    const { max, step } = this.temporaryState;
 
-    [this.changes.from, this.changes.to] = values;
+    const isInitializedTo = isDefined(to);
+    const isFromUpdated = isDefined(this.changes.from);
+    const isSecondUpdated = isDefined(this.changes.to);
+
+    isInitializedTo && isFromUpdated && !isSecondUpdated && (from = (to as number) - step);
+    isInitializedTo && isSecondUpdated && !isFromUpdated && (to = from + step);
+
+    if (!isInitializedTo || from === to) {
+      this.initializeTo();
+      return;
+    }
+
+    if (from > (to as number)) {
+      from < max && (to = from + step);
+      from >= max && (from = max - step) && (to = max);
+    }
+
+    [this.changes.from, this.changes.to] = [from, to];
+    this.temporaryState = { ...this.temporaryState, ...this.changes };
+  }
+
+  private initializeTo(): void {
+    const { min, max, step } = this.temporaryState;
+    let { from, to } = this.temporaryState;
+
+    const distanceToMin = from - min;
+    const distanceToMax = max - from;
+
+    distanceToMin > distanceToMax
+      && (to = from)
+      && (from -= step);
+
+    distanceToMin <= distanceToMax && (to = from + step);
+
+    [this.changes.from, this.changes.to] = [from, to];
     this.temporaryState = { ...this.temporaryState, ...this.changes };
   }
 }

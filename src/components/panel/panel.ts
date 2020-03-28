@@ -52,7 +52,7 @@ class Panel {
 
     [...foundFields, ...foundCheckboxes].forEach((elem) => {
       const field = new Input(elem.querySelector('.input') as HTMLInputElement);
-      const name = field.getAttribute('name');
+      const name = field.getAttr('name');
 
       switch (name) {
         case 'from':
@@ -94,14 +94,14 @@ class Panel {
         case 'min':
         case 'max':
         case 'step':
-          fields[key].setAttribute('value', value);
+          fields[key].setAttr('value', value);
           break;
 
         case 'bar':
         case 'tip':
         case 'range':
         case 'vertical':
-          fields[key].setAttribute('checked', value);
+          fields[key].setAttr('checked', value);
           break;
 
         default: break;
@@ -109,16 +109,16 @@ class Panel {
 
       switch (key) {
         case 'from':
-          range && fields.to.setAttribute('min', value);
+          range && fields.to.setAttr('min', value);
           break;
 
         case 'to':
-          fields.from.setAttribute('max', value);
+          fields.from.setAttr('max', value);
           break;
 
         case 'step':
-          fields.from.setAttribute('step', value);
-          range && fields.to.setAttribute('step', value);
+          fields.from.setAttr('step', value);
+          range && fields.to.setAttr('step', value);
           break;
 
         case 'range':
@@ -148,9 +148,12 @@ class Panel {
     (toContainer.querySelector('.num-field__label') as HTMLElement).setAttribute('for', ID);
     (toContainer.querySelector('.num-field__title') as HTMLElement).textContent = 'to';
 
+    const { from } = this.settings() as PState;
+
     this.fields.to = new Input(toContainer.querySelector('.input') as HTMLElement);
-    this.fields.to.setAttribute('name', 'to');
-    this.fields.to.setAttribute('id', ID);
+    this.fields.to.setAttr('name', 'to');
+    this.fields.to.setAttr('id', ID);
+    this.fields.to.setAttr('min', String(from));
     this.fields.to.getElement().removeAttribute('max');
     this.fields.to.getElement().addEventListener('change', this.handleInputChange);
     fromContainer?.after(toContainer);

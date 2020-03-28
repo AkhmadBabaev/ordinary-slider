@@ -10,7 +10,7 @@ const options: ThumbOptions = {
   vertical: false,
   isActive: true,
   tip: true,
-  key: 'thumb:0',
+  key: '0',
   position: '10%',
   value: 0,
 };
@@ -52,11 +52,10 @@ describe('Thumb', () => {
   });
 
   test('set option key as data-key value', () => {
-    expect(thumb.getElement().dataset.key).toBe('thumb:0');
+    expect(thumb.getElement().dataset.key).toBe('0');
   });
 
   test('adds is_active modifier to thumb element', () => {
-    const activeClass = 'o-slider__thumb_is_active';
-    expect(thumb.getElement().classList.contains(activeClass)).toBeTruthy();
+    expect(thumb.getElement().hasAttribute('data-active')).toBeTruthy();
   });
 });

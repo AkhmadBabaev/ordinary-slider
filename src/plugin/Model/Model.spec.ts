@@ -91,14 +91,14 @@ describe('Model', () => {
     describe('From', () => {
       afterEach(() => model.setState(testeeState));
 
-      test('should be less than min', () => {
+      test('should be greater than or equal to min', () => {
         model.setState({ from: -1 });
-        expect(model.getState().from).toBe(0);
+        expect(model.getState().from).toBeGreaterThanOrEqual(model.getState().min);
       });
 
-      test('should be greater than max', () => {
+      test('should be less than or equal to max', () => {
         model.setState({ from: 101 });
-        expect(model.getState().from).toBe(100);
+        expect(model.getState().from).toBeLessThanOrEqual(model.getState().max);
       });
 
       test('should adapt to step values', () => {
@@ -120,10 +120,10 @@ describe('Model', () => {
         expect(model.getState().from).toBe(90);
       });
 
-      test('should be less than or equal to property To', () => {
+      test('should be less than property to', () => {
         model.setState({ from: 10, range: true });
         model.setState({ to: 5 });
-        expect(model.getState().from).toBe(5);
+        expect(model.getState().from).toBeLessThan(model.getState().to as number);
       });
 
       test('throws error if get Infinity value', () => {
@@ -134,27 +134,27 @@ describe('Model', () => {
     describe('To', () => {
       beforeEach(() => model.setState({ ...testeeState, range: true }));
 
-      test('should be less than min', () => {
+      test('should be greater than min', () => {
         model.setState({ to: -1 });
-        expect(model.getState().to).toBe(0);
+        expect(model.getState().to).toBeGreaterThan(model.getState().min);
       });
 
-      test('should be greater than max', () => {
+      test('should be less than or equal to max', () => {
         model.setState({ to: 101 });
-        expect(model.getState().to).toBe(100);
+        expect(model.getState().to).toBeLessThanOrEqual(model.getState().max);
       });
 
       test('should adapt to step values', () => {
-        model.setState({ step: 30 });
+        model.setState({ step: 30, from: 0 });
 
-        model.setState({ to: 30 });
+        model.setState({ to: 60 });
+        expect(model.getState().to).toBe(60);
+
+        model.setState({ to: 50 });
+        expect(model.getState().to).toBe(60);
+
+        model.setState({ to: 40 });
         expect(model.getState().to).toBe(30);
-
-        model.setState({ to: 20 });
-        expect(model.getState().to).toBe(30);
-
-        model.setState({ to: 10 });
-        expect(model.getState().to).toBe(0);
 
         model.setState({ to: 96 });
         expect(model.getState().to).toBe(100);
@@ -163,15 +163,10 @@ describe('Model', () => {
         expect(model.getState().to).toBe(90);
       });
 
-      test('should be greater than or equal to property from', () => {
+      test('should be greater than property from', () => {
         model.setState({ to: 5 });
         model.setState({ from: 10 });
-        expect(model.getState().to).toBe(10);
-      });
-
-      test('if range set as true and To is null or undefined, To should be equal to max', () => {
-        const newModel = new Model({ ...testeeState, range: true });
-        expect(newModel.getState().to).toBe(100);
+        expect(model.getState().to).toBeGreaterThan(model.getState().from);
       });
 
       test('throws error if get Infinity value', () => {

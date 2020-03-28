@@ -36,8 +36,8 @@ class View extends Observable {
     this.getOptions = this.getOptions.bind(this);
     this.handleThumbMove = this.handleThumbMove.bind(this);
     this.handleThumbStop = this.handleThumbStop.bind(this);
-    this.handleWindowResize = debounce(this.handleWindowResize.bind(this), 500);
-    this.render = asyncRender(this.render);
+    this.handleWindowResize = debounce(this.handleWindowResize.bind(this), 150);
+    this.render = asyncRender(this.render.bind(this));
 
     this.setComponentClass();
     this.addOtherListeners();
@@ -148,58 +148,59 @@ class View extends Observable {
   }
 
   private handleThumbMove(event: CustomEvent): void {
-    const { position, element, isActive } = event.detail;
+    const { position, element } = event.detail;
     const { min, max, vertical } = this.options;
-
-    const data: { [k: string]: number } = {};
 
     const value = vertical
       ? max - position / this.ratio
       : position / this.ratio + min;
 
-    const isFirstThumb = element.dataset.key === 'thumb:0';
+    const isTrack = element.dataset.name === 'track';
+    const isThumb = element.dataset.name === 'thumb';
+    let data: { [k: string]: unknown } = {};
 
-    if (this.options.range) {
-      const values = this.getValues();
+    isTrack && (data = this.handleThumbMoveFromTrack(value));
+    isThumb && (data = this.handleThumbMoveFromThumbs(element, value));
 
-      const isSecondThumb = element.dataset.key === 'thumb:1';
-
-      const isFirstEqualToMin = values[0] === min;
-      const isSecondEqualToMax = values[1] === max;
-
-      const isGreaterThanSecondValue = value > values[1];
-      const isLessThanFirstValue = value < values[0];
-
-      const isFirstThumbBecomeSecond = isFirstThumb
-        && isGreaterThanSecondValue
-        && !isSecondEqualToMax;
-
-      const isSecondThumbBecomeFirst = isSecondThumb
-        && isLessThanFirstValue
-        && !isFirstEqualToMin;
-
-      isFirstThumbBecomeSecond && (element.dataset.key = 'thumb:1');
-      isSecondThumbBecomeFirst && (element.dataset.key = 'thumb:0');
-
-      isSecondThumb && (data.to = value);
-    }
-
-    isFirstThumb && (data.from = value);
-
-    isActive && this.handleActiveThumbIndex(element.dataset.key);
     this.notify(data);
-
     event.stopPropagation();
+  }
+
+  private handleThumbMoveFromTrack(value: number): { [k: string]: number } {
+    const data: { [k: string]: number } = {};
+    const [first, second] = this.getValues();
+
+    if (!this.options.range) return { from: value };
+
+    const distanceToFirst = value - first;
+    const distanceToSecond = second - value;
+
+    distanceToFirst >= distanceToSecond
+      ? data.to = value
+      : data.from = value;
+
+    return data;
+  }
+
+  private handleThumbMoveFromThumbs(thumb: HTMLElement, value: number): { [k: string]: number } {
+    const { key, active: isActive } = thumb.dataset;
+    const data: { [k: string]: number } = {};
+
+    key === '0' && (data.from = value);
+    key === '1' && (data.to = value);
+
+    isActive && this.handleActiveThumbIndex(key as string);
+    return data;
   }
 
   private handleActiveThumbIndex(key: string): void {
     this.activeThumbIndex = 0;
-    this.options.range && (this.activeThumbIndex = (key === 'thumb:0') ? 0 : 1);
+    this.options.range && (this.activeThumbIndex = (key === '0') ? 0 : 1);
   }
 
   private handleThumbStop(event: CustomEvent): void {
-    const activeClass = 'o-slider__thumb_is_active';
-    this.element.querySelector(`.${activeClass}`)?.classList.remove(activeClass);
+    const thumbSelector = '[data-name="thumb"][data-active="true"]';
+    setTimeout(() => this.element.querySelector(thumbSelector)?.removeAttribute('data-active'), 0);
 
     delete this.activeThumbIndex;
     event.stopPropagation();
