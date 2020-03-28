@@ -148,11 +148,12 @@ class Panel {
     (toContainer.querySelector('.num-field__label') as HTMLElement).setAttribute('for', ID);
     (toContainer.querySelector('.num-field__title') as HTMLElement).textContent = 'to';
 
-    const { from } = this.settings() as PState;
+    const { from, to } = this.settings() as PState;
 
     this.fields.to = new Input(toContainer.querySelector('.input') as HTMLElement);
     this.fields.to.setAttr('name', 'to');
     this.fields.to.setAttr('id', ID);
+    this.fields.to.setAttr('value', String(to));
     this.fields.to.setAttr('min', String(from));
     this.fields.to.getElement().removeAttribute('max');
     this.fields.to.getElement().addEventListener('change', this.handleInputChange);
