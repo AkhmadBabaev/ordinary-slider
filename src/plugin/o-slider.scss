@@ -76,7 +76,7 @@
 
     cursor: pointer;
 
-    &_is_active {
+    &[data-active='true'] {
       --slider-color: var(--slider-color-dark);
       z-index: 10;
     }

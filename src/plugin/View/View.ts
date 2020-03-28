@@ -37,7 +37,7 @@ class View extends Observable {
     this.handleThumbMove = this.handleThumbMove.bind(this);
     this.handleThumbStop = this.handleThumbStop.bind(this);
     this.handleWindowResize = debounce(this.handleWindowResize.bind(this), 150);
-    this.render = asyncRender(this.render);
+    this.render = asyncRender(this.render.bind(this));
 
     this.setComponentClass();
     this.addOtherListeners();
@@ -160,7 +160,7 @@ class View extends Observable {
     let data: { [k: string]: unknown } = {};
 
     isTrack && (data = this.handleThumbMoveFromTrack(value));
-    isThumb && (data = this.handleThumbMoveFromThumbs(element, value, event.detail.isActive));
+    isThumb && (data = this.handleThumbMoveFromThumbs(element, value));
 
     this.notify(data);
     event.stopPropagation();
@@ -182,16 +182,12 @@ class View extends Observable {
     return data;
   }
 
-  private handleThumbMoveFromThumbs(
-    thumb: HTMLElement,
-    value: number,
-    isActive: boolean,
-  ): { [k: string]: number } {
+  private handleThumbMoveFromThumbs(thumb: HTMLElement, value: number): { [k: string]: number } {
+    const { key, active: isActive } = thumb.dataset;
     const data: { [k: string]: number } = {};
-    const { key } = thumb.dataset;
 
-    key === 'thumb:0' && (data.from = value);
-    key === 'thumb:1' && (data.to = value);
+    key === '0' && (data.from = value);
+    key === '1' && (data.to = value);
 
     isActive && this.handleActiveThumbIndex(key as string);
     return data;
@@ -199,12 +195,12 @@ class View extends Observable {
 
   private handleActiveThumbIndex(key: string): void {
     this.activeThumbIndex = 0;
-    this.options.range && (this.activeThumbIndex = (key === 'thumb:0') ? 0 : 1);
+    this.options.range && (this.activeThumbIndex = (key === '0') ? 0 : 1);
   }
 
   private handleThumbStop(event: CustomEvent): void {
-    const activeClass = 'o-slider__thumb_is_active';
-    this.element.querySelector(`.${activeClass}`)?.classList.remove(activeClass);
+    const thumbSelector = '[data-name="thumb"][data-active="true"]';
+    setTimeout(() => this.element.querySelector(thumbSelector)?.removeAttribute('data-active'), 0);
 
     delete this.activeThumbIndex;
     event.stopPropagation();

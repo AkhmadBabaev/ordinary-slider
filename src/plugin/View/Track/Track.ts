@@ -37,7 +37,7 @@ class Track extends Simple<TrackOptions> {
       const individualProps: PThumbOptions = {};
       const position = convertSliderUnitToPercent({ min, max, value });
 
-      individualProps.key = `thumb:${index}`;
+      individualProps.key = String(index);
       individualProps.position = `${position}%`;
       individualProps.value = value;
       isDefined(active) && (active === index) && (individualProps.isActive = true);

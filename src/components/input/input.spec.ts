@@ -13,14 +13,14 @@ describe('Input', () => {
     expect(element.classList.contains('input')).toBeTruthy();
   });
 
-  test('getAttribute returns specified attribute', () => {
-    expect(input.getAttribute('class')).toBe('input');
+  test('getAttr returns specified attribute', () => {
+    expect(input.getAttr('class')).toBe('input');
   });
 
-  test('setAttribute should set specified attribute', async () => {
-    input.setAttribute('type', 'number');
+  test('setAttr should set specified attribute', async () => {
+    input.setAttr('type', 'number');
 
     await new Promise((res) => requestAnimationFrame(() => res()));
-    expect(input.getAttribute('type')).toBe('number');
+    expect(input.getAttr('type')).toBe('number');
   });
 });

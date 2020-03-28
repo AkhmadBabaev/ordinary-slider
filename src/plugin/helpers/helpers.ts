@@ -134,7 +134,6 @@ export function asyncRender(fn: Function): (options: {}) => Promise<void> {
     await fn.call(this, options);
     isRendering = false;
 
-
     if (updates) {
       wrapper.call(context, updates);
       context = null;

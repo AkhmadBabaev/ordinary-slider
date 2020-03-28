@@ -3,16 +3,16 @@ class Input {
 
   constructor(element: HTMLElement) {
     this.element = element;
-    this.getAttribute = this.getAttribute.bind(this);
-    this.setAttribute = this.setAttribute.bind(this);
+    this.getAttr = this.getAttr.bind(this);
+    this.setAttr = this.setAttr.bind(this);
     this.init();
   }
 
-  public getAttribute(name: string): string {
+  public getAttr(name: string): string {
     return this.element.getAttribute(name) as string;
   }
 
-  public setAttribute(name: string, value: string | number | boolean): void {
+  public setAttr(name: string, value: string | number | boolean): void {
     // set the same value as attribute and DOM property
     // it isn't a mistake
     requestAnimationFrame(() => {

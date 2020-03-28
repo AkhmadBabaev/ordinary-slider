@@ -16,7 +16,7 @@ class Thumb extends Simple<ThumbOptions> {
 
     this.setPosition();
     this.setKey();
-    this.handleActive();
+    this.setActive();
 
     this.addListeners();
     this.addToParent();
@@ -39,8 +39,7 @@ class Thumb extends Simple<ThumbOptions> {
     const target = mouseDownEvent.target as HTMLElement;
     const { offsetX, offsetY } = mouseDownEvent;
 
-    this.options.isActive = true;
-    this.handleActive();
+    this.element.dataset.active = 'true';
     document.body.classList.add('o-slider-grabbed');
 
     const { parent, vertical } = this.options;
@@ -57,10 +56,10 @@ class Thumb extends Simple<ThumbOptions> {
       const position = client - parentBound - shift;
 
       this.element.dispatchEvent(new CustomEvent(EVENT_THUMBMOVE, {
-        detail: { position, element: this.element, isActive: this.options.isActive },
+        detail: { position, element: this.element },
         bubbles: true,
       }));
-    }, 50);
+    }, 40);
 
     const handleMouseUp = (): void => {
       document.removeEventListener('mousemove', handleMouseMove);
@@ -68,7 +67,7 @@ class Thumb extends Simple<ThumbOptions> {
 
       document.body.classList.remove('o-slider-grabbed');
 
-      delete this.options.isActive;
+      this.element.removeAttribute('data-active');
       this.element.dispatchEvent(new CustomEvent(EVENT_THUMBSTOP, { bubbles: true }));
     };
 
@@ -82,8 +81,8 @@ class Thumb extends Simple<ThumbOptions> {
     this.element.dataset.key = this.options.key;
   }
 
-  private handleActive(): void {
-    this.options.isActive && this.element.classList.add('o-slider__thumb_is_active');
+  private setActive(): void {
+    this.options.isActive && (this.element.dataset.active = 'true');
   }
 
   private addListeners(): void {

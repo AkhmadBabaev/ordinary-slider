@@ -176,15 +176,6 @@ class Model extends Observable {
     this.temporaryState.to = to;
   }
 
-  private handleRange(): void {
-    if (!this.temporaryState.range || isDefined(this.temporaryState.to)) return;
-    this;
-    // const to = this.handleValue(this.temporaryState.max);
-
-    // this.changes.to = to;
-    // this.temporaryState.to = to;
-  }
-
   private validateChanges(): void {
     Object.keys(this.changes).forEach((prop) => {
       const value = this.changes[prop as keyof State];
@@ -214,7 +205,6 @@ class Model extends Observable {
 
   private handleProperty(property: string): void {
     switch (property) {
-      case 'range': this.handleRange(); break;
       case 'from': this.handleFrom(); break;
       case 'to': this.handleTo(); break;
       case 'min': this.handleMin(); break;
