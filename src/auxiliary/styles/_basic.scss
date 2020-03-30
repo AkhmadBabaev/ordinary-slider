@@ -15,55 +15,12 @@ html {
   height: 100%;
 }
 
-body {
-  margin: 0;
-}
-
-h1 {
-  font-size: 2rem;
-}
-
-h2 {
-  font-size: 1.7rem;
-}
-
-h3 {
-  font-size: 1.45rem;
-}
-
-h4 {
-  font-size: 1.2rem;
-}
-
-h5 {
-  font-size: 1rem;
-}
-
-h6 {
-  font-size: 0.85rem;
-}
-
-img {
-  line-height: 0;
-}
-
-a,
-img,
-button {
-  outline: none;
-}
-
-a,
-button,
-input {
-  -webkit-tap-highlight-color: transparent !important;
-}
-
 /*    Additional
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
 
 .page {
   height: 100%;
+  margin: 0;
 
   &__inner {
     min-width: 100%;
