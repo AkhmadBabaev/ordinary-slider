@@ -45,6 +45,8 @@ yarn install
 
 - `yarn prod` - запускает *production* сборку и сохраняет результат в папку `/docs`. Детали работы в [webpack.prod.js](./config/webpack.prod.js).
 
+- `yarn lint` - проверяет код на соответствие параметрам указанным в [eslint](./.eslintrc.yml).  
+
 - `yarn test` - запускает тесты.
 
 
