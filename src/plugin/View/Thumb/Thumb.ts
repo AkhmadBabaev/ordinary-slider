@@ -17,6 +17,7 @@ class Thumb extends Simple<ThumbOptions> {
     this.setPosition();
     this.setKey();
     this.setActive();
+    this.setPriority();
 
     this.addListeners();
     this.addToParent();
@@ -25,6 +26,11 @@ class Thumb extends Simple<ThumbOptions> {
   private setPosition(): void {
     const side = this.options.vertical ? 'bottom' : 'left';
     this.element.style[side] = this.options.position;
+  }
+
+  private setPriority(): void {
+    if (!this.options.isPriority) return;
+    this.element.dataset.priority = 'true';
   }
 
   private createTip(): void {

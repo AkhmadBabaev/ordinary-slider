@@ -9,6 +9,7 @@ const options: ThumbOptions = {
   parent: document.body,
   vertical: false,
   isActive: true,
+  isPriority: true,
   tip: true,
   key: '0',
   position: '10%',
@@ -55,7 +56,11 @@ describe('Thumb', () => {
     expect(thumb.getElement().dataset.key).toBe('0');
   });
 
-  test('adds is_active modifier to thumb element', () => {
+  test('adds data attribute priority', () => {
+    expect(thumb.getElement().hasAttribute('data-priority')).toBeTruthy();
+  });
+
+  test('adds data attribute active', () => {
     expect(thumb.getElement().hasAttribute('data-active')).toBeTruthy();
   });
 });

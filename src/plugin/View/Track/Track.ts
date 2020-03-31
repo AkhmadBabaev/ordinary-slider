@@ -40,7 +40,12 @@ class Track extends Simple<TrackOptions> {
       individualProps.key = String(index);
       individualProps.position = `${position}%`;
       individualProps.value = value;
+
       isDefined(active) && (active === index) && (individualProps.isActive = true);
+
+      if (this.options.range) {
+        index === 0 && (value > max / 2) && (individualProps.isPriority = true);
+      }
 
       new Thumb({ ...props, ...individualProps } as ThumbOptions);
     });

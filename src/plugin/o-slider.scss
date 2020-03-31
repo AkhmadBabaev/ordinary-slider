@@ -80,6 +80,10 @@
       --slider-color: var(--slider-color-dark);
       z-index: 10;
     }
+
+    &[data-priority='true'] {
+      z-index: 5;
+    }
   }
 
   &__tip {
