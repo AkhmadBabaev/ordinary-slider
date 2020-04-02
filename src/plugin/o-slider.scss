@@ -76,12 +76,12 @@
 
     cursor: pointer;
 
-    &[data-active='true'] {
+    &_is_active {
       --slider-color: var(--slider-color-dark);
       z-index: 10;
     }
 
-    &[data-priority='true'] {
+    &_is_priority {
       z-index: 5;
     }
   }

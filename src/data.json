@@ -1,0 +1,24 @@
+{
+  "panels": [{
+    "styles": "--h: 255; --s: 10%; --l: 40%",
+    "min": -50,
+    "max": 50,
+    "step": 10,
+    "bar": "true",
+    "tip": "true"
+  }, {
+    "styles": "--h: 170; --s: 15%; --l: 45%",
+    "from": 30,
+    "to": 70,
+    "interval": "true",
+    "bar": "true"
+  }, {
+    "styles": "--s: 15%; --l: 45%",
+    "max": 10,
+    "step": 2.5,
+    "from": 0,
+    "direction": "vertical",
+    "tip": "true",
+    "bar": "true"
+  }]
+}

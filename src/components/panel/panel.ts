@@ -1,15 +1,12 @@
-import Input from '../input/input';
-
-import { PState } from '../../plugin/Model/Interfaces';
-
-import { isDefined } from '../../plugin/helpers/helpers';
+import CheckBox from '../checkbox/Checkbox';
+import NumField from '../num-field/NumField';
 
 type Settings = { [k: string]: unknown };
 
 class Panel {
   private element: HTMLElement;
 
-  public fields: { [k: string]: Input } = {};
+  public fields: { [k: string]: CheckBox | NumField } = {};
 
   private $slider: JQuery<object>;
 
@@ -25,8 +22,8 @@ class Panel {
   }
 
   public settings(options?: Settings): Settings | void {
-    if (isDefined(options)) this.$slider.oSlider('settings', options);
-    return this.$slider.oSlider('settings') as PState as Settings;
+    if (arguments.length) this.$slider.oSlider('settings', options);
+    return this.$slider.oSlider('settings') as unknown as Settings;
   }
 
   public subscribe(callback: Function): void {
@@ -47,12 +44,19 @@ class Panel {
   }
 
   private defineFields(): void {
-    const foundFields = Array.from(this.element.querySelectorAll('.js-panel__field'));
+    const foundNulFields = Array.from(this.element.querySelectorAll('.js-panel__field'));
     const foundCheckboxes = Array.from(this.element.querySelectorAll('.js-panel__checkbox'));
 
-    [...foundFields, ...foundCheckboxes].forEach((elem) => {
-      const field = new Input(elem.querySelector('.input') as HTMLInputElement);
-      const name = field.getAttr('name');
+    [...foundNulFields, ...foundCheckboxes].forEach((elem) => {
+      const fieldElement = elem.firstElementChild as HTMLElement;
+      const isCheckbox = fieldElement.className.includes('checkbox');
+      const isNumField = fieldElement.className.includes('num-field');
+      let field;
+
+      isNumField && (field = new NumField(fieldElement as HTMLElement));
+      isCheckbox && (field = new CheckBox(fieldElement as HTMLElement));
+
+      const name = field?.getInput().getAttribute('name');
 
       switch (name) {
         case 'from':
@@ -64,8 +68,8 @@ class Panel {
         case 'tip':
         case 'range':
         case 'vertical':
-          this.fields[name] = field;
-          field.getElement().addEventListener('change', this.handleInputChange);
+          this.fields[name] = field as NumField | CheckBox;
+          this.fields[name].getInput().addEventListener('change', this.handleInputChange);
           break;
 
         default: break;
@@ -80,13 +84,14 @@ class Panel {
     this.settings(data);
   }
 
-  private handleSliderChanges(options: PState): void {
+  private handleSliderChanges(options: Settings): void {
     const { range } = this.settings() as Settings;
     const { fields } = this;
 
     Object.keys(options).forEach((key) => {
       if (!Object.prototype.hasOwnProperty.call(fields, key)) return;
-      const value = options[key as keyof PState] as number | boolean;
+      const input = fields[key].getInput();
+      const value = options[key];
 
       switch (key) {
         case 'from':
@@ -94,14 +99,14 @@ class Panel {
         case 'min':
         case 'max':
         case 'step':
-          fields[key].setAttr('value', value);
+          input.setAttribute('value', String(value));
           break;
 
         case 'bar':
         case 'tip':
         case 'range':
         case 'vertical':
-          fields[key].setAttr('checked', value);
+          input.checked = value as boolean;
           break;
 
         default: break;
@@ -109,21 +114,21 @@ class Panel {
 
       switch (key) {
         case 'from':
-          range && fields.to.setAttr('min', value);
+          range && fields.to.getInput().setAttribute('min', String(value));
           break;
 
         case 'to':
-          fields.from.setAttr('max', value);
+          fields.from.getInput().setAttribute('max', String(value));
           break;
 
         case 'step':
-          fields.from.setAttr('step', value);
-          range && fields.to.setAttr('step', value);
+          fields.from.getInput().setAttribute('step', String(value));
+          range && fields.to.getInput().setAttribute('step', String(value));
           break;
 
         case 'range':
           options.range ? this.setFieldTo() : this.removeFieldTo();
-          !options.range && fields.from.getElement().removeAttribute('max');
+          !options.range && fields.from.getInput().removeAttribute('max');
           break;
 
         default: break;
@@ -132,7 +137,7 @@ class Panel {
   }
 
   private setSlider(): void {
-    const slider = this.element.querySelector('.js-panel__slider') as HTMLElement;
+    const slider = this.element.querySelector('.js-panel__slider')?.firstElementChild as HTMLElement;
 
     this.$slider = $(slider).oSlider() as JQuery<object>;
     this.subscribe(this.handleSliderChanges);
@@ -140,23 +145,20 @@ class Panel {
   }
 
   private setFieldTo(): void {
-    // eslint-disable-next-line no-bitwise
-    const ID = `${(~~(Math.random() * 1e12)).toString(32)}`;
+    const { from, to } = this.settings() as Settings;
+
     const fromContainer = this.fields.from.getElement().closest('.js-panel__field');
     const toContainer = fromContainer?.cloneNode(true) as HTMLElement;
 
-    (toContainer.querySelector('.num-field__label') as HTMLElement).setAttribute('for', ID);
-    (toContainer.querySelector('.num-field__title') as HTMLElement).textContent = 'to';
+    this.fields.to = new NumField(toContainer);
+    this.fields.to.setTitle('to');
 
-    const { from, to } = this.settings() as PState;
-
-    this.fields.to = new Input(toContainer.querySelector('.input') as HTMLElement);
-    this.fields.to.setAttr('name', 'to');
-    this.fields.to.setAttr('id', ID);
-    this.fields.to.setAttr('value', String(to));
-    this.fields.to.setAttr('min', String(from));
-    this.fields.to.getElement().removeAttribute('max');
-    this.fields.to.getElement().addEventListener('change', this.handleInputChange);
+    const input = this.fields.to.getInput();
+    input.setAttribute('name', 'to');
+    input.setAttribute('value', String(to));
+    input.setAttribute('min', String(from));
+    input.removeAttribute('max');
+    input.addEventListener('change', this.handleInputChange);
     fromContainer?.after(toContainer);
   }
 

@@ -6,6 +6,11 @@
     "allowJs": true,
     "sourceMap": true,
     "strictPropertyInitialization": false,
-    "outDir": "docs"
+    "outDir": "docs",
+    "baseUrl": "src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@favicons/*": ["favicons/*"],
+    },
   }
 }

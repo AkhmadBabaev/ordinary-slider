@@ -1,17 +1,14 @@
-mixin checkbox({ additionalClasses, mods, id = generateID(), title, name, checked } = {})
-  -
-    const className = 'checkbox';
-    const classes = generateClassList({ className, mods, additionalClasses });
+mixin checkbox({ id = null, title = 'title', name = '', isChecked = false } = {})
+  - const className = 'checkbox';
 
-  div(class= classes)
-    +input({
-      additionalClasses: `${className}__input`,
-      type: 'checkbox',
-      id,
-      name,
-      checked,
-    })
-
-    label(class= `${className}__label` for= id)
-      span(class= `${className}__title`)= title
-      div(class= `${className}__toggler`)
+  div(class = className)
+    label(class = `${className}__label` for = id)
+      input(
+        class = `${className}__input`
+        type = "checkbox"
+        id = id
+        name = name
+        checked = isChecked
+      )
+      span(class = `${className}__title`)= title
+      div(class = `${className}__toggler`)

@@ -42,15 +42,18 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    alias: {
+      '@components': paths.absComponents,
+      '@favicons': paths.absFavicons,
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: `${paths.input}/index.pug`,
       filename: `${paths.output}/index.html`,
-      hash: false,
-      inject: false,
-      minify: false,
       currentEnv: process.env.NODE_ENV,
+      inject: false,
+      hash: false,
     }),
   ],
 };

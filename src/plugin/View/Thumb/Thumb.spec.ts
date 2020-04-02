@@ -56,11 +56,11 @@ describe('Thumb', () => {
     expect(thumb.getElement().dataset.key).toBe('0');
   });
 
-  test('adds data attribute priority', () => {
-    expect(thumb.getElement().hasAttribute('data-priority')).toBeTruthy();
+  test('adds BEM modifier priority', () => {
+    expect(thumb.getElement().classList.contains('o-slider__thumb_is_priority')).toBeTruthy();
   });
 
-  test('adds data attribute active', () => {
-    expect(thumb.getElement().hasAttribute('data-active')).toBeTruthy();
+  test('adds BEM modifier active', () => {
+    expect(thumb.getElement().classList.contains('o-slider__thumb_is_active')).toBeTruthy();
   });
 });

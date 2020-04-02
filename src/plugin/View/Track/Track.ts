@@ -6,7 +6,11 @@ import { TrackOptions } from './Interfaces';
 import { ThumbOptions, PThumbOptions } from '../Thumb/Interfaces';
 import { BarOptions, PBarOptions } from '../Bar/Interfaces';
 
-import { convertSliderUnitToPercent, propertyFilter, isDefined } from '../../helpers/helpers';
+import {
+  convertSliderUnitToPercent as convertToPercent,
+  propertyFilter,
+  isDefined,
+} from '../../helpers/helpers';
 
 import { EVENT_THUMBMOVE } from '../constants';
 
@@ -23,7 +27,7 @@ class Track extends Simple<TrackOptions> {
   }
 
   private createThumbs(): void {
-    const propsList: string[] = ['tip', 'vertical', 'element:parent'];
+    const propsList = ['tip', 'vertical', 'element:parent'];
     const props = propertyFilter({ ...this, ...this.options }, propsList);
 
     const {
@@ -33,9 +37,9 @@ class Track extends Simple<TrackOptions> {
       activeThumbIndex: active,
     } = this.options;
 
-    values.forEach((value, index: number) => {
+    values.forEach((value, index) => {
       const individualProps: PThumbOptions = {};
-      const position = convertSliderUnitToPercent({ min, max, value });
+      const position = convertToPercent({ min, max, value });
 
       individualProps.key = String(index);
       individualProps.position = `${position}%`;
@@ -67,11 +71,11 @@ class Track extends Simple<TrackOptions> {
 
     const length = range
       ? (100 / (max - min)) * (values[1] - values[0])
-      : convertSliderUnitToPercent({ min, max, value: values[0] });
+      : convertToPercent({ min, max, value: values[0] });
 
     if (!length) return;
 
-    range && (shift = convertSliderUnitToPercent({ min, max, value: values[0] }));
+    range && (shift = convertToPercent({ min, max, value: values[0] }));
 
     props.length = `${length}%`;
     shift && (props.shift = `${shift}%`);
@@ -98,7 +102,6 @@ class Track extends Simple<TrackOptions> {
   }
 
   private addToParent(): void {
-    this.element.dataset.name = 'track';
     this.options.parent.append(this.element);
   }
 }

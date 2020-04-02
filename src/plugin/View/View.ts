@@ -74,7 +74,7 @@ class View extends Observable {
   }
 
   private setComponentClass(): void {
-    this.element.classList.add('o-slider');
+    !this.element.classList.contains('o-slider') && this.element.classList.add('o-slider');
   }
 
   private getValues(): number[] {
@@ -99,7 +99,7 @@ class View extends Observable {
   }
 
   private createTrack(): void {
-    const propsList: string[] = [
+    const propsList = [
       'activeThumbIndex',
       'fragment:parent',
       'vertical',
@@ -155,8 +155,8 @@ class View extends Observable {
       ? max - position / this.ratio
       : position / this.ratio + min;
 
-    const isTrack = element.dataset.name === 'track';
-    const isThumb = element.dataset.name === 'thumb';
+    const isTrack = element.className.includes('track');
+    const isThumb = element.className.includes('thumb');
     let data: { [k: string]: unknown } = {};
 
     isTrack && (data = this.handleThumbMoveFromTrack(value));
@@ -183,13 +183,13 @@ class View extends Observable {
   }
 
   private handleThumbMoveFromThumbs(thumb: HTMLElement, value: number): { [k: string]: number } {
-    const { key, active: isActive } = thumb.dataset;
+    const isActive = thumb.classList.contains('o-slider__thumb_is_active');
     const data: { [k: string]: number } = {};
 
-    key === '0' && (data.from = value);
-    key === '1' && (data.to = value);
+    thumb.dataset.key === '0' && (data.from = value);
+    thumb.dataset.key === '1' && (data.to = value);
 
-    isActive && this.handleActiveThumbIndex(key as string);
+    isActive && this.handleActiveThumbIndex(thumb.dataset.key as string);
     return data;
   }
 
@@ -199,8 +199,8 @@ class View extends Observable {
   }
 
   private handleThumbStop(event: CustomEvent): void {
-    const thumbSelector = '[data-name="thumb"][data-active="true"]';
-    setTimeout(() => this.element.querySelector(thumbSelector)?.removeAttribute('data-active'), 0);
+    const thumbSelector = 'o-slider__thumb_is_active';
+    setTimeout(() => this.element.querySelector(`.${thumbSelector}`)?.classList.remove(thumbSelector), 5);
 
     delete this.activeThumbIndex;
     event.stopPropagation();

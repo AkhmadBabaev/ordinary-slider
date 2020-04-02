@@ -3,7 +3,7 @@
 
   &__input { display: none; }
 
-  &__input:checked + &__label &__toggler:before {
+  &__input:checked ~ &__toggler:before {
     margin-left: auto;
   }
 

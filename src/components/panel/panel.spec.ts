@@ -1,11 +1,11 @@
 import '../../plugin/o-slider';
 import Panel from './panel';
 
-import defaultState from '../../plugin/Model/defaultState';
-
 document.body.innerHTML = `
   <div class="js-panel">
-    <div class="js-panel__slider"></div>
+    <div class="js-panel__slider">
+      <div class="o-slider"></div>
+    </div>
 
     <div class="js-panel__field">
       <input class="input" name="min" type="number">
@@ -31,7 +31,7 @@ const options = {
 };
 
 describe('Panel', () => {
-  afterEach(() => panel.settings({ ...defaultState }));
+  afterEach(() => panel.settings(options));
 
   test('getElement returns root element of panel', () => {
     const element = panel.getElement();
@@ -43,7 +43,7 @@ describe('Panel', () => {
 
   describe('Method settings', () => {
     test('returns current state of slider', () => {
-      expect(panel.settings()).toEqual(defaultState);
+      expect(panel.settings()).toEqual(options);
     });
 
     test('sets new options', () => {

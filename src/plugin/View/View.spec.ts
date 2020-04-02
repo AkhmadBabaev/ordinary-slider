@@ -39,4 +39,16 @@ describe('View', () => {
 
     expect(view.notify).toHaveBeenCalled();
   });
+
+  test('adds BEM modifier is_vertical if vertical set as true', async () => {
+    view.render({ ...view.getOptions(), vertical: true });
+    await new Promise((res) => requestAnimationFrame(() => res()));
+    expect(document.body.classList.contains('o-slider_is_vertical')).toBeTruthy();
+  });
+
+  test('adds BEM modifier is_horizontal if vertical set as false', async () => {
+    view.render({ ...view.getOptions(), vertical: false });
+    await new Promise((res) => requestAnimationFrame(() => res()));
+    expect(document.body.classList.contains('o-slider_is_horizontal')).toBeTruthy();
+  });
 });

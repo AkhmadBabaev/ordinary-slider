@@ -30,7 +30,7 @@ class Thumb extends Simple<ThumbOptions> {
 
   private setPriority(): void {
     if (!this.options.isPriority) return;
-    this.element.dataset.priority = 'true';
+    this.element.classList.add('o-slider__thumb_is_priority');
   }
 
   private createTip(): void {
@@ -45,7 +45,8 @@ class Thumb extends Simple<ThumbOptions> {
     const target = mouseDownEvent.target as HTMLElement;
     const { offsetX, offsetY } = mouseDownEvent;
 
-    this.element.dataset.active = 'true';
+    this.options.isActive = true;
+    this.setActive();
     document.body.classList.add('o-slider-grabbed');
 
     const { parent, vertical } = this.options;
@@ -73,7 +74,7 @@ class Thumb extends Simple<ThumbOptions> {
 
       document.body.classList.remove('o-slider-grabbed');
 
-      this.element.removeAttribute('data-active');
+      this.element.classList.remove('o-slider__thumb_is_active');
       this.element.dispatchEvent(new CustomEvent(EVENT_THUMBSTOP, { bubbles: true }));
     };
 
@@ -88,7 +89,7 @@ class Thumb extends Simple<ThumbOptions> {
   }
 
   private setActive(): void {
-    this.options.isActive && (this.element.dataset.active = 'true');
+    this.options.isActive && this.element.classList.add('o-slider__thumb_is_active');
   }
 
   private addListeners(): void {
@@ -96,7 +97,6 @@ class Thumb extends Simple<ThumbOptions> {
   }
 
   private addToParent(): void {
-    this.element.dataset.name = 'thumb';
     this.options.parent.append(this.element);
   }
 }

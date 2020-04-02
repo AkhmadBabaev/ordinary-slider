@@ -1,4 +1,6 @@
 extends ./auxiliary/markup/layout
 
 block append content
-  +panel-list
+  - const data = require('./data.json');
+
+  +panel-list(data.panels)

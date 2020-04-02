@@ -1,18 +1,16 @@
-mixin num-field({ additionalClasses, mods, id = generateID(), title, name, min, max, step, value } = {})
-  -
-    const className = 'num-field';
-    const classes = generateClassList({ className, mods, additionalClasses })
+mixin num-field({ id = null, title = 'title', name = '', min = null, max = null, step = 1, value = 0 } = {})
+  - const className = 'num-field';
 
-  div(class= classes)
-    label(class= `${className}__label` for= id)
-      span(class= `${className}__title`)= title
-    +input({
-      additionalClasses: `${className}__input`,
-      type: 'number',
-      id,
-      name,
-      value,
-      min,
-      max,
-      step,
-    })
+  div(class = className)
+    label(class = `${className}__label` for = id)
+      span(class = `${className}__title`)= title
+      input(
+        id = id
+        class = `${className}__input`
+        type = "number"
+        name = name
+        min = min
+        max = max
+        step = step
+        value = value
+      )

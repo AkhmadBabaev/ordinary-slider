@@ -1,4 +1,4 @@
-import Panel from './components/panel/panel';
+import Panel from '@components/panel/panel';
 
 window.addEventListener('load', () => {
   const panels = document.querySelectorAll('.js-panel');
