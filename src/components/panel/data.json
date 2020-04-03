@@ -3,7 +3,8 @@
     { "title": "min", "name": "min" },
     { "title": "max", "name": "max" },
     { "title": "step", "name": "step" },
-    { "title": "from", "name": "from" }
+    { "title": "from", "name": "from" },
+    { "title": "to", "name": "to" }
   ],
   "checkboxes": [
     { "title": "vertical", "name": "vertical" },

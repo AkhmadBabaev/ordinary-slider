@@ -127,8 +127,12 @@ class Panel {
           break;
 
         case 'range':
-          options.range ? this.setFieldTo() : this.removeFieldTo();
-          !options.range && fields.from.getInput().removeAttribute('max');
+          if (options.range) {
+            this.fields.to.getInput().disabled = false;
+          } else {
+            this.fields.to.getInput().disabled = true;
+            fields.from.getInput().removeAttribute('max');
+          }
           break;
 
         default: break;
@@ -142,31 +146,6 @@ class Panel {
     this.$slider = $(slider).oSlider() as JQuery<object>;
     this.subscribe(this.handleSliderChanges);
     this.handleSliderChanges(this.settings() as Settings);
-  }
-
-  private setFieldTo(): void {
-    const { from, to } = this.settings() as Settings;
-
-    const fromContainer = this.fields.from.getElement().closest('.js-panel__field');
-    const toContainer = fromContainer?.cloneNode(true) as HTMLElement;
-
-    this.fields.to = new NumField(toContainer);
-    this.fields.to.setTitle('to');
-
-    const input = this.fields.to.getInput();
-    input.setAttribute('name', 'to');
-    input.setAttribute('value', String(to));
-    input.setAttribute('min', String(from));
-    input.removeAttribute('max');
-    input.addEventListener('change', this.handleInputChange);
-    fromContainer?.after(toContainer);
-  }
-
-  private removeFieldTo(): void {
-    const toContainer = this.fields.to?.getElement().closest('.js-panel__field');
-    toContainer?.remove();
-
-    delete this.fields.to;
   }
 }
 

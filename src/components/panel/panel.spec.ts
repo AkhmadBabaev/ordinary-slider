@@ -8,11 +8,27 @@ document.body.innerHTML = `
     </div>
 
     <div class="js-panel__field">
-      <input class="input" name="min" type="number">
+      <div class="num-field">
+        <div class "num-field__label">
+          <span class="num-field__title">from</span>
+          <input class="num-field__input" name="from" type="number">
+        </div>
+      </div>
+    </div>
+
+    <div class="js-panel__field">
+      <div class="num-field">
+        <div class "num-field__label">
+          <span class="num-field__title">to</span>
+          <input class="num-field__input" name="to" type="number">
+        </div>
+      </div>
     </div>
 
     <div class="js-panel__checkbox">
-      <input class="input" name="bar" type="checkbox">
+      <div class="checkbox">
+        <input class="checkbox__input" name="range" type="checkbox">
+      </div>
     </div>
   </div>
 `;
@@ -69,5 +85,9 @@ describe('Panel', () => {
     panel.settings(options);
 
     expect(callback).not.toHaveBeenCalled();
+  });
+
+  test('if option range set as false the field "to" should be disabled', () => {
+    expect(panel.getElement().querySelector('[name="to"]')?.hasAttribute('disabled')).toBeTruthy();
   });
 });
