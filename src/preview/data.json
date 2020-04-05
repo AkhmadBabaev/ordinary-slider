@@ -17,8 +17,8 @@
     "max": 10,
     "step": 2.5,
     "from": 0,
-    "direction": "vertical",
     "tip": "true",
-    "bar": "true"
+    "bar": "true",
+    "direction": "vertical"
   }]
 }

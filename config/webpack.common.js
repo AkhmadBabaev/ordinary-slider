@@ -5,8 +5,8 @@ const paths = require('./paths');
 module.exports = {
   context: paths.absInput,
   entry: {
-    index: [`./${paths.input}/index`, `./${paths.input}/index.scss`],
-    'o-slider': [`./${paths.input}/plugin/o-slider`, `./${paths.input}/plugin/o-slider.scss`],
+    index: [`${paths.input}/preview/index`, `./${paths.input}/preview/index.scss`],
+    'o-slider': [`${paths.input}/plugin/o-slider`, `./${paths.input}/plugin/o-slider.scss`],
   },
   output: {
     path: paths.absOutput,
@@ -49,7 +49,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: `${paths.input}/index.pug`,
+      template: `${paths.input}/preview/index.pug`,
       filename: `${paths.output}/index.html`,
       currentEnv: process.env.NODE_ENV,
       inject: false,
