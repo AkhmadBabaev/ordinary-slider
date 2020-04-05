@@ -5,8 +5,14 @@ const paths = require('./paths');
 module.exports = {
   context: paths.absInput,
   entry: {
-    index: [`${paths.input}/preview/index`, `./${paths.input}/preview/index.scss`],
-    'o-slider': [`${paths.input}/plugin/o-slider`, `./${paths.input}/plugin/o-slider.scss`],
+    index: [
+      `${paths.input}/preview/index`,
+      `${paths.input}/${paths.auxiliary}/${paths.styles}/_basic.scss`,
+    ],
+    'o-slider': [
+      `${paths.input}/plugin/o-slider`,
+      `${paths.input}/plugin/o-slider.scss`,
+    ],
   },
   output: {
     path: paths.absOutput,
