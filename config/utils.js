@@ -16,13 +16,14 @@ function getNetworkIp() {
 const projectName = packageJson.name;
 const protocol = 'http';
 const domain = 'localhost';
-const port = '80';
+const port = 8080;
 const networkIp = getNetworkIp();
 const url = `${protocol}://${domain}:${port}`;
 const localUrl = networkIp && `${protocol}://${networkIp}:${port}`;
 
-
-module.exports.port = port;
-module.exports.url = url;
-module.exports.localUrl = localUrl;
-module.exports.projectName = projectName;
+module.exports = {
+  port,
+  url,
+  localUrl,
+  projectName,
+};

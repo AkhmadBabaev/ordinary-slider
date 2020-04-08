@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
 const merge = require('webpack-merge');
-const chalk = require('chalk');
 const common = require('./webpack.common');
+const { complitionLogHook, projectInfoHook } = require('./hooks');
 
 const paths = require('./paths');
 const {
@@ -47,31 +46,8 @@ module.exports = merge(common, {
   plugins: [
     {
       apply: (compiler) => {
-        compiler.hooks.entryOption.tap('start', () => {
-          console.clear();
-          console.log(chalk.yellow('Compilation in progress...\n'));
-        });
-
-        compiler.hooks.done.tap('finish', () => {
-          const data = {
-            name: {
-              content: projectName || 'not found',
-              color: projectName ? 'green' : 'red',
-            },
-            network: {
-              content: localUrl || 'not found',
-              color: localUrl ? 'blue' : 'red',
-            },
-          };
-
-          console.clear();
-          console.log();
-          console.log(`Name:                ${chalk[data.name.color](data.name.content)}`);
-          console.log();
-          console.log(`Local:               ${chalk.blue(url)}`);
-          console.log(`Network:             ${chalk[data.network.color](data.network.content)}`);
-          console.log();
-        });
+        compiler.hooks.entryOption.tap('compilationLog', complitionLogHook);
+        compiler.hooks.done.tap('projectInfo', () => projectInfoHook({ projectName, localUrl, url }));
       },
     },
   ],
