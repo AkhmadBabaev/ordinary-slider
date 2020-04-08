@@ -42,9 +42,4 @@ rules:
     - error
     - devDependencies: true
 
-  no-console:
-    - error
-    - allow:
-      - warn
-
   no-new: off

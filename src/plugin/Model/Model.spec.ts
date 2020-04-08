@@ -30,14 +30,6 @@ describe('Model', () => {
       expect(() => model.setState({})).toThrowError();
     });
 
-    test('throws console.warn if arguments is more than 2', () => {
-      console.warn = jest.fn();
-
-      // @ts-ignore
-      model.setState(testeeState, false, 'fakeArg');
-      expect(console.warn).toHaveBeenCalled();
-    });
-
     test('throws error if called with unknowns properties', () => {
       // @ts-ignore
       expect(() => model.setState({ fake: 'property' })).toThrowError();
