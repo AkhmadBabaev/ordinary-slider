@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const ip = require('ip');
+const portUsed = require('port-used');
 const packageJson = require('../package.json');
 
 /**
@@ -13,17 +14,21 @@ function getNetworkIp() {
   return isPrivate && isV4Format && currentIP;
 }
 
-const projectName = packageJson.name;
-const protocol = 'http';
-const domain = 'localhost';
-const port = 8080;
-const networkIp = getNetworkIp();
-const url = `${protocol}://${domain}:${port}`;
-const localUrl = networkIp && `${protocol}://${networkIp}:${port}`;
+/**
+ * @return {number} availabel port between 3000 and 65000.
+ */
+async function getAvailabelPort() {
+  for (let port = 3000; port < 65000; port += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    const isUsed = await portUsed.check(port, 'localhost');
+    if (!isUsed) return port;
+  }
+
+  throw new Error('no availabel ports');
+}
 
 module.exports = {
-  port,
-  url,
-  localUrl,
-  projectName,
+  projectName: packageJson.name,
+  getNetworkIp,
+  getAvailabelPort,
 };

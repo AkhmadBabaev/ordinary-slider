@@ -1,22 +1,14 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common');
-const { complitionLogHook, projectInfoHook } = require('./hooks');
-
 const paths = require('./paths');
-const {
-  port,
-  url,
-  localUrl,
-  projectName,
-} = require('./utils');
+const { complitionLogHook, projectInfoHook } = require('./hooks');
+const { projectName, getNetworkIp, getAvailabelPort } = require('./utils');
 
-module.exports = merge(common, {
+const config = {
   mode: 'development',
   devtool: 'eval',
   devServer: {
     contentBase: paths.output,
-    public: url,
-    port,
     host: '0.0.0.0',
     progress: true,
     noInfo: true,
@@ -43,12 +35,26 @@ module.exports = merge(common, {
     errors: true,
     warnings: true,
   },
-  plugins: [
-    {
-      apply: (compiler) => {
-        compiler.hooks.entryOption.tap('compilationLog', complitionLogHook);
-        compiler.hooks.done.tap('projectInfo', () => projectInfoHook({ projectName, localUrl, url }));
-      },
+  plugins: [],
+};
+
+module.exports = async () => {
+  const protocol = 'http';
+  const domain = 'localhost';
+  const networkIp = getNetworkIp();
+  const port = await getAvailabelPort();
+  const url = `${protocol}://${domain}:${port}`;
+  const localUrl = networkIp && `${protocol}://${networkIp}:${port}`;
+
+  config.devServer.port = port;
+  config.devServer.public = url;
+
+  config.plugins.push({
+    apply: (compiler) => {
+      compiler.hooks.entryOption.tap('compilationLog', complitionLogHook);
+      compiler.hooks.done.tap('projectInfo', () => projectInfoHook({ projectName, localUrl, url }));
     },
-  ],
-});
+  });
+
+  return merge(common, config);
+};
