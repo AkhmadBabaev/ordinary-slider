@@ -47,8 +47,11 @@ class Track extends Simple<TrackOptions> {
 
       isDefined(active) && (active === index) && (individualProps.isActive = true);
 
-      if (this.options.range) {
-        index === 0 && (value > max / 2) && (individualProps.isPriority = true);
+      if (this.options.range && index === 0) {
+        const distanceToMax = max - value;
+        const distanceToMin = value - min;
+
+        distanceToMax < distanceToMin && (individualProps.isPriority = true);
       }
 
       new Thumb({ ...props, ...individualProps } as ThumbOptions);

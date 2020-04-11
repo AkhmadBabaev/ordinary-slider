@@ -37,7 +37,7 @@ class Presenter {
 
   private ViewNotifier(options: PState): void {
     const viewOptions = this.view.getOptions();
-    const stateChanges = options;
+    const stateChanges = { ...options };
 
     Object.keys(stateChanges).forEach((key) => {
       const value = stateChanges[key as keyof State];

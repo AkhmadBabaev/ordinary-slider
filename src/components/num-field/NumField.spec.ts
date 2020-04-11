@@ -25,4 +25,9 @@ describe('Number field', () => {
     const numFieldElem = numField.getElement();
     expect(numFieldElem.querySelector('.num-field__title')?.textContent).toBe('hello');
   });
+
+  test('setAttr should set specified attribute', () => {
+    numField.setAttr('type', 'number');
+    expect(numField.getInput().getAttribute('type')).toBe('number');
+  });
 });

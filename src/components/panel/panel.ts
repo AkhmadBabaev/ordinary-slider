@@ -99,7 +99,7 @@ class Panel {
         case 'min':
         case 'max':
         case 'step':
-          input.setAttribute('value', String(value));
+          (fields[key] as NumField).setAttr('value', value);
           break;
 
         case 'bar':
@@ -114,16 +114,16 @@ class Panel {
 
       switch (key) {
         case 'from':
-          range && fields.to.getInput().setAttribute('min', String(value));
+          range && (fields.to as NumField).setAttr('min', value);
           break;
 
         case 'to':
-          fields.from.getInput().setAttribute('max', String(value));
+          (fields.from as NumField).setAttr('max', value);
           break;
 
         case 'step':
-          fields.from.getInput().setAttribute('step', String(value));
-          range && fields.to.getInput().setAttribute('step', String(value));
+          (fields.from as NumField).setAttr('step', value);
+          (fields.to as NumField).setAttr('step', value);
           break;
 
         case 'range':
