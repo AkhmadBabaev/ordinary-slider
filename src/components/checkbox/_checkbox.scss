@@ -7,6 +7,14 @@
     margin-left: auto;
   }
 
+  &:focus {
+    outline: none;
+  }
+
+  &:focus &__toggler {
+    box-shadow: 0 0 0.3em 0.06em var(--checkbox-color);
+  }
+
   &__label {
     color: var(--checkbox-color);
     display: inline-flex;
@@ -16,7 +24,7 @@
   }
 
   &__title {
-    margin-right: .5em;
+    margin-right: 1em;
     cursor: pointer;
   }
 
