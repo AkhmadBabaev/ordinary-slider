@@ -10,9 +10,8 @@ import {
   debounce,
   isDefined,
   asyncRender,
+  throttle,
 } from '../helpers/helpers';
-
-import { EVENT_THUMBMOVE, EVENT_THUMBSTOP } from './constants';
 
 class View extends Observable {
   private element: HTMLElement;
@@ -29,18 +28,20 @@ class View extends Observable {
 
   private sliderLength: number;
 
+  private isGrabbed: boolean;
+
   constructor(rootElem: HTMLElement, options: State) {
     super();
 
     this.element = rootElem;
     this.getOptions = this.getOptions.bind(this);
-    this.handleThumbMove = this.handleThumbMove.bind(this);
-    this.handleThumbStop = this.handleThumbStop.bind(this);
+    this.handleTrackClick = this.handleTrackClick.bind(this);
+    this.handleThumbMouseDown = this.handleThumbMouseDown.bind(this);
     this.handleWindowResize = debounce(this.handleWindowResize.bind(this), 150);
     this.render = asyncRender(this.render.bind(this));
 
     this.setComponentClass();
-    this.addOtherListeners();
+    this.addConstantListeners();
     this.render(options);
   }
 
@@ -58,7 +59,7 @@ class View extends Observable {
     this.setSliderLength();
     this.setRatio();
 
-    this.addElementListeners();
+    this.addListeners();
     this.addAttributesWatcher();
 
     delete this.updates;
@@ -147,63 +148,14 @@ class View extends Observable {
     Object.keys(attrs).forEach((key) => this.fragment.setAttribute(`data-${key}`, attrs[key]));
   }
 
-  private handleThumbMove(event: CustomEvent): void {
-    const { position, element } = event.detail;
-    const { min, max, vertical } = this.options;
-
-    const value = vertical
-      ? max - position / this.ratio
-      : position / this.ratio + min;
-
-    const isTrack = element.className.includes('track');
-    const isThumb = element.className.includes('thumb');
-    let data: { [k: string]: unknown } = {};
-
-    isTrack && (data = this.handleThumbMoveFromTrack(value));
-    isThumb && (data = this.handleThumbMoveFromThumbs(element, value));
-
-    this.notify(data);
-    event.stopPropagation();
-  }
-
-  private handleThumbMoveFromTrack(value: number): { [k: string]: number } {
-    const data: { [k: string]: number } = {};
-    const [first, second] = this.getValues();
-
-    if (!this.options.range) return { from: value };
-
-    const distanceToFirst = value - first;
-    const distanceToSecond = second - value;
-
-    distanceToFirst >= distanceToSecond
-      ? data.to = value
-      : data.from = value;
-
-    return data;
-  }
-
-  private handleThumbMoveFromThumbs(thumb: HTMLElement, value: number): { [k: string]: number } {
-    const isActive = thumb.classList.contains('o-slider__thumb_is_active');
-    const data: { [k: string]: number } = {};
-
-    thumb.dataset.key === '0' && (data.from = value);
-    thumb.dataset.key === '1' && (data.to = value);
-
-    isActive && this.handleActiveThumbIndex(thumb.dataset.key as string);
-    return data;
-  }
-
-  private handleActiveThumbIndex(key: string): void {
+  private setActiveThumbIndex(key: string): void {
     this.activeThumbIndex = 0;
     this.options.range && (this.activeThumbIndex = (key === '0') ? 0 : 1);
   }
 
-  private handleThumbStop(event: CustomEvent): void {
-    const thumbSelector = 'o-slider__thumb_is_active';
-    setTimeout(() => this.element.querySelector(`.${thumbSelector}`)?.classList.remove(thumbSelector), 5);
-
-    delete this.activeThumbIndex;
-    event.stopPropagation();
+  private deleteActiveThumbMod(): void {
+    const activeClass = 'o-slider__thumb_is_active';
+    setTimeout(() => this.element.querySelector(`.${activeClass}`)?.classList.remove(activeClass), 5);
   }
 
   private handleWindowResize(): void {
@@ -235,12 +187,100 @@ class View extends Observable {
     });
   }
 
-  private addElementListeners(): void {
-    this.element.addEventListener(EVENT_THUMBMOVE, this.handleThumbMove as EventListener);
-    this.element.addEventListener(EVENT_THUMBSTOP, this.handleThumbStop as EventListener);
+  private calculateValue(position: number): number {
+    return this.options.vertical
+      ? this.options.max - position / this.ratio
+      : position / this.ratio + this.options.min;
   }
 
-  private addOtherListeners(): void {
+  private handleTrackClick(event: MouseEvent): void {
+    const { vertical, range } = this.options;
+    const target = event.target as HTMLElement;
+    const track = target.closest('.o-slider__track') as HTMLElement;
+
+    const client = vertical ? event.clientY : event.clientX;
+    const trackBound = vertical
+      ? track.getBoundingClientRect().y
+      : track.getBoundingClientRect().x;
+
+    const position = client - trackBound;
+    const value = this.calculateValue(position);
+
+    if (!range) {
+      this.notify({ from: value });
+      return;
+    }
+
+    const [first, second] = this.getValues();
+    const distanceToFirst = value - first;
+    const distanceToSecond = second - value;
+
+    distanceToFirst >= distanceToSecond
+      ? this.notify({ to: value })
+      : this.notify({ from: value });
+
+    event.preventDefault();
+  }
+
+  private handleThumbMouseDown(mouseDownEvent: MouseEvent): void {
+    // if it isn't left click
+    if (!(mouseDownEvent.which === 1)) return;
+
+    const target = mouseDownEvent.target as HTMLElement;
+    const thumb = target.closest('.o-slider__thumb') as HTMLElement;
+    const { offsetX, offsetY } = mouseDownEvent;
+
+    if (!thumb) return;
+
+    thumb.classList.add('o-slider__thumb_is_active');
+    document.body.classList.add('o-slider-grabbed');
+    this.isGrabbed = true;
+
+    const { vertical } = this.options;
+    const slider = this.element;
+
+    const targetLength = vertical ? target.clientHeight : target.clientWidth;
+    const offset = vertical ? offsetY : offsetX;
+    const shift = offset - (targetLength / 2);
+    const sliderBound = vertical
+      ? slider.getBoundingClientRect().y
+      : slider.getBoundingClientRect().x;
+
+    const handleDocumentMouseMove = throttle((event: MouseEvent): void => {
+      const client = vertical ? event.clientY : event.clientX;
+      const position = client - sliderBound - shift;
+      const value = this.calculateValue(position);
+      const data: { [k: string]: number } = {};
+
+      thumb.dataset.key === '0' ? (data.from = value) : (data.to = value);
+
+      this.isGrabbed
+        ? this.setActiveThumbIndex(thumb.dataset.key as string)
+        : delete this.activeThumbIndex;
+
+      this.notify(data);
+    }, 40);
+
+    const handleDocumentMouseUp = (): void => {
+      document.removeEventListener('mousemove', handleDocumentMouseMove);
+      document.removeEventListener('mouseup', handleDocumentMouseUp);
+
+      document.body.classList.remove('o-slider-grabbed');
+      this.deleteActiveThumbMod();
+      delete this.isGrabbed;
+    };
+
+    document.addEventListener('mousemove', handleDocumentMouseMove);
+    document.addEventListener('mouseup', handleDocumentMouseUp);
+    mouseDownEvent.preventDefault();
+  }
+
+  private addListeners(): void {
+    this.element.addEventListener('click', this.handleTrackClick);
+    this.element.addEventListener('mousedown', this.handleThumbMouseDown);
+  }
+
+  private addConstantListeners(): void {
     window.addEventListener('resize', this.handleWindowResize);
   }
 }

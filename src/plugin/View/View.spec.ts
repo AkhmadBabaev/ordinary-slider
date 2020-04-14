@@ -5,8 +5,6 @@ import defaultState from '../Model/defaultState';
 
 import { hasChild } from '../helpers/helpers';
 
-import { EVENT_THUMBMOVE } from './constants';
-
 const view = new View(document.body, defaultState);
 
 describe('View', () => {
@@ -26,18 +24,6 @@ describe('View', () => {
     Object.keys(defaultState).forEach((attr) => {
       expect(document.body.hasAttribute(`data-${attr}`)).toBeTruthy();
     });
-  });
-
-  test(`should subscribe to custom event ${EVENT_THUMBMOVE}`, () => {
-    const thumb: HTMLElement | null = document.body.querySelector('.o-slider__thumb');
-    view.notify = jest.fn();
-
-    (thumb as HTMLElement).dispatchEvent(new CustomEvent(EVENT_THUMBMOVE, {
-      detail: { position: 50, element: thumb, isActive: false },
-      bubbles: true,
-    }));
-
-    expect(view.notify).toHaveBeenCalled();
   });
 
   test('adds BEM modifier is_vertical if vertical set as true', async () => {
