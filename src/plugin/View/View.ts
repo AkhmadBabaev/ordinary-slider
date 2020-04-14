@@ -233,7 +233,7 @@ class View extends Observable {
     if (!thumb) return;
 
     thumb.classList.add('o-slider__thumb_is_active');
-    document.body.classList.add('o-slider-grabbed');
+    this.coverElement('on');
     this.isGrabbed = true;
 
     const { vertical } = this.options;
@@ -265,14 +265,26 @@ class View extends Observable {
       document.removeEventListener('mousemove', handleDocumentMouseMove);
       document.removeEventListener('mouseup', handleDocumentMouseUp);
 
-      document.body.classList.remove('o-slider-grabbed');
       this.deleteActiveThumbMod();
+      this.coverElement('off');
       delete this.isGrabbed;
     };
 
     document.addEventListener('mousemove', handleDocumentMouseMove);
     document.addEventListener('mouseup', handleDocumentMouseUp);
     mouseDownEvent.preventDefault();
+  }
+
+  private coverElement(value: 'on' | 'off'): void {
+    const { body } = document;
+    const coverClass = 'o-slider__window-cover';
+    const cover = body.querySelector(`.${coverClass}`) as HTMLElement;
+
+    if (value === 'on') {
+      cover
+        ? cover.removeAttribute('style')
+        : body.insertAdjacentHTML('afterbegin', `<div class=${coverClass}></div>`);
+    } else cover.style.display = 'none';
   }
 
   private addListeners(): void {

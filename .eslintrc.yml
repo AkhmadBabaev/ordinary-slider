@@ -43,3 +43,5 @@ rules:
     - devDependencies: true
 
   no-new: off
+
+  class-methods-use-this: off
