@@ -1,3 +1,5 @@
+import { boundMethod } from 'autobind-decorator';
+
 import Observable from '../Observable/Observable';
 import Track from './Track/Track';
 
@@ -34,10 +36,6 @@ class View extends Observable {
     super();
 
     this.element = rootElem;
-    this.getOptions = this.getOptions.bind(this);
-    this.handleTrackClick = this.handleTrackClick.bind(this);
-    this.handleThumbMouseDown = this.handleThumbMouseDown.bind(this);
-    this.handleWindowResize = debounce(this.handleWindowResize.bind(this), 150);
     this.render = asyncRender(this.render.bind(this));
 
     this.setComponentClass();
@@ -65,6 +63,7 @@ class View extends Observable {
     delete this.updates;
   }
 
+  @boundMethod
   public getOptions(): State {
     return this.options;
   }
@@ -193,6 +192,7 @@ class View extends Observable {
       : position / this.ratio + this.options.min;
   }
 
+  @boundMethod
   private handleTrackClick(event: MouseEvent): void {
     const { vertical, range } = this.options;
     const target = event.target as HTMLElement;
@@ -222,6 +222,7 @@ class View extends Observable {
     event.preventDefault();
   }
 
+  @boundMethod
   private handleThumbMouseDown(mouseDownEvent: MouseEvent): void {
     // if it isn't left click
     if (!(mouseDownEvent.which === 1)) return;
@@ -293,7 +294,7 @@ class View extends Observable {
   }
 
   private addConstantListeners(): void {
-    window.addEventListener('resize', this.handleWindowResize);
+    window.addEventListener('resize', debounce(this.handleWindowResize.bind(this), 150));
   }
 }
 

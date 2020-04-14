@@ -1,3 +1,5 @@
+import { boundMethod } from 'autobind-decorator';
+
 class CheckBox {
   protected element: HTMLElement;
 
@@ -5,21 +7,20 @@ class CheckBox {
 
   constructor(element: HTMLElement) {
     this.element = element;
-    this.setTitle = this.setTitle.bind(this);
-    this.handleFocus = this.handleFocus.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
-    this.handleDocumentKeyUp = this.handleDocumentKeyUp.bind(this);
     this.init();
   }
 
+  @boundMethod
   public getElement(): HTMLElement {
     return this.element;
   }
 
+  @boundMethod
   public getInput(): HTMLInputElement {
     return this.input;
   }
 
+  @boundMethod
   public setTitle(title: string): void {
     const titleElement = this.element.querySelector('.checkbox__title') as HTMLElement;
     titleElement.textContent = title;
@@ -31,14 +32,17 @@ class CheckBox {
     this.element.addEventListener('blur', this.handleBlur);
   }
 
+  @boundMethod
   private handleFocus(): void {
     document.addEventListener('keyup', this.handleDocumentKeyUp);
   }
 
+  @boundMethod
   private handleBlur(): void {
     document.removeEventListener('keyup', this.handleDocumentKeyUp);
   }
 
+  @boundMethod
   private handleDocumentKeyUp(event: KeyboardEvent): void {
     if (event.code !== 'Enter') return;
     this.input.checked = !this.input.checked;

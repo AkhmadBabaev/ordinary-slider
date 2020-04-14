@@ -1,21 +1,22 @@
+import { boundMethod } from 'autobind-decorator';
+
 abstract class Simple<T> {
   protected element: HTMLElement;
 
   protected options: T;
 
   constructor(options: T) {
-    this.getElement = this.getElement.bind(this);
-    this.getOptions = this.getOptions.bind(this);
-    this.render = this.render.bind(this);
     this.render(options);
   }
 
   public abstract render(options: T): void;
 
+  @boundMethod
   public getElement(): HTMLElement {
     return this.element;
   }
 
+  @boundMethod
   public getOptions(): T {
     return this.options;
   }

@@ -6,6 +6,7 @@
     "allowJs": true,
     "sourceMap": true,
     "strictPropertyInitialization": false,
+    "experimentalDecorators": true,
     "outDir": "docs",
     "baseUrl": "src",
     "paths": {

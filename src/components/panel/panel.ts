@@ -1,3 +1,5 @@
+import { boundMethod } from 'autobind-decorator';
+
 import CheckBox from '../checkbox/Checkbox';
 import NumField from '../num-field/NumField';
 
@@ -12,28 +14,26 @@ class Panel {
 
   constructor(elem: HTMLElement) {
     this.element = elem;
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSliderChanges = this.handleSliderChanges.bind(this);
-    this.settings = this.settings.bind(this);
-    this.subscribe = this.subscribe.bind(this);
-    this.unsubscribe = this.unsubscribe.bind(this);
     this.init();
   }
 
+  @boundMethod
   public settings(options?: Settings): Settings | void {
     if (arguments.length) this.$slider.oSlider('settings', options);
     return this.$slider.oSlider('settings') as unknown as Settings;
   }
 
+  @boundMethod
   public subscribe(callback: Function): void {
     this.$slider.oSlider('subscribe', callback);
   }
 
+  @boundMethod
   public unsubscribe(callback: Function): void {
     this.$slider.oSlider('unsubscribe', callback);
   }
 
+  @boundMethod
   public getElement(): HTMLElement {
     return this.element;
   }
@@ -77,6 +77,7 @@ class Panel {
     });
   }
 
+  @boundMethod
   private handleInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     const data = { [target.name]: target.type === 'checkbox' ? target.checked : Number(target.value) };
@@ -84,6 +85,7 @@ class Panel {
     this.settings(data);
   }
 
+  @boundMethod
   private handleSliderChanges(options: Settings): void {
     const { range } = this.settings() as Settings;
     const { fields } = this;

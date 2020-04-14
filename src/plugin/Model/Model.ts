@@ -1,3 +1,5 @@
+import { boundMethod } from 'autobind-decorator';
+
 import Observable from '../Observable/Observable';
 import defaultState from './defaultState';
 
@@ -17,11 +19,10 @@ class Model extends Observable {
 
   constructor(options: PState = {}) {
     super();
-
-    this.setState = this.setState.bind(this);
     Object.keys(options).length && this.setState(options, false);
   }
 
+  @boundMethod
   public setState(properties: PState, notify = true): void {
     // no arguments
     if (!arguments.length) throw new Error('setState has not arguments');
