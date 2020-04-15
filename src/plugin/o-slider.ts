@@ -1,9 +1,7 @@
 import Model from './Model/Model';
+import { State, PState } from './Model/Interfaces';
 import View from './View/View';
 import Presenter from './Presenter/Presenter';
-
-import { State, PState } from './Model/Interfaces';
-
 import { isObject, isDefined } from './helpers/helpers';
 
 declare global {

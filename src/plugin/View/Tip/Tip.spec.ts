@@ -1,9 +1,7 @@
-import Tip from './Tip';
-import Simple from '../Templates/Simple/Simple';
-
-import { TipOptions } from './Interfaces';
-
 import { hasChild } from '../../helpers/helpers';
+import Simple from '../Templates/Simple/Simple';
+import Tip from './Tip';
+import { TipOptions } from './Interfaces';
 
 const options: TipOptions = {
   parent: document.body,

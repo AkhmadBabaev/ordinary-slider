@@ -1,9 +1,7 @@
-import View from './View';
 import Observable from '../Observable/Observable';
-
 import defaultState from '../Model/defaultState';
-
 import { hasChild } from '../helpers/helpers';
+import View from './View';
 
 const view = new View(document.body, defaultState);
 

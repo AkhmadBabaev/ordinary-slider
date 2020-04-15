@@ -1,5 +1,4 @@
 import Model from './Model';
-
 import { State } from './Interfaces';
 
 const testeeState: State = {

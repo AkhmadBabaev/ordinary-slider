@@ -1,9 +1,7 @@
-import Bar from './Bar';
-import Simple from '../Templates/Simple/Simple';
-
-import { BarOptions } from './Interfaces';
-
 import { hasChild } from '../../helpers/helpers';
+import Simple from '../Templates/Simple/Simple';
+import Bar from './Bar';
+import { BarOptions } from './Interfaces';
 
 const options: BarOptions = {
   parent: document.body,

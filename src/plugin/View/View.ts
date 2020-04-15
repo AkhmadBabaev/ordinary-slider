@@ -1,11 +1,7 @@
 import { boundMethod } from 'autobind-decorator';
 
 import Observable from '../Observable/Observable';
-import Track from './Track/Track';
-
 import { State, PState } from '../Model/Interfaces';
-import { TrackOptions } from './Track/Interfaces';
-
 import {
   propertyFilter,
   isBooleanSpy,
@@ -14,6 +10,8 @@ import {
   asyncRender,
   throttle,
 } from '../helpers/helpers';
+import Track from './Track/Track';
+import { TrackOptions } from './Track/Interfaces';
 
 class View extends Observable {
   private element: HTMLElement;

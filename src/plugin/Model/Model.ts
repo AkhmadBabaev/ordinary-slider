@@ -1,14 +1,12 @@
 import { boundMethod } from 'autobind-decorator';
 
 import Observable from '../Observable/Observable';
-import defaultState from './defaultState';
-
-import { State, PState } from './Interfaces';
-
 import {
   isObject, isBoolean, isNumber,
   isDefined, softRounding, objectReflection,
 } from '../helpers/helpers';
+import defaultState from './defaultState';
+import { State, PState } from './Interfaces';
 
 class Model extends Observable {
   private state: State = defaultState;

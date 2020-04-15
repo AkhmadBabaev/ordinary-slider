@@ -1,9 +1,7 @@
-import Thumb from './Thumb';
-import Simple from '../Templates/Simple/Simple';
-
-import { ThumbOptions } from './Interfaces';
-
 import { hasChild } from '../../helpers/helpers';
+import Simple from '../Templates/Simple/Simple';
+import Thumb from './Thumb';
+import { ThumbOptions } from './Interfaces';
 
 const options: ThumbOptions = {
   parent: document.body,

@@ -1,9 +1,7 @@
-import Track from './Track';
-import Simple from '../Templates/Simple/Simple';
-
-import { TrackOptions } from './Interfaces';
-
 import { hasChild } from '../../helpers/helpers';
+import Simple from '../Templates/Simple/Simple';
+import Track from './Track';
+import { TrackOptions } from './Interfaces';
 
 const options: TrackOptions = {
   parent: document.body,

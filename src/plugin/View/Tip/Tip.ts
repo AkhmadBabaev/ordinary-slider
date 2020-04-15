@@ -1,5 +1,4 @@
 import Simple from '../Templates/Simple/Simple';
-
 import { TipOptions } from './Interfaces';
 
 class Tip extends Simple<TipOptions> {

@@ -1,6 +1,5 @@
 import Simple from '../Templates/Simple/Simple';
 import Tip from '../Tip/Tip';
-
 import { ThumbOptions } from './Interfaces';
 
 class Thumb extends Simple<ThumbOptions> {

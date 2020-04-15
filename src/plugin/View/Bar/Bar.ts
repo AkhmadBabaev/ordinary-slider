@@ -1,8 +1,6 @@
-import Simple from '../Templates/Simple/Simple';
-
-import { BarOptions } from './Interfaces';
-
 import { isDefined } from '../../helpers/helpers';
+import Simple from '../Templates/Simple/Simple';
+import { BarOptions } from './Interfaces';
 
 class Bar extends Simple<BarOptions> {
   public render(options: BarOptions): void {

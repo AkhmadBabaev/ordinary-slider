@@ -1,16 +1,14 @@
-import Simple from '../Templates/Simple/Simple';
-import Thumb from '../Thumb/Thumb';
-import Bar from '../Bar/Bar';
-
-import { TrackOptions } from './Interfaces';
-import { ThumbOptions, PThumbOptions } from '../Thumb/Interfaces';
-import { BarOptions, PBarOptions } from '../Bar/Interfaces';
-
 import {
   convertSliderUnitToPercent as convertToPercent,
   propertyFilter,
   isDefined,
 } from '../../helpers/helpers';
+import Simple from '../Templates/Simple/Simple';
+import Thumb from '../Thumb/Thumb';
+import { ThumbOptions, PThumbOptions } from '../Thumb/Interfaces';
+import Bar from '../Bar/Bar';
+import { BarOptions, PBarOptions } from '../Bar/Interfaces';
+import { TrackOptions } from './Interfaces';
 
 class Track extends Simple<TrackOptions> {
   public render(options: TrackOptions): void {
