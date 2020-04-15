@@ -4,19 +4,16 @@ import Observable from '../Observable/Observable';
 import { State, PState } from '../Model/Interfaces';
 import {
   propertyFilter,
-  isBooleanSpy,
-  debounce,
   isDefined,
-  asyncRender,
   throttle,
+  debounce,
+  isBooleanSpy,
 } from '../helpers/helpers';
 import Track from './Track/Track';
 import { TrackOptions } from './Track/Interfaces';
 
 class View extends Observable {
-  private element: HTMLElement;
-
-  private fragment: HTMLElement;
+  private root: HTMLElement;
 
   private options: State;
 
@@ -24,39 +21,44 @@ class View extends Observable {
 
   private ratio: number;
 
-  private activeThumbIndex: number;
-
   private sliderLength: number;
 
+  private activeThumbIndex: number;
+
   private isGrabbed: boolean;
+
+  private attributesObserver: { [k: string]: Function };
+
+  private className = 'o-slider';
 
   constructor(rootElem: HTMLElement, options: State) {
     super();
 
-    this.element = rootElem;
-    this.render = asyncRender(this.render.bind(this));
+    this.root = rootElem;
+    this.options = options;
 
+    this.createAttributesObserver();
     this.setComponentClass();
-    this.addConstantListeners();
-    this.render(options);
+    this.applyState(options);
+    this.addListeners();
   }
 
-  public async render(options: PState): Promise<void> {
+  @boundMethod
+  public applyState(options: PState): void {
     this.options = { ...this.options, ...options };
     this.updates = options;
 
-    this.createFragment();
+    const { min, max, vertical } = this.updates;
+    const isDirectionUpdated = isDefined(vertical);
+    const isRatioUpdated = isDirectionUpdated || isDefined(min) || isDefined(max);
+
+    isDirectionUpdated && this.handleOptionVertical();
+
+    this.setDataAttributes();
     this.createTrack();
 
-    await this.reflow();
-
-    this.updateElement();
-
-    this.setSliderLength();
-    this.setRatio();
-
-    this.addListeners();
-    this.addAttributesWatcher();
+    isDirectionUpdated && this.setSliderLength();
+    isRatioUpdated && this.setRatio();
 
     delete this.updates;
   }
@@ -66,13 +68,37 @@ class View extends Observable {
     return this.options;
   }
 
-  private updateElement(): void {
-    this.element = this.fragment;
-    delete this.fragment;
+  private createTrack(): void {
+    this.root.innerHTML = Track(this.generateTrackOptions());
+  }
+
+  private handleOptionVertical(): void {
+    if (this.options.vertical) {
+      this.root.classList.add(`${this.className}_is_vertical`);
+      this.root.classList.remove(`${this.className}_is_horizontal`);
+    } else {
+      this.root.classList.add(`${this.className}_is_horizontal`);
+      this.root.classList.remove(`${this.className}_is_vertical`);
+    }
+  }
+
+  private setDataAttributes(): void {
+    this.attributesObserver.unsubscribe();
+    const attrs = this.updates as { [k: string]: string };
+    Object.keys(attrs).forEach((key) => this.root.setAttribute(`data-${key}`, attrs[key]));
+    this.attributesObserver.subscribe();
   }
 
   private setComponentClass(): void {
-    !this.element.classList.contains('o-slider') && this.element.classList.add('o-slider');
+    !this.root.classList.contains(this.className) && this.root.classList.add(this.className);
+  }
+
+  private generateTrackOptions(): TrackOptions {
+    const values = this.getValues();
+    const trackOptionsList = ['vertical', 'range', 'bar', 'tip', 'min', 'max', 'className', 'activeThumbIndex'];
+    const trackOptions = propertyFilter({ ...this, ...this.options }, trackOptionsList);
+
+    return { ...trackOptions, values } as TrackOptions;
   }
 
   private getValues(): number[] {
@@ -82,106 +108,17 @@ class View extends Observable {
     return values as number[];
   }
 
-  private async reflow(): Promise<void> {
-    await new Promise((resolve) => requestAnimationFrame(() => {
-      this.element.replaceWith(this.fragment);
-      resolve();
-    }));
-  }
-
-  private createFragment(): void {
-    this.fragment = this.element.cloneNode() as HTMLElement;
-
-    this.handleVerticalParameter();
-    this.setDataAttributes();
-  }
-
-  private createTrack(): void {
-    const propsList = [
-      'activeThumbIndex',
-      'fragment:parent',
-      'vertical',
-      'range',
-      'tip',
-      'bar',
-      'min',
-      'max',
-    ];
-
-    const props = propertyFilter({ ...this, ...this.options }, propsList);
-    const values = this.getValues();
-
-    new Track({ ...props, values } as TrackOptions);
-  }
-
   private getSliderLength(): number {
-    return this.options.vertical ? this.element.clientHeight : this.element.clientWidth;
+    return this.options.vertical ? this.root.clientHeight : this.root.clientWidth;
   }
 
   private setSliderLength(): void {
-    if (!isDefined(this.options.vertical)) return;
     this.sliderLength = this.getSliderLength();
   }
 
   private setRatio(): void {
     const { min, max } = this.options;
     this.ratio = this.sliderLength / (max - min);
-  }
-
-  private handleVerticalParameter(): void {
-    if (!isDefined(this.updates.vertical)) return;
-
-    if (this.options.vertical) {
-      this.fragment.classList.add('o-slider_is_vertical');
-      this.fragment.classList.remove('o-slider_is_horizontal');
-    } else {
-      this.fragment.classList.add('o-slider_is_horizontal');
-      this.fragment.classList.remove('o-slider_is_vertical');
-    }
-  }
-
-  private setDataAttributes(): void {
-    const attrs = this.updates as { [k: string]: string };
-    Object.keys(attrs).forEach((key) => this.fragment.setAttribute(`data-${key}`, attrs[key]));
-  }
-
-  private setActiveThumbIndex(key: string): void {
-    this.activeThumbIndex = 0;
-    this.options.range && (this.activeThumbIndex = (key === '0') ? 0 : 1);
-  }
-
-  private deleteActiveThumbMod(): void {
-    const activeClass = 'o-slider__thumb_is_active';
-    setTimeout(() => this.element.querySelector(`.${activeClass}`)?.classList.remove(activeClass), 5);
-  }
-
-  private handleWindowResize(): void {
-    // if length was not changed
-    if (this.sliderLength === this.getSliderLength()) return;
-
-    this.sliderLength = this.getSliderLength();
-    this.setRatio();
-  }
-
-  private addAttributesWatcher(): void {
-    const { notify, element } = this;
-
-    function callback(options: any): void {
-      Object.keys(options).forEach((record) => {
-        const { attributeName, oldValue } = options[record];
-        const property = attributeName.split('-')[1];
-        let value: string | boolean = element.getAttribute(attributeName) as string;
-
-        isBooleanSpy(oldValue) && (value = value === 'true');
-        notify({ [property]: value });
-      });
-    }
-
-    new MutationObserver(callback).observe(element, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: Object.keys(this.options).map((key) => `data-${key}`),
-    });
   }
 
   private calculateValue(position: number): number {
@@ -194,7 +131,7 @@ class View extends Observable {
   private handleTrackClick(event: MouseEvent): void {
     const { vertical, range } = this.options;
     const target = event.target as HTMLElement;
-    const track = target.closest('.o-slider__track') as HTMLElement;
+    const track = target.closest(`.${this.className}__track`) as HTMLElement;
 
     const client = vertical ? event.clientY : event.clientX;
     const trackBound = vertical
@@ -226,17 +163,17 @@ class View extends Observable {
     if (!(mouseDownEvent.which === 1)) return;
 
     const target = mouseDownEvent.target as HTMLElement;
-    const thumb = target.closest('.o-slider__thumb') as HTMLElement;
+    const thumb = target.closest(`.${this.className}__thumb`) as HTMLElement;
     const { offsetX, offsetY } = mouseDownEvent;
 
     if (!thumb) return;
 
-    thumb.classList.add('o-slider__thumb_is_active');
+    thumb.classList.add(`${this.className}__thumb_is_active`);
     this.coverElement('on');
     this.isGrabbed = true;
 
     const { vertical } = this.options;
-    const slider = this.element;
+    const slider = this.root;
 
     const targetLength = vertical ? target.clientHeight : target.clientWidth;
     const offset = vertical ? offsetY : offsetX;
@@ -274,24 +211,69 @@ class View extends Observable {
     mouseDownEvent.preventDefault();
   }
 
+  private deleteActiveThumbMod(): void {
+    const activeClass = `${this.className}__thumb_is_active`;
+    this.root.querySelector(`.${activeClass}`)?.classList.remove(activeClass);
+  }
+
+  private setActiveThumbIndex(key: string): void {
+    this.activeThumbIndex = 0;
+    this.options.range && (this.activeThumbIndex = (key === '0') ? 0 : 1);
+  }
+
+  private handleWindowResize(): void {
+    // if length was not changed
+    if (this.sliderLength === this.getSliderLength()) return;
+
+    this.setSliderLength();
+    this.setRatio();
+  }
+
+  protected createAttributesObserver(): void {
+    const { root, notify } = this;
+
+    function callback(options: any): void {
+      Object.keys(options).forEach((record) => {
+        const { attributeName, oldValue } = options[record];
+        const property = attributeName.split('-')[1];
+        let value: string | boolean = root.getAttribute(attributeName) as string;
+
+        isBooleanSpy(oldValue) && (value = value === 'true');
+        notify({ [property]: value });
+      });
+    }
+
+    const observer = new MutationObserver(callback);
+    const config = {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: Object.keys(this.options).map((key) => `data-${key}`),
+    };
+
+    observer.observe(root, config);
+
+    this.attributesObserver = {
+      subscribe: (): void => observer.observe(root, config),
+      unsubscribe: (): void => observer.disconnect(),
+    };
+  }
+
   private coverElement(value: 'on' | 'off'): void {
     const { body } = document;
-    const coverClass = 'o-slider__window-cover';
-    const cover = body.querySelector(`.${coverClass}`) as HTMLElement;
+    const coverClass = `${this.className}__window-cover`;
+    const coverElement = body.querySelector(`.${coverClass}`) as HTMLElement;
 
     if (value === 'on') {
-      cover
-        ? cover.removeAttribute('style')
+      coverElement
+        ? coverElement.removeAttribute('style')
         : body.insertAdjacentHTML('afterbegin', `<div class=${coverClass}></div>`);
-    } else cover.style.display = 'none';
+    } else coverElement.style.display = 'none';
   }
 
   private addListeners(): void {
-    this.element.addEventListener('click', this.handleTrackClick);
-    this.element.addEventListener('mousedown', this.handleThumbMouseDown);
-  }
+    this.root.addEventListener('click', this.handleTrackClick);
+    this.root.addEventListener('mousedown', this.handleThumbMouseDown);
 
-  private addConstantListeners(): void {
     window.addEventListener('resize', debounce(this.handleWindowResize.bind(this), 150));
   }
 }

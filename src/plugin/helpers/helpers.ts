@@ -117,29 +117,3 @@ export function objectReflection(a: object, b: object): object {
 
   return result;
 }
-
-export function asyncRender(fn: Function): (options: {}) => Promise<void> {
-  let isRendering = false;
-  let context: unknown;
-  let updates: {} | null;
-
-  async function wrapper(this: unknown, options: {}): Promise<void> {
-    if (isRendering) {
-      updates = { ...updates, ...options };
-      context = this;
-      return;
-    }
-
-    isRendering = true;
-    await fn.call(this, options);
-    isRendering = false;
-
-    if (updates) {
-      wrapper.call(context, updates);
-      context = null;
-      updates = null;
-    }
-  }
-
-  return wrapper;
-}

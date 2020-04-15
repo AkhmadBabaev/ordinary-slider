@@ -44,4 +44,6 @@ rules:
 
   no-new: off
 
+  indent: off
+
   class-methods-use-this: off

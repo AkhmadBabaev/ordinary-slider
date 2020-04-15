@@ -1,5 +1,6 @@
-export interface BarOptions {
-  parent: HTMLElement;
+import { ComponentOptions } from '../Component/Interface';
+
+export interface BarOptions extends ComponentOptions {
   vertical: boolean;
   length: string;
   shift?: string;

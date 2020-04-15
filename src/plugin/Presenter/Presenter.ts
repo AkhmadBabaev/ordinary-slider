@@ -44,7 +44,7 @@ class Presenter {
       (viewOptions[key as keyof State] === value) && delete stateChanges[key as keyof State];
     });
 
-    Object.keys(stateChanges).length && this.view.render(stateChanges);
+    Object.keys(stateChanges).length && this.view.applyState(stateChanges);
   }
 }
 
