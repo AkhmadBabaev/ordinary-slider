@@ -7,7 +7,7 @@ module.exports = {
   entry: {
     index: [
       `${paths.input}/preview/index`,
-      `${paths.input}/${paths.auxiliary}/${paths.styles}/_basic.scss`,
+      `${paths.input}/${paths.auxiliary}/${paths.styles}/basic.scss`,
     ],
     'o-slider': [
       `${paths.input}/plugin/o-slider`,
