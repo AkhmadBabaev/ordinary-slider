@@ -45,11 +45,11 @@
     }
   }
 
-  &__input:disabled ~ &__disableCover {
+  &__input:disabled ~ &__disable-cover {
     display: block;
   }
 
-  &__disableCover {
+  &__disable-cover {
     display: none;
     width: 100%;
     height: 100%;
