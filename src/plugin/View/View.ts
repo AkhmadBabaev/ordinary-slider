@@ -131,12 +131,12 @@ class View extends Observable {
   private handleTrackClick(event: MouseEvent): void {
     const { vertical, range } = this.options;
     const target = event.target as HTMLElement;
-    const track = target.closest(`.${this.className}__track`) as HTMLElement;
+    const trackElement = target.closest(`.${this.className}__track`) as HTMLElement;
 
     const client = vertical ? event.clientY : event.clientX;
     const trackBound = vertical
-      ? track.getBoundingClientRect().y
-      : track.getBoundingClientRect().x;
+      ? trackElement.getBoundingClientRect().y
+      : trackElement.getBoundingClientRect().x;
 
     const position = client - trackBound;
     const value = this.calculateValue(position);
@@ -163,12 +163,12 @@ class View extends Observable {
     if (!(mouseDownEvent.which === 1)) return;
 
     const target = mouseDownEvent.target as HTMLElement;
-    const thumb = target.closest(`.${this.className}__thumb`) as HTMLElement;
+    const thumbElement = target.closest(`.${this.className}__thumb`) as HTMLElement;
     const { offsetX, offsetY } = mouseDownEvent;
 
-    if (!thumb) return;
+    if (!thumbElement) return;
 
-    thumb.classList.add(`${this.className}__thumb_is_active`);
+    thumbElement.classList.add(`${this.className}__thumb_is_active`);
     this.coverElement('on');
     this.isGrabbed = true;
 
@@ -187,11 +187,12 @@ class View extends Observable {
       const position = client - sliderBound - shift;
       const value = this.calculateValue(position);
       const data: { [k: string]: number } = {};
+      const { key } = thumbElement.dataset;
 
-      thumb.dataset.key === '0' ? (data.from = value) : (data.to = value);
+      key === '0' ? (data.from = value) : (data.to = value);
 
       this.isGrabbed
-        ? this.setActiveThumbIndex(thumb.dataset.key as string)
+        ? this.setActiveThumbIndex(key as string)
         : delete this.activeThumbIndex;
 
       this.notify(data);
@@ -203,11 +204,14 @@ class View extends Observable {
 
       this.deleteActiveThumbMod();
       this.coverElement('off');
+
+      delete this.activeThumbIndex;
       delete this.isGrabbed;
     };
 
     document.addEventListener('mousemove', handleDocumentMouseMove);
     document.addEventListener('mouseup', handleDocumentMouseUp);
+
     mouseDownEvent.preventDefault();
   }
 

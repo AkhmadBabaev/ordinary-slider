@@ -1,6 +1,4 @@
 import ThumbComponent from './ThumbComponent';
 import { ThumbOptions } from './Interfaces';
 
-export default function Track(options: ThumbOptions): string {
-  return new ThumbComponent(options).getElement();
-}
+export default (options: ThumbOptions): string => new ThumbComponent(options).getElement();
