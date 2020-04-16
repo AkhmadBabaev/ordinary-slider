@@ -9,7 +9,7 @@ class BarComponent extends Component<BarOptions> {
     return `
       <div
         class=${options.className}__bar
-        style="${dimension}: ${options.length}; ${side}: ${options.shift || 0}">
+        style='${dimension}: ${options.length}; ${side}: ${options.shift || 0}'>
       </div>
     `;
   }

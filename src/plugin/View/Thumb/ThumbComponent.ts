@@ -12,8 +12,8 @@ class ThumbComponent extends Component<ThumbOptions> {
 
     return `
       <div
-        class="${classes}"
-        style="${side}: ${options.position}"
+        class='${classes}'
+        style='${side}: ${options.position}'
         data-key=${options.key}>
 
         ${options.tip ? `<div class=${options.className}__tip>${options.value}</div>` : ''}

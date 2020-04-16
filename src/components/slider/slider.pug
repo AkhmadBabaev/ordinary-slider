@@ -1,6 +1,6 @@
-mixin slider({ min = 0, max = 100, step = 1, from = 0, to = null, tip = false, bar = false, interval = false, direction = 'horizontal' } = {})
+mixin slider({ min = 0, max = 100, step = 1, from = 0, to = null, tip = false, bar = false, interval = false, direction = "horizontal" } = {})
   -
-    const className = 'o-slider';
+    const className = "o-slider";
     let classes = className;
 
   div(
@@ -13,5 +13,5 @@ mixin slider({ min = 0, max = 100, step = 1, from = 0, to = null, tip = false, b
     data-tip = tip
     data-bar = bar
     data-range = interval
-    data-vertical = `${direction === 'vertical'}`
+    data-vertical = `${direction === "vertical"}`
   )
