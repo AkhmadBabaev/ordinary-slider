@@ -5,7 +5,7 @@ import {
   isObject, isBoolean, isNumber,
   isDefined, softRounding, objectReflection,
 } from '../helpers/helpers';
-import defaultState from './defaultState';
+import defaultState from './default-state';
 import { State, PState } from './Interfaces';
 
 class Model extends Observable {

@@ -1,5 +1,5 @@
 import Observable from '../Observable/Observable';
-import defaultState from '../Model/defaultState';
+import defaultState from '../Model/default-state';
 import { hasChild } from '../helpers/helpers';
 import View from './View';
 
