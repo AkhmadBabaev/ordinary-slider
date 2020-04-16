@@ -1,12 +1,11 @@
-mixin checkbox({ id = null, title = "title", name = "", isChecked = false } = {})
+mixin checkbox({ title = "title", name = "", isChecked = false } = {})
   - const className = "checkbox";
 
   div(class = className tabindex = 0)
-    label(class = `${className}__label` for = id)
+    label(class = `${className}__label`)
       input(
         class = `${className}__input`
         type = "checkbox"
-        id = id
         name = name
         checked = isChecked
       )

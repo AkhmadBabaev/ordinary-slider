@@ -1,11 +1,10 @@
-mixin num-field({ id = null, title = "title", name = "", min = null, max = null, step = 1, value = 0 } = {})
+mixin num-field({ title = "title", name = "", min = null, max = null, step = 1, value = 0 } = {})
   - const className = "num-field";
 
   div(class = className)
-    label(class = `${className}__label` for = id)
+    label(class = `${className}__label`)
       span(class = `${className}__title`)= title
       input(
-        id = id
         class = `${className}__input`
         type = "number"
         name = name
