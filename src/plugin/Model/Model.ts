@@ -66,12 +66,7 @@ class Model extends Observable {
 
   private handleMin(): void {
     let { min } = this.temporaryState;
-    const {
-      max, step, from, to,
-    } = this.temporaryState;
-
-    const isGreaterThanFrom = min > from;
-    const isGreaterThanTo = min > (to as number);
+    const { max, step } = this.temporaryState;
     const gap = max - min;
 
     min >= max && (min = max - 1);
@@ -81,23 +76,14 @@ class Model extends Observable {
     this.temporaryState.min = min;
 
     // update related properties
-    const isStepUpdated = isDefined(this.changes.step);
-    const isFromUpdated = isDefined(this.changes.from);
-    const isToUpdated = isDefined(this.changes.from);
-
-    !isStepUpdated && (step > gap) && this.handleStep();
-    !isFromUpdated && isGreaterThanFrom && this.handleFrom();
-    !isToUpdated && isGreaterThanTo && this.handleTo();
+    !isDefined(this.changes.step) && (step > gap) && this.handleStep();
+    !isDefined(this.changes.from) && this.handleFrom();
+    !isDefined(this.changes.to) && this.handleTo();
   }
 
   private handleMax(): void {
     let { max } = this.temporaryState;
-    const {
-      min, step, from, to,
-    } = this.temporaryState;
-
-    const isLessThanFrom = max < from;
-    const isLessThanTo = max < (to as number);
+    const { min, step } = this.temporaryState;
     const gap = max - min;
 
     max <= min && (max = min + 1);
@@ -107,13 +93,9 @@ class Model extends Observable {
     this.temporaryState.max = max;
 
     // update related properties
-    const isStepUpdated = isDefined(this.changes.step);
-    const isFromUpdated = isDefined(this.changes.from);
-    const isToUpdated = isDefined(this.changes.to);
-
-    !isStepUpdated && (step > gap) && this.handleStep();
-    !isFromUpdated && isLessThanFrom && this.handleFrom();
-    !isToUpdated && isLessThanTo && this.handleTo();
+    !isDefined(this.changes.step) && (step > gap) && this.handleStep();
+    !isDefined(this.changes.from) && this.handleFrom();
+    !isDefined(this.changes.to) && this.handleTo();
   }
 
   private handleStep(): void {
@@ -129,11 +111,8 @@ class Model extends Observable {
     this.temporaryState.step = step;
 
     // update related property
-    const isFromUpdated = isDefined(this.changes.from);
-    const isToUpdated = isDefined(this.changes.to);
-
-    !isFromUpdated && this.handleFrom();
-    !isToUpdated && this.handleTo();
+    !isDefined(this.changes.from) && this.handleFrom();
+    !isDefined(this.changes.to) && this.handleTo();
   }
 
   private handleValue(param: number): number {
@@ -147,9 +126,7 @@ class Model extends Observable {
       const upperStepBound = lowerStepBound + step;
 
       upperStepBound > max && (step = max - lowerStepBound);
-
-      const halfStep = step / 2;
-      value = (halfStep > remainder) ? lowerStepBound : upperStepBound;
+      value = (step / 2 > remainder) ? lowerStepBound : upperStepBound;
     }
 
     value < min && (value = min);
@@ -165,7 +142,7 @@ class Model extends Observable {
   }
 
   private handleTo(): void {
-    if (!this.temporaryState.range) return;
+    if (!this.temporaryState.range || !this.temporaryState.to) return;
     const to = this.handleValue(this.temporaryState.to as number);
 
     this.changes.to = to;
@@ -211,27 +188,30 @@ class Model extends Observable {
   }
 
   correctFromTo(): void {
-    if (!this.temporaryState.range) return;
-    if (this.temporaryState.from < (this.temporaryState.to as number)) return;
-
     let { from, to } = this.temporaryState;
-    const { max, step } = this.temporaryState;
+    const isFromLessThanTo = from < (to as number);
 
-    const isInitializedTo = isDefined(to);
+    if (!this.temporaryState.range || isFromLessThanTo) return;
+
+    const { min, max, step } = this.temporaryState;
     const isFromUpdated = isDefined(this.changes.from);
     const isSecondUpdated = isDefined(this.changes.to);
+    const isOnlyFromUpdated = isFromUpdated && !isSecondUpdated;
+    const isOnlyToUpdated = isSecondUpdated && !isFromUpdated;
 
-    isInitializedTo && isFromUpdated && !isSecondUpdated && (from = (to as number) - step);
-    isInitializedTo && isSecondUpdated && !isFromUpdated && (to = from + step);
-
-    if (!isInitializedTo || from === to) {
-      this.initializeTo();
-      return;
+    if (isDefined(to) && isOnlyFromUpdated) {
+      const reminder = ((to as number) - min) % step;
+      from = reminder === 0 ? (to as number) - step : (to as number) - reminder;
     }
 
-    if (from > (to as number)) {
-      from < max && (to = from + step);
-      from >= max && (from = max - step) && (to = max);
+    if (isDefined(to) && isOnlyToUpdated) {
+      to = (from + step < max) ? from + step : max;
+    }
+
+    const shouldInitializeTo = !isDefined(to) || from >= (to as number);
+    if (shouldInitializeTo) {
+      this.initializeTo();
+      return;
     }
 
     [this.changes.from, this.changes.to] = [from, to];
@@ -239,17 +219,19 @@ class Model extends Observable {
   }
 
   private initializeTo(): void {
-    const { min, max, step } = this.temporaryState;
     let { from, to } = this.temporaryState;
+    const { min, max, step } = this.temporaryState;
 
     const distanceToMin = from - min;
     const distanceToMax = max - from;
 
-    distanceToMin > distanceToMax
-      && (to = from)
-      && (from -= step);
-
-    distanceToMin <= distanceToMax && (to = from + step);
+    if (distanceToMin > distanceToMax) {
+      const reminder = (from - min) % step;
+      to = from;
+      from = reminder === 0
+        ? from - step
+        : from - reminder;
+    } else to = from + step;
 
     [this.changes.from, this.changes.to] = [from, to];
     this.temporaryState = { ...this.temporaryState, ...this.changes };
