@@ -233,6 +233,72 @@ class View extends Observable {
     this.setRatio();
   }
 
+  @boundMethod
+  private handleThumbTouchStart(touchStartEvent: TouchEvent): void {
+    if (touchStartEvent.touches.length > 1) return;
+
+    const target = touchStartEvent.target as HTMLElement;
+    const thumbElement = target.closest(`.${this.className}__thumb`) as HTMLElement;
+
+    if (!thumbElement) return;
+
+    thumbElement.classList.add(`${this.className}__thumb_is_active`);
+    this.isGrabbed = true;
+
+    const { vertical } = this.options;
+    const slider = this.root;
+
+    const targetLength = vertical ? target.clientHeight : target.clientWidth;
+
+    const offset = vertical
+      ? touchStartEvent.touches[0].clientY
+      : touchStartEvent.touches[0].clientX;
+
+    const targetBound = vertical
+      ? target.getBoundingClientRect().y
+      : target.getBoundingClientRect().x;
+
+    const sliderBound = vertical
+      ? slider.getBoundingClientRect().y
+      : slider.getBoundingClientRect().x;
+
+    const shift = offset - targetBound - (targetLength / 2);
+
+    const handleDocumentTouchMove = throttle((touchMoveEvent: TouchEvent): void => {
+      if (touchMoveEvent.touches.length > 1) return;
+
+      const client = vertical
+        ? touchMoveEvent.touches[0].clientY
+        : touchMoveEvent.touches[0].clientX;
+
+      const position = client - sliderBound - shift;
+      const value = this.calculateValue(position);
+      const data: { [k: string]: number } = {};
+      const { key } = thumbElement.dataset;
+
+      key === '0' ? (data.from = value) : (data.to = value);
+
+      this.notify(data);
+      this.isGrabbed
+        ? this.setActiveThumbIndex(key as string)
+        : delete this.activeThumbIndex;
+    }, 40);
+
+    const handleDocumentTouchEnd = (): void => {
+      target.removeEventListener('touchmove', handleDocumentTouchMove);
+      target.removeEventListener('touchend', handleDocumentTouchEnd);
+
+      this.deleteActiveThumbMod();
+      delete this.activeThumbIndex;
+      delete this.isGrabbed;
+    };
+
+    target.addEventListener('touchmove', handleDocumentTouchMove, { passive: false });
+    target.addEventListener('touchend', handleDocumentTouchEnd);
+
+    touchStartEvent.preventDefault();
+  }
+
   protected createAttributesObserver(): void {
     const { root, notify } = this;
 
@@ -277,6 +343,7 @@ class View extends Observable {
   private addListeners(): void {
     this.root.addEventListener('click', this.handleTrackClick);
     this.root.addEventListener('mousedown', this.handleThumbMouseDown);
+    this.root.addEventListener('touchstart', this.handleThumbTouchStart, { passive: false });
 
     window.addEventListener('resize', debounce(this.handleWindowResize.bind(this), 150));
   }
