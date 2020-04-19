@@ -1,6 +1,23 @@
-extends ../auxiliary/markup/layout
+extends /components/page/page
 
-block append content
+block append variables
+  - const title = "Ordinary slider preview";
+
+block append head
+  if isProdEnv
+    link(rel = "stylesheet" href = "index.min.css")
+    link(rel = "stylesheet" href = "o-slider.min.css")
+
+block append scripts
+  script(
+    src = "https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity = "sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin = "anonymous"
+  )
+  script(src = "o-slider.min.js")
+  script(src = "index.min.js")
+
+block append page-content
   - const data = require("./data.json");
 
   +panel-list(data.panels)
