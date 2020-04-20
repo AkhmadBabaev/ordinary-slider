@@ -9,34 +9,34 @@ function compareType(type: string, value: unknown): boolean {
   return type.toLowerCase() === getType(value).toLowerCase();
 }
 
-export function isNumber(value: unknown): boolean {
+function isNumber(value: unknown): boolean {
   const result: unknown = (value as string).length ? Number(value) : value;
 
   if (Number.isNaN(result as number)) return false;
   return typeof result === 'number';
 }
 
-export function isObject(value: unknown): boolean {
+function isObject(value: unknown): boolean {
   return compareType('object', value);
 }
 
-export function isBoolean(value: unknown): boolean {
+function isBoolean(value: unknown): boolean {
   return typeof value === 'boolean';
 }
 
-export function isBooleanSpy(value: string): boolean {
+function isBooleanSpy(value: string): boolean {
   return (value === 'true') || (value === 'false');
 }
 
-export function isDefined(value: unknown): boolean {
+function isDefined(value: unknown): boolean {
   return (value !== undefined) && (value !== null);
 }
 
-export function softRounding(num: number): number {
+function softRounding(num: number): number {
   return Number(num.toFixed(1));
 }
 
-export function propertyFilter(obj: { [k: string]: any }, props: string[]): { [k: string]: any } {
+function propertyFilter(obj: { [k: string]: any }, props: string[]): { [k: string]: any } {
   const result: { [k: string]: unknown } = {};
 
   props.forEach((prop: string) => {
@@ -60,7 +60,7 @@ export function propertyFilter(obj: { [k: string]: any }, props: string[]): { [k
   return result;
 }
 
-export function throttle(fn: Function, wait: number): () => void {
+function throttle(fn: Function, wait: number): () => void {
   let isThrottled = false;
   let context: unknown;
   let args: unknown[] | null;
@@ -92,7 +92,7 @@ export function throttle(fn: Function, wait: number): () => void {
   return wrapper;
 }
 
-export function debounce(fn: Function, wait: number): () => void {
+function debounce(fn: Function, wait: number): () => void {
   let timer: any;
   return function wrapper(...params: unknown[]): void {
     clearTimeout(timer);
@@ -100,15 +100,15 @@ export function debounce(fn: Function, wait: number): () => void {
   };
 }
 
-export function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
+function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
   return Object.keys(parent.children).some((x, i: number) => parent.children[i] === child);
 }
 
-export function convertSliderUnitToPercent({ min, max, value }: { [k: string]: number }): number {
+function convertSliderUnitToPercent({ min, max, value }: { [k: string]: number }): number {
   return (100 / (max - min)) * (value - min);
 }
 
-export function objectReflection(a: object, b: object): object {
+function objectReflection(a: object, b: object): object {
   const result = { ...a, ...b };
 
   Object.keys(a).forEach((key) => {
@@ -117,3 +117,18 @@ export function objectReflection(a: object, b: object): object {
 
   return result;
 }
+
+export {
+  convertSliderUnitToPercent,
+  objectReflection,
+  propertyFilter,
+  softRounding,
+  isBooleanSpy,
+  isBoolean,
+  isDefined,
+  isNumber,
+  isObject,
+  hasChild,
+  debounce,
+  throttle,
+};

@@ -1,6 +1,8 @@
 :root {
   --basic-font-name: 'Arial', sans-serif;
   --basic-color: #000;
+
+  -webkit-tap-highlight-color: transparent !important;
 }
 
 html {

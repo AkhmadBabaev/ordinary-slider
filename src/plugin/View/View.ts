@@ -233,6 +233,35 @@ class View extends Observable {
     this.setRatio();
   }
 
+  protected createAttributesObserver(): void {
+    const { root, notify } = this;
+
+    function callback(options: any): void {
+      Object.keys(options).forEach((record) => {
+        const { attributeName, oldValue } = options[record];
+        const property = attributeName.split('-')[1];
+        let value: string | boolean = root.getAttribute(attributeName) as string;
+
+        isBooleanSpy(oldValue) && (value = value === 'true');
+        notify({ [property]: value });
+      });
+    }
+
+    const observer = new MutationObserver(callback);
+    const config = {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: Object.keys(this.options).map((key) => `data-${key}`),
+    };
+
+    observer.observe(root, config);
+
+    this.attributesObserver = {
+      subscribe: (): void => observer.observe(root, config),
+      unsubscribe: (): void => observer.disconnect(),
+    };
+  }
+
   @boundMethod
   private handleThumbTouchStart(touchStartEvent: TouchEvent): void {
     if (touchStartEvent.touches.length > 1) return;
@@ -297,35 +326,6 @@ class View extends Observable {
     target.addEventListener('touchend', handleDocumentTouchEnd);
 
     touchStartEvent.preventDefault();
-  }
-
-  protected createAttributesObserver(): void {
-    const { root, notify } = this;
-
-    function callback(options: any): void {
-      Object.keys(options).forEach((record) => {
-        const { attributeName, oldValue } = options[record];
-        const property = attributeName.split('-')[1];
-        let value: string | boolean = root.getAttribute(attributeName) as string;
-
-        isBooleanSpy(oldValue) && (value = value === 'true');
-        notify({ [property]: value });
-      });
-    }
-
-    const observer = new MutationObserver(callback);
-    const config = {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: Object.keys(this.options).map((key) => `data-${key}`),
-    };
-
-    observer.observe(root, config);
-
-    this.attributesObserver = {
-      subscribe: (): void => observer.observe(root, config),
-      unsubscribe: (): void => observer.disconnect(),
-    };
   }
 
   private coverElement(value: 'on' | 'off'): void {
