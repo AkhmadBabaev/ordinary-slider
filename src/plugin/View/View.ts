@@ -9,7 +9,7 @@ import {
   debounce,
   isBooleanSpy,
 } from '../helpers/helpers';
-import Track from './Track/Track';
+import { trackHTML as track } from './Track/Track';
 import { TrackOptions } from './Track/Interfaces';
 
 class View extends Observable {
@@ -69,7 +69,7 @@ class View extends Observable {
   }
 
   private createTrack(): void {
-    this.root.innerHTML = Track(this.generateTrackOptions());
+    this.root.innerHTML = track(this.generateTrackOptions());
   }
 
   private handleOptionVertical(): void {

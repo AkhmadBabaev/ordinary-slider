@@ -1,6 +1,6 @@
 import { hasChild } from '../../helpers/helpers';
 import Component from '../Component/Component';
-import TrackComponent from './TrackComponent';
+import { Track } from './Track';
 import { TrackOptions } from './Interfaces';
 
 document.body.innerHTML = '<div id="test"></div>';
@@ -17,12 +17,12 @@ const options: TrackOptions = {
   max: 100,
 };
 
-let track: TrackComponent;
+let track: Track;
 let trackElement: HTMLElement;
 
 describe('Track', () => {
   beforeEach(() => {
-    track = new TrackComponent(options);
+    track = new Track(options);
     testElement.innerHTML = track.getElement();
     trackElement = testElement.querySelector(`.${options.className}__track`) as HTMLElement;
   });
@@ -39,7 +39,7 @@ describe('Track', () => {
   });
 
   test('contains 2 thumbs elements if range set as true', () => {
-    testElement.innerHTML = new TrackComponent({ ...options, range: true }).getElement();
+    testElement.innerHTML = new Track({ ...options, range: true }).getElement();
     trackElement = testElement.querySelector(`.${options.className}__track`) as HTMLElement;
 
     const thumbs = trackElement.querySelectorAll(`.${options.className}__thumb`);
@@ -54,7 +54,7 @@ describe('Track', () => {
   });
 
   test('contains element bar if bar set as true', () => {
-    testElement.innerHTML = new TrackComponent({ ...options, bar: true }).getElement();
+    testElement.innerHTML = new Track({ ...options, bar: true }).getElement();
     trackElement = testElement.querySelector(`.${options.className}__track`) as HTMLElement;
 
     const barElement = trackElement.querySelector(`.${options.className}__bar`) as HTMLElement;

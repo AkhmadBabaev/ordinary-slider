@@ -1,6 +1,6 @@
 import { hasChild } from '../../helpers/helpers';
 import Component from '../Component/Component';
-import BarComponent from './BarComponent';
+import { Bar } from './Bar';
 import { BarOptions } from './Interfaces';
 
 document.body.innerHTML = '<div id="test"></div>';
@@ -13,12 +13,12 @@ const options: BarOptions = {
   shift: '5%',
 };
 
-let bar: BarComponent;
+let bar: Bar;
 let barElement: HTMLElement;
 
 describe('Bar', () => {
   beforeEach(() => {
-    bar = new BarComponent(options);
+    bar = new Bar(options);
     testElement.innerHTML = bar.getElement();
     barElement = testElement.querySelector(`.${options.className}__bar`) as HTMLElement;
   });
@@ -35,7 +35,7 @@ describe('Bar', () => {
     });
 
     test('should be set as height if vertical is true', () => {
-      testElement.innerHTML = new BarComponent({ ...options, vertical: true }).getElement();
+      testElement.innerHTML = new Bar({ ...options, vertical: true }).getElement();
       barElement = testElement.querySelector(`.${options.className}__bar`) as HTMLElement;
       expect(barElement.style.height).toBe('10%');
     });
@@ -47,7 +47,7 @@ describe('Bar', () => {
     });
 
     test('should be set as bottom if vertical is true', () => {
-      testElement.innerHTML = new BarComponent({ ...options, vertical: true }).getElement();
+      testElement.innerHTML = new Bar({ ...options, vertical: true }).getElement();
       barElement = testElement.querySelector(`.${options.className}__bar`) as HTMLElement;
       expect(barElement.style.bottom).toBe('5%');
     });

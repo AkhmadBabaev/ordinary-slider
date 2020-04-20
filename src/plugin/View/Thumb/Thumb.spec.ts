@@ -1,5 +1,5 @@
 import { hasChild } from '../../helpers/helpers';
-import ThumbComponent from './ThumbComponent';
+import { Thumb } from './Thumb';
 import Component from '../Component/Component';
 import { ThumbOptions } from './Interfaces';
 
@@ -17,12 +17,12 @@ const options: ThumbOptions = {
   value: 5,
 };
 
-let thumb: ThumbComponent;
+let thumb: Thumb;
 let thumbElement: HTMLElement;
 
 describe('Thumb', () => {
   beforeEach(() => {
-    thumb = new ThumbComponent(options);
+    thumb = new Thumb(options);
     testElement.innerHTML = thumb.getElement();
     thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
   });
@@ -40,7 +40,7 @@ describe('Thumb', () => {
     });
 
     test('contains element tip if tip set as true', () => {
-      testElement.innerHTML = new ThumbComponent({ ...options, tip: true }).getElement();
+      testElement.innerHTML = new Thumb({ ...options, tip: true }).getElement();
       thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
 
       const tipElement = thumbElement.querySelector(`.${options.className}__tip`) as HTMLElement;
@@ -54,7 +54,7 @@ describe('Thumb', () => {
     });
 
     test('should be set as bottom if vertical is true', () => {
-      testElement.innerHTML = new ThumbComponent({ ...options, vertical: true }).getElement();
+      testElement.innerHTML = new Thumb({ ...options, vertical: true }).getElement();
       thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
 
       expect(thumbElement.style.bottom).toBe('10%');
@@ -62,7 +62,7 @@ describe('Thumb', () => {
   });
 
   test('option "value" should be placed inside tip element if tip set as true', () => {
-    testElement.innerHTML = new ThumbComponent({ ...options, tip: true }).getElement();
+    testElement.innerHTML = new Thumb({ ...options, tip: true }).getElement();
     thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
 
     const tipElement = thumbElement.querySelector(`.${options.className}__tip`) as HTMLElement;

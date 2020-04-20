@@ -118,8 +118,13 @@ function objectReflection(a: object, b: object): object {
   return result;
 }
 
+function getComponentHTML<T>(Component: { new (options: T): any }): Function {
+  return (options: T): string => new Component(options).getElement();
+}
+
 export {
   convertSliderUnitToPercent,
+  getComponentHTML,
   objectReflection,
   propertyFilter,
   softRounding,
