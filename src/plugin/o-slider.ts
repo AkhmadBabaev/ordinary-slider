@@ -45,7 +45,7 @@ declare global {
   ): JQuery<object> | JQuery<HTMLElement> | State {
     const $firstElement = $(this).first();
 
-    if (!arguments.length) {
+    if (!$firstElement.data('oSlider')) {
       const settings = params[0] as PState;
       init.call(this, settings, $firstElement);
       return $(this).first();
