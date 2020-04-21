@@ -51,7 +51,7 @@ declare global {
       return $(this).first();
     }
 
-    if (!(typeof params[0] === 'string')) throw new TypeError('oSlider methodd name should be a string');
+    if (!(typeof params[0] === 'string')) throw new TypeError('oSlider method name should be a string');
     const method = params[0];
     const options = params[1];
 
