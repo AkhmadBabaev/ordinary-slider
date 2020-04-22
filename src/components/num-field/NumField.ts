@@ -3,6 +3,8 @@ import { boundMethod } from 'autobind-decorator';
 class NumField {
   protected element: HTMLElement;
 
+  protected titleElement: HTMLElement;
+
   protected input: HTMLInputElement;
 
   constructor(element: HTMLElement) {
@@ -22,8 +24,7 @@ class NumField {
 
   @boundMethod
   public setTitle(title: string): void {
-    const titleElement = this.element.querySelector('.num-field__title')!;
-    titleElement.textContent = title;
+    this.titleElement.textContent = title;
   }
 
   @boundMethod
@@ -34,6 +35,7 @@ class NumField {
 
   protected init(): void {
     this.input = this.element.querySelector('.num-field__input') as HTMLInputElement;
+    this.titleElement = this.element.querySelector('.num-field__title') as HTMLElement;
   }
 }
 

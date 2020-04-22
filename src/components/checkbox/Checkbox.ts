@@ -3,6 +3,8 @@ import { boundMethod } from 'autobind-decorator';
 class CheckBox {
   protected element: HTMLElement;
 
+  protected titleElement: HTMLElement;
+
   protected input: HTMLInputElement;
 
   constructor(element: HTMLElement) {
@@ -22,12 +24,13 @@ class CheckBox {
 
   @boundMethod
   public setTitle(title: string): void {
-    const titleElement = this.element.querySelector('.checkbox__title')!;
-    titleElement.textContent = title;
+    this.titleElement.textContent = title;
   }
 
   protected init(): void {
     this.input = this.element.querySelector('.checkbox__input') as HTMLInputElement;
+    this.titleElement = this.element.querySelector('.checkbox__title') as HTMLElement;
+
     this.element.addEventListener('focus', this.handleFocus);
     this.element.addEventListener('blur', this.handleBlur);
   }
