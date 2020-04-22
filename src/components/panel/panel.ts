@@ -43,18 +43,27 @@ class Panel {
     this.setSlider();
   }
 
-  private defineFields(): void {
+  private foundFields(): HTMLElement[] {
     const foundNulFields = Array.from(this.element.querySelectorAll('.js-panel__field'));
     const foundCheckboxes = Array.from(this.element.querySelectorAll('.js-panel__checkbox'));
+    const foundList = [...foundNulFields, ...foundCheckboxes];
 
-    [...foundNulFields, ...foundCheckboxes].forEach((elem) => {
-      const fieldElement = elem.firstElementChild as HTMLElement;
-      const isCheckbox = fieldElement.className.includes('checkbox');
-      const isNumField = fieldElement.className.includes('num-field');
+    return foundList.map((elem) => elem.firstElementChild as HTMLElement);
+  }
+
+  private setField(field: NumField | CheckBox, name: string): void {
+    this.fields[name] = field;
+    this.fields[name].getInput().addEventListener('change', this.handleInputChange);
+  }
+
+  private defineFields(): void {
+    this.foundFields().forEach((elem) => {
+      const isCheckbox = elem.className.includes('checkbox');
+      const isNumField = elem.className.includes('num-field');
       let field;
 
-      isNumField && (field = new NumField(fieldElement));
-      isCheckbox && (field = new CheckBox(fieldElement));
+      isNumField && (field = new NumField(elem));
+      isCheckbox && (field = new CheckBox(elem));
 
       const name = field?.getInput().getAttribute('name');
 
@@ -68,8 +77,7 @@ class Panel {
         case 'tip':
         case 'range':
         case 'vertical':
-          this.fields[name] = field as NumField | CheckBox;
-          this.fields[name].getInput().addEventListener('change', this.handleInputChange);
+          this.setField(field as NumField | CheckBox, name);
           break;
 
         default: break;
