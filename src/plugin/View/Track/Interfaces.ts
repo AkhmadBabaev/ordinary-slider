@@ -10,3 +10,5 @@ export interface TrackOptions extends ComponentOptions {
   values: number[];
   activeThumbIndex: number;
 }
+
+export type PTrackOptions = Partial<TrackOptions>;

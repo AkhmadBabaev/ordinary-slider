@@ -5,10 +5,6 @@ function getType(param: unknown): string {
   return readableType;
 }
 
-function compareType(type: string, value: unknown): boolean {
-  return type.toLowerCase() === getType(value).toLowerCase();
-}
-
 function isNumber(value: unknown): boolean {
   const result: unknown = (value as string).length ? Number(value) : value;
 
@@ -17,7 +13,7 @@ function isNumber(value: unknown): boolean {
 }
 
 function isObject(value: unknown): boolean {
-  return compareType('object', value);
+  return getType(value).toLowerCase() === 'object';
 }
 
 function isBoolean(value: unknown): boolean {
@@ -36,11 +32,11 @@ function softRounding(num: number): number {
   return Number(num.toFixed(1));
 }
 
-function propertyFilter(obj: { [k: string]: any }, props: string[]): { [k: string]: any } {
-  const result: { [k: string]: unknown } = {};
+function propertyFilter<T extends object>(obj: T, props: string[]): T {
+  const result: T = {} as T;
 
   props.forEach((prop: string) => {
-    let value: unknown = obj[prop];
+    let value = obj[prop as keyof T];
     let propName = prop;
 
     if (prop.includes(':')) {
@@ -51,10 +47,10 @@ function propertyFilter(obj: { [k: string]: any }, props: string[]): { [k: strin
       if (!secondPart.length) throw new SyntaxError('Invalid value');
 
       propName = secondPart;
-      value = obj[firstPart];
+      value = obj[firstPart as keyof T];
     }
 
-    isDefined(value) && (result[propName] = value);
+    isDefined(value) && (result[propName as keyof T] = value);
   });
 
   return result;
@@ -94,13 +90,13 @@ function throttle(fn: Function, wait: number): () => void {
 
 function debounce(fn: Function, wait: number): () => void {
   let timer: any;
-  return function wrapper(...params: unknown[]): void {
+  return (...params: unknown[]): void => {
     clearTimeout(timer);
     timer = setTimeout(() => fn(...params), wait);
   };
 }
 
-function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
+function hasChild<T extends Element>(parent: T, child: T): boolean {
   return Object.keys(parent.children).some((x, i: number) => parent.children[i] === child);
 }
 
@@ -108,7 +104,7 @@ function convertSliderUnitToPercent({ min, max, value }: { [k: string]: number }
   return (100 / (max - min)) * (value - min);
 }
 
-function objectReflection(a: object, b: object): object {
+function objectReflection<T extends object>(a: T, b: T): T {
   const result = { ...a, ...b };
 
   Object.keys(a).forEach((key) => {
@@ -118,7 +114,7 @@ function objectReflection(a: object, b: object): object {
   return result;
 }
 
-function getComponentHTML<T>(Component: { new (options: T): any }): Function {
+function getComponentHTML<T>(Component: { new (options: T): any }): (options: T) => string {
   return (options: T): string => new Component(options).getElement();
 }
 

@@ -1,10 +1,10 @@
 import { hasChild } from '../../helpers/helpers';
 import Component from '../Component/Component';
-import { Bar } from './Bar';
+import { Bar, barHTML as bar } from './Bar';
 import { BarOptions } from './Interfaces';
 
 document.body.innerHTML = '<div id="test"></div>';
-const testElement = document.body.querySelector('#test') as HTMLElement;
+const testElement = document.body.querySelector('#test')!;
 
 const options: BarOptions = {
   className: 'o-slider',
@@ -13,17 +13,15 @@ const options: BarOptions = {
   shift: '5%',
 };
 
-let bar: Bar;
-let barElement: HTMLElement;
-
 describe('Bar', () => {
+  let barElement: HTMLElement;
+
   beforeEach(() => {
-    bar = new Bar(options);
-    testElement.innerHTML = bar.getElement();
+    testElement.innerHTML = bar(options);
     barElement = testElement.querySelector(`.${options.className}__bar`) as HTMLElement;
   });
 
-  test('is an instance of class Component', () => expect(bar).toBeInstanceOf(Component));
+  test('is an instance of class Component', () => expect(new Bar(options)).toBeInstanceOf(Component));
 
   test('is valid HTML string', () => {
     expect(hasChild(testElement, barElement)).toBeTruthy();
@@ -35,7 +33,7 @@ describe('Bar', () => {
     });
 
     test('should be set as height if vertical is true', () => {
-      testElement.innerHTML = new Bar({ ...options, vertical: true }).getElement();
+      testElement.innerHTML = bar({ ...options, vertical: true });
       barElement = testElement.querySelector(`.${options.className}__bar`) as HTMLElement;
       expect(barElement.style.height).toBe('10%');
     });
@@ -47,7 +45,7 @@ describe('Bar', () => {
     });
 
     test('should be set as bottom if vertical is true', () => {
-      testElement.innerHTML = new Bar({ ...options, vertical: true }).getElement();
+      testElement.innerHTML = bar({ ...options, vertical: true });
       barElement = testElement.querySelector(`.${options.className}__bar`) as HTMLElement;
       expect(barElement.style.bottom).toBe('5%');
     });

@@ -10,7 +10,7 @@ import {
   isBooleanSpy,
 } from '../helpers/helpers';
 import { trackHTML as track } from './Track/Track';
-import { TrackOptions } from './Track/Interfaces';
+import { TrackOptions, PTrackOptions } from './Track/Interfaces';
 
 class View extends Observable {
   private root: HTMLElement;
@@ -96,9 +96,13 @@ class View extends Observable {
   private generateTrackOptions(): TrackOptions {
     const values = this.getValues();
     const trackOptionsList = ['vertical', 'range', 'bar', 'tip', 'min', 'max', 'className', 'activeThumbIndex'];
-    const trackOptions = propertyFilter({ ...this, ...this.options }, trackOptionsList);
+    const trackOptions: PTrackOptions = propertyFilter({
+      ...this,
+      ...this.options,
+    }, trackOptionsList);
 
-    return { ...trackOptions, values } as TrackOptions;
+    trackOptions.values = values;
+    return trackOptions as TrackOptions;
   }
 
   private getValues(): number[] {
@@ -191,11 +195,10 @@ class View extends Observable {
 
       key === '0' ? (data.from = value) : (data.to = value);
 
+      this.notify(data);
       this.isGrabbed
         ? this.setActiveThumbIndex(key as string)
         : delete this.activeThumbIndex;
-
-      this.notify(data);
     }, 40);
 
     const handleDocumentMouseUp = (): void => {
@@ -228,7 +231,6 @@ class View extends Observable {
   private handleWindowResize(): void {
     // if length was not changed
     if (this.sliderLength === this.getSliderLength()) return;
-
     this.setSliderLength();
     this.setRatio();
   }

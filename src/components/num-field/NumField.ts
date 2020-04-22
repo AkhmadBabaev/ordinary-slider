@@ -22,7 +22,7 @@ class NumField {
 
   @boundMethod
   public setTitle(title: string): void {
-    const titleElement = this.element.querySelector('.num-field__title') as HTMLElement;
+    const titleElement = this.element.querySelector('.num-field__title')!;
     titleElement.textContent = title;
   }
 

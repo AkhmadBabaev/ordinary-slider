@@ -22,13 +22,8 @@ declare global {
     options: PState = {},
     $firstElement: JQuery<HTMLElement>,
   ): void {
-    if (!this.length) {
-      throw new ReferenceError('Connection to non-existent element');
-    }
-
-    if (!isObject(options)) {
-      throw new TypeError('oSlider configuration should be an object');
-    }
+    if (!this.length) throw new ReferenceError('Connection to non-existent element');
+    if (!isObject(options)) throw new TypeError('oSlider configuration should be an object');
 
     const htmlElement = $firstElement[0];
     const data = $(htmlElement).data();

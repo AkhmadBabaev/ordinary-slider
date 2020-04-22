@@ -1,10 +1,10 @@
 import { hasChild } from '../../helpers/helpers';
-import { Thumb } from './Thumb';
+import { Thumb, thumbHTML as thumb } from './Thumb';
 import Component from '../Component/Component';
 import { ThumbOptions } from './Interfaces';
 
 document.body.innerHTML = '<div id="test"></div>';
-const testElement = document.body.querySelector('#test') as HTMLElement;
+const testElement = document.body.querySelector('#test')!;
 
 const options: ThumbOptions = {
   className: 'o-slider',
@@ -17,17 +17,15 @@ const options: ThumbOptions = {
   value: 5,
 };
 
-let thumb: Thumb;
-let thumbElement: HTMLElement;
-
 describe('Thumb', () => {
+  let thumbElement: HTMLElement;
+
   beforeEach(() => {
-    thumb = new Thumb(options);
-    testElement.innerHTML = thumb.getElement();
+    testElement.innerHTML = thumb(options);
     thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
   });
 
-  test('is an instance of class Component', () => expect(thumb).toBeInstanceOf(Component));
+  test('is an instance of class Component', () => expect(new Thumb(options)).toBeInstanceOf(Component));
 
   test('is valid HTML string', () => {
     expect(hasChild(testElement, thumbElement)).toBeTruthy();
@@ -35,15 +33,15 @@ describe('Thumb', () => {
 
   describe('Options tip', () => {
     test('doesn\'t contain element tip if tip set as false', () => {
-      const tipElement = thumbElement.querySelector(`.${options.className}__tip`) as HTMLElement;
+      const tipElement = thumbElement.querySelector(`.${options.className}__tip`)!;
       expect(hasChild(thumbElement, tipElement)).toBeFalsy();
     });
 
     test('contains element tip if tip set as true', () => {
-      testElement.innerHTML = new Thumb({ ...options, tip: true }).getElement();
+      testElement.innerHTML = thumb({ ...options, tip: true });
       thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
 
-      const tipElement = thumbElement.querySelector(`.${options.className}__tip`) as HTMLElement;
+      const tipElement = thumbElement.querySelector(`.${options.className}__tip`)!;
       expect(hasChild(thumbElement, tipElement)).toBeTruthy();
     });
   });
@@ -54,7 +52,7 @@ describe('Thumb', () => {
     });
 
     test('should be set as bottom if vertical is true', () => {
-      testElement.innerHTML = new Thumb({ ...options, vertical: true }).getElement();
+      testElement.innerHTML = thumb({ ...options, vertical: true });
       thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
 
       expect(thumbElement.style.bottom).toBe('10%');
@@ -62,10 +60,10 @@ describe('Thumb', () => {
   });
 
   test('option "value" should be placed inside tip element if tip set as true', () => {
-    testElement.innerHTML = new Thumb({ ...options, tip: true }).getElement();
+    testElement.innerHTML = thumb({ ...options, tip: true });
     thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
 
-    const tipElement = thumbElement.querySelector(`.${options.className}__tip`) as HTMLElement;
+    const tipElement = thumbElement.querySelector(`.${options.className}__tip`)!;
     expect(tipElement.textContent).toBe('5');
   });
 

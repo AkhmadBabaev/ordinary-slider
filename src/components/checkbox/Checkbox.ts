@@ -22,7 +22,7 @@ class CheckBox {
 
   @boundMethod
   public setTitle(title: string): void {
-    const titleElement = this.element.querySelector('.checkbox__title') as HTMLElement;
+    const titleElement = this.element.querySelector('.checkbox__title')!;
     titleElement.textContent = title;
   }
 

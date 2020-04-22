@@ -41,10 +41,7 @@ describe('propertyFilter', () => {
 
 describe('throttle', () => {
   let log: number;
-
-  let fn = function wrapper(value: number): void {
-    log = value;
-  };
+  let fn = (value: number): void => { log = value; };
 
   beforeAll(() => {
     fn = throttle(fn, 1000);

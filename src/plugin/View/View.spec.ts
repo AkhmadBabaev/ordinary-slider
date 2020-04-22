@@ -4,9 +4,8 @@ import { hasChild } from '../helpers/helpers';
 import View from './View';
 
 document.body.innerHTML = '<div id="test"></div>';
-const testElement = document.body.querySelector('#test') as HTMLElement;
-
-const view = new View(testElement, defaultState);
+const testElement = document.body.querySelector('#test')!;
+const view = new View(testElement as HTMLElement, defaultState);
 
 describe('View', () => {
   test('is an instance of class Observable', () => expect(view).toBeInstanceOf(Observable));
@@ -16,7 +15,7 @@ describe('View', () => {
   });
 
   test('contains element track', () => {
-    const track = testElement.querySelector('.o-slider__track') as HTMLElement;
+    const track = testElement.querySelector('.o-slider__track')!;
     expect(hasChild(testElement, track)).toBeTruthy();
   });
 

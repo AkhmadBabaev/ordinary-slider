@@ -20,7 +20,7 @@ class Panel {
   @boundMethod
   public settings(options?: Settings): Settings | void {
     if (arguments.length) this.$slider.oSlider('settings', options);
-    return this.$slider.oSlider('settings') as unknown as Settings;
+    return { ...this.$slider.oSlider('settings') };
   }
 
   @boundMethod
@@ -53,8 +53,8 @@ class Panel {
       const isNumField = fieldElement.className.includes('num-field');
       let field;
 
-      isNumField && (field = new NumField(fieldElement as HTMLElement));
-      isCheckbox && (field = new CheckBox(fieldElement as HTMLElement));
+      isNumField && (field = new NumField(fieldElement));
+      isCheckbox && (field = new CheckBox(fieldElement));
 
       const name = field?.getInput().getAttribute('name');
 
@@ -143,7 +143,7 @@ class Panel {
   }
 
   private setSlider(): void {
-    const slider = this.element.querySelector('.js-panel__slider')?.firstElementChild as HTMLElement;
+    const slider = this.element.querySelector('.js-panel__slider')?.firstElementChild!;
 
     this.$slider = $(slider).oSlider() as JQuery<object>;
     this.subscribe(this.handleSliderChanges);
