@@ -1,22 +1,16 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const paths = require('./paths');
+const dirs = require('./dirs');
 
 module.exports = {
-  context: paths.absInput,
+  context: dirs.input.path,
   entry: {
-    index: [
-      `${paths.input}/preview/index`,
-      `${paths.input}/${paths.auxiliary}/${paths.styles}/basic.scss`,
-    ],
-    'o-slider': [
-      `${paths.input}/plugin/o-slider`,
-      `${paths.input}/plugin/o-slider.scss`,
-    ],
+    index: ['./preview/index', './auxiliary/styles/basic.scss'],
+    'o-slider': ['./plugin/o-slider', './plugin/o-slider.scss'],
   },
   output: {
-    path: paths.absOutput,
-    filename: `${paths.output}/[name].min.js`,
+    path: dirs.output.path,
+    filename: '[name].min.js',
   },
   module: {
     rules: [
@@ -33,14 +27,14 @@ module.exports = {
       {
         test: /\.pug$/,
         loader: 'pug-loader',
-        options: { root: paths.absInput },
+        options: { root: dirs.input.path },
       },
 
       // Favicons
 
       {
         test: /\.(png|svg)$/i,
-        include: paths.absFavicons,
+        include: dirs.favicons.path,
         loader: 'file-loader',
         options: { name: '[path][name].[ext]' },
       },
@@ -49,15 +43,15 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {
-      '@components': paths.absComponents,
-      '@favicons': paths.absFavicons,
+      '@components': dirs.components.path,
+      '@favicons': dirs.favicons.path,
     },
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: `${paths.input}/preview/index.pug`,
-      filename: `${paths.output}/index.html`,
       currentEnv: process.env.NODE_ENV,
+      template: 'preview/index.pug',
+      filename: 'index.html',
       inject: false,
       hash: false,
     }),

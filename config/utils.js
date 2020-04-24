@@ -8,10 +8,7 @@ const packageJson = require('../package.json');
  */
 function getNetworkIp() {
   const currentIP = ip.address();
-  const isPrivate = ip.isPrivate(currentIP);
-  const isV4Format = ip.isV4Format(currentIP);
-
-  return isPrivate && isV4Format && currentIP;
+  return ip.isPrivate(currentIP) && ip.isV4Format(currentIP) && currentIP;
 }
 
 /**

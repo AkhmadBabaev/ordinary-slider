@@ -1,6 +1,6 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common');
-const paths = require('./paths');
+const dirs = require('./dirs');
 const { complitionLogHook, projectInfoHook } = require('./hooks');
 const { projectName, getNetworkIp, getAvailabelPort } = require('./utils');
 
@@ -8,7 +8,7 @@ const config = {
   mode: 'development',
   devtool: 'eval',
   devServer: {
-    contentBase: paths.output,
+    contentBase: dirs.output.relativeName,
     host: '0.0.0.0',
     progress: true,
     noInfo: true,
