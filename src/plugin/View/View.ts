@@ -295,7 +295,7 @@ class View extends Observable {
 
     const shift = offset - targetBound - (targetLength / 2);
 
-    const handleDocumentTouchMove = throttle((touchMoveEvent: TouchEvent): void => {
+    const handleThumbTouchMove = throttle((touchMoveEvent: TouchEvent): void => {
       if (touchMoveEvent.touches.length > 1) return;
 
       const client = vertical
@@ -315,17 +315,17 @@ class View extends Observable {
         : delete this.activeThumbIndex;
     }, 40);
 
-    const handleDocumentTouchEnd = (): void => {
-      target.removeEventListener('touchmove', handleDocumentTouchMove);
-      target.removeEventListener('touchend', handleDocumentTouchEnd);
+    const handleThumbTouchEnd = (): void => {
+      target.removeEventListener('touchmove', handleThumbTouchMove);
+      target.removeEventListener('touchend', handleThumbTouchEnd);
 
       this.deleteActiveThumbMod();
       delete this.activeThumbIndex;
       delete this.isGrabbed;
     };
 
-    target.addEventListener('touchmove', handleDocumentTouchMove, { passive: false });
-    target.addEventListener('touchend', handleDocumentTouchEnd);
+    target.addEventListener('touchmove', handleThumbTouchMove, { passive: false });
+    target.addEventListener('touchend', handleThumbTouchEnd);
 
     touchStartEvent.preventDefault();
   }
