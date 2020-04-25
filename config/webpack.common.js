@@ -5,7 +5,7 @@ const dirs = require('./dirs');
 module.exports = {
   context: dirs.input.path,
   entry: {
-    index: ['./preview/index', './auxiliary/styles/basic.scss'],
+    index: ['./preview/index', `./${dirs.styles.name}/basic.scss`],
     'o-slider': ['./plugin/o-slider', './plugin/o-slider.scss'],
   },
   output: {
