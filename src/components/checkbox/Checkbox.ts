@@ -31,17 +31,17 @@ class CheckBox {
     this.input = this.element.querySelector('.checkbox__input') as HTMLInputElement;
     this.titleElement = this.element.querySelector('.checkbox__title') as HTMLElement;
 
-    this.element.addEventListener('focus', this.handleFocus);
-    this.element.addEventListener('blur', this.handleBlur);
+    this.element.addEventListener('focus', this.handleCheckboxFocus);
+    this.element.addEventListener('blur', this.handleCheckboxBlur);
   }
 
   @boundMethod
-  private handleFocus(): void {
+  private handleCheckboxFocus(): void {
     document.addEventListener('keyup', this.handleDocumentKeyUp);
   }
 
   @boundMethod
-  private handleBlur(): void {
+  private handleCheckboxBlur(): void {
     document.removeEventListener('keyup', this.handleDocumentKeyUp);
   }
 
