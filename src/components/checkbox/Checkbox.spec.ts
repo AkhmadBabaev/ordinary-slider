@@ -10,9 +10,9 @@ document.body.innerHTML = `
   </div>
 `;
 
-const checkbox = new Checkbox(document.body.querySelector('.checkbox') as HTMLElement);
-
 describe('Checkbox', () => {
+  const checkbox = new Checkbox(document.body.querySelector('.checkbox') as HTMLElement);
+
   test('getElement should return an element', () => {
     expect(checkbox.getElement()).toBeInstanceOf(HTMLElement);
   });
@@ -25,5 +25,30 @@ describe('Checkbox', () => {
     checkbox.setTitle('hello');
     const checkboxElem = checkbox.getElement();
     expect(checkboxElem.querySelector('.checkbox__title')?.textContent).toBe('hello');
+  });
+
+  test('should generate Change Event if press Enter on focused checkbox', () => {
+    const checkboxElem = checkbox.getElement();
+    const callback = jest.fn();
+
+    const keyboardEventOptions = {
+      bubbles: true,
+      code: 'KeyE',
+    };
+
+    const handleCheckboxFocus = (): void => {
+      document.dispatchEvent(new KeyboardEvent('keyup', keyboardEventOptions));
+    };
+
+    checkboxElem.addEventListener('change', callback);
+    checkboxElem.addEventListener('focus', handleCheckboxFocus);
+    checkboxElem.dispatchEvent(new FocusEvent('focus', { bubbles: true }));
+
+    expect(callback).not.toBeCalled();
+
+    keyboardEventOptions.code = 'Enter';
+
+    checkboxElem.dispatchEvent(new FocusEvent('focus', { bubbles: true }));
+    expect(callback).toBeCalled();
   });
 });
