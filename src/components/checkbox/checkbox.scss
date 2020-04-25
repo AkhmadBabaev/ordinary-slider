@@ -1,12 +1,6 @@
 .checkbox {
   --checkbox-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 0%));
 
-  &__input { display: none; }
-
-  &__input:checked ~ &__toggler:before {
-    margin-left: auto;
-  }
-
   &:focus {
     outline: none;
   }
@@ -21,6 +15,12 @@
     align-items: center;
     white-space: nowrap;
     user-select: none;
+  }
+
+  &__input { display: none; }
+
+  &__input:checked ~ &__toggler:before {
+    margin-left: auto;
   }
 
   &__title {
