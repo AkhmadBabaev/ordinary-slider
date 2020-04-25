@@ -27,12 +27,12 @@ describe('View', () => {
 
   test('adds BEM modifier is_vertical if vertical set as true', () => {
     view.applyState({ vertical: true });
-    expect(sliderElement.classList.contains('o-slider_is_vertical')).toBeTruthy();
+    expect(sliderElement.classList.contains('o-slider_direction_vertical')).toBeTruthy();
   });
 
   test('adds BEM modifier is_horizontal if vertical set as false', () => {
     view.applyState({ vertical: false });
-    expect(sliderElement.classList.contains('o-slider_is_horizontal')).toBeTruthy();
+    expect(sliderElement.classList.contains('o-slider_direction_horizontal')).toBeTruthy();
   });
 
   test('getOptions returns current options', () => {

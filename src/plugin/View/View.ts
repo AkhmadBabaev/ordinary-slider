@@ -74,11 +74,11 @@ class View extends Observable {
 
   private handleOptionVertical(): void {
     if (this.options.vertical) {
-      this.root.classList.add(`${this.className}_is_vertical`);
-      this.root.classList.remove(`${this.className}_is_horizontal`);
+      this.root.classList.add(`${this.className}_direction_vertical`);
+      this.root.classList.remove(`${this.className}_direction_horizontal`);
     } else {
-      this.root.classList.add(`${this.className}_is_horizontal`);
-      this.root.classList.remove(`${this.className}_is_vertical`);
+      this.root.classList.add(`${this.className}_direction_horizontal`);
+      this.root.classList.remove(`${this.className}_direction_vertical`);
     }
   }
 
@@ -172,7 +172,7 @@ class View extends Observable {
 
     if (!thumbElement) return;
 
-    thumbElement.classList.add(`${this.className}__thumb_is_active`);
+    thumbElement.classList.add(`${this.className}__thumb_type_active`);
     this.coverElement('on');
     this.isGrabbed = true;
 
@@ -219,7 +219,7 @@ class View extends Observable {
   }
 
   private deleteActiveThumbMod(): void {
-    const activeClass = `${this.className}__thumb_is_active`;
+    const activeClass = `${this.className}__thumb_type_active`;
     this.root.querySelector(`.${activeClass}`)?.classList.remove(activeClass);
   }
 
@@ -273,7 +273,7 @@ class View extends Observable {
 
     if (!thumbElement) return;
 
-    thumbElement.classList.add(`${this.className}__thumb_is_active`);
+    thumbElement.classList.add(`${this.className}__thumb_type_active`);
     this.isGrabbed = true;
 
     const { vertical } = this.options;

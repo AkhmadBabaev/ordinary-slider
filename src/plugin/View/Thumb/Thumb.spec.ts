@@ -72,10 +72,10 @@ describe('Thumb', () => {
   });
 
   test('adds BEM modifier priority', () => {
-    expect(thumbElement.classList.contains(`${options.className}__thumb_is_priority`)).toBeTruthy();
+    expect(thumbElement.classList.contains(`${options.className}__thumb_type_priority`)).toBeTruthy();
   });
 
   test('adds BEM modifier active', () => {
-    expect(thumbElement.classList.contains(`${options.className}__thumb_is_active`)).toBeTruthy();
+    expect(thumbElement.classList.contains(`${options.className}__thumb_type_active`)).toBeTruthy();
   });
 });
