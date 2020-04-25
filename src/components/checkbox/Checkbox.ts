@@ -30,9 +30,7 @@ class CheckBox {
   protected init(): void {
     this.input = this.checkboxElement.querySelector('.checkbox__input') as HTMLInputElement;
     this.titleElement = this.checkboxElement.querySelector('.checkbox__title') as HTMLElement;
-
-    this.checkboxElement.addEventListener('focus', this.handleCheckboxFocus);
-    this.checkboxElement.addEventListener('blur', this.handleCheckboxBlur);
+    this.addListeners();
   }
 
   @boundMethod
@@ -50,6 +48,11 @@ class CheckBox {
     if (event.code !== 'Enter') return;
     this.input.checked = !this.input.checked;
     this.input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  private addListeners(): void {
+    this.checkboxElement.addEventListener('focus', this.handleCheckboxFocus);
+    this.checkboxElement.addEventListener('blur', this.handleCheckboxBlur);
   }
 }
 
