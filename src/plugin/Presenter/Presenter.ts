@@ -1,3 +1,5 @@
+import { boundMethod } from 'autobind-decorator';
+
 import { Model, State, PState } from '../Model/Interfaces';
 import { View } from '../View/Interfaces';
 
@@ -6,26 +8,25 @@ class Presenter {
     private model: Model,
     private view: View,
   ) {
-    this.getState = this.getState.bind(this);
-    this.subscribe = this.subscribe.bind(this);
-    this.unsubscribe = this.unsubscribe.bind(this);
-    this.setState = this.setState.bind(this);
-    this.ViewNotifier = this.ViewNotifier.bind(this);
     this.init();
   }
 
+  @boundMethod
   public subscribe(callback: Function): void {
     this.model.subscribe(callback);
   }
 
+  @boundMethod
   public unsubscribe(callback: Function): void {
     this.model.unsubscribe(callback);
   }
 
+  @boundMethod
   public setState(options: PState): void {
     this.model.setState(options);
   }
 
+  @boundMethod
   public getState(): State {
     return this.model.getState();
   }
@@ -35,6 +36,7 @@ class Presenter {
     this.view.subscribe(this.model.setState);
   }
 
+  @boundMethod
   private ViewNotifier(options: PState): void {
     const viewOptions = this.view.getOptions();
     const stateChanges = { ...options };
