@@ -1,12 +1,6 @@
 class Observable {
   private observers: Function[] = [];
 
-  constructor() {
-    this.subscribe = this.subscribe.bind(this);
-    this.unsubscribe = this.unsubscribe.bind(this);
-    this.notify = this.notify.bind(this);
-  }
-
   public subscribe(cb: Function): void {
     this.observers.push(cb);
   }
