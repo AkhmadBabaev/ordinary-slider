@@ -1,6 +1,4 @@
-import Model from './Model/Model';
 import { State, PState } from './Model/Interfaces';
-import View from './View/View';
 import Presenter from './Presenter/Presenter';
 import { isObject, isDefined } from './helpers/helpers';
 
@@ -27,9 +25,7 @@ declare global {
 
     const sliderElement = $firstItemFound[0];
     const dataFromAttributes = $(sliderElement).data();
-    const model: Model = new Model({ ...options, ...dataFromAttributes });
-    const view: View = new View(sliderElement, model.getState());
-    const presenter = new Presenter(model, view);
+    const presenter = new Presenter(sliderElement, { ...options, ...dataFromAttributes });
 
     $firstItemFound.data('oSlider', presenter);
   }

@@ -18,6 +18,7 @@ describe('oSlider', () => {
 
   test('initialization with options allow to set options to state', () => {
     const $slider = $('.o-slider').oSlider({ from: 10 }) as JQuery<object>;
+    // console.log($slider.oSlider('settings'))
     expect($slider.oSlider('settings')).toEqual({ ...defaultState, from: 10 });
   });
 

@@ -1,13 +1,17 @@
 import { boundMethod } from 'autobind-decorator';
 
-import { Model, State, PState } from '../Model/Interfaces';
-import { View } from '../View/Interfaces';
+import Model from '../Model/Model';
+import { State, PState } from '../Model/Interfaces';
+import View from '../View/View';
 
 class Presenter {
-  constructor(
-    private model: Model,
-    private view: View,
-  ) {
+  private view: View;
+
+  private model: Model;
+
+  constructor(rootElement: HTMLElement, options: PState) {
+    this.model = new Model(options);
+    this.view = new View(rootElement, this.model.getState());
     this.init();
   }
 

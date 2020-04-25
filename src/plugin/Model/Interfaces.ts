@@ -11,10 +11,3 @@ export interface State {
 }
 
 export type PState = Partial<State>;
-
-export interface Model {
-  setState: (data: PState, notify?: boolean) => void;
-  getState: () => State;
-  subscribe: (cb: Function) => void;
-  unsubscribe: (cb: Function) => void;
-}
