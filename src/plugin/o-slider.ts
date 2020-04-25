@@ -20,29 +20,29 @@ declare global {
   function init(
     this: JQuery,
     options: PState = {},
-    $firstElement: JQuery<HTMLElement>,
+    $firstItemFound: JQuery<HTMLElement>,
   ): void {
     if (!this.length) throw new ReferenceError('Connection to non-existent element');
     if (!isObject(options)) throw new TypeError('oSlider configuration should be an object');
 
-    const htmlElement = $firstElement[0];
-    const data = $(htmlElement).data();
-    const model: Model = new Model({ ...options, ...data });
-    const view: View = new View(htmlElement, model.getState());
+    const sliderElement = $firstItemFound[0];
+    const dataFromAttributes = $(sliderElement).data();
+    const model: Model = new Model({ ...options, ...dataFromAttributes });
+    const view: View = new View(sliderElement, model.getState());
     const presenter = new Presenter(model, view);
 
-    $firstElement.data('oSlider', presenter);
+    $firstItemFound.data('oSlider', presenter);
   }
 
   // eslint-disable-next-line no-param-reassign
   $.fn.oSlider = function oSlider(
     ...params: [(PState | string)?, (PState | Function)?]
   ): JQuery<object> | JQuery<HTMLElement> | State {
-    const $firstElement = $(this).first();
+    const $firstItemFound = $(this).first();
 
-    if (!$firstElement.data('oSlider')) {
+    if (!$firstItemFound.data('oSlider')) {
       const settings = params[0] as PState;
-      init.call(this, settings, $firstElement);
+      init.call(this, settings, $firstItemFound);
       return $(this).first();
     }
 
@@ -52,10 +52,10 @@ declare global {
 
     switch (method) {
       case 'settings':
-        if (!isDefined(options)) return $firstElement.data('oSlider').getState() as State;
-        $firstElement.data('oSlider').setState(options as PState); break;
-      case 'subscribe': $firstElement.data('oSlider').subscribe(options as Function); break;
-      case 'unsubscribe': $firstElement.data('oSlider').unsubscribe(options as Function); break;
+        if (!isDefined(options)) return $firstItemFound.data('oSlider').getState() as State;
+        $firstItemFound.data('oSlider').setState(options as PState); break;
+      case 'subscribe': $firstItemFound.data('oSlider').subscribe(options as Function); break;
+      case 'unsubscribe': $firstItemFound.data('oSlider').unsubscribe(options as Function); break;
       default: break;
     }
 

@@ -1,20 +1,20 @@
 import { boundMethod } from 'autobind-decorator';
 
 class CheckBox {
-  protected element: HTMLElement;
+  protected checkboxElement: HTMLElement;
 
   protected titleElement: HTMLElement;
 
   protected input: HTMLInputElement;
 
   constructor(element: HTMLElement) {
-    this.element = element;
+    this.checkboxElement = element;
     this.init();
   }
 
   @boundMethod
   public getElement(): HTMLElement {
-    return this.element;
+    return this.checkboxElement;
   }
 
   @boundMethod
@@ -28,11 +28,11 @@ class CheckBox {
   }
 
   protected init(): void {
-    this.input = this.element.querySelector('.checkbox__input') as HTMLInputElement;
-    this.titleElement = this.element.querySelector('.checkbox__title') as HTMLElement;
+    this.input = this.checkboxElement.querySelector('.checkbox__input') as HTMLInputElement;
+    this.titleElement = this.checkboxElement.querySelector('.checkbox__title') as HTMLElement;
 
-    this.element.addEventListener('focus', this.handleCheckboxFocus);
-    this.element.addEventListener('blur', this.handleCheckboxBlur);
+    this.checkboxElement.addEventListener('focus', this.handleCheckboxFocus);
+    this.checkboxElement.addEventListener('blur', this.handleCheckboxBlur);
   }
 
   @boundMethod
