@@ -6,14 +6,14 @@ import NumField from '../num-field/NumField';
 type Settings = { [k: string]: unknown };
 
 class Panel {
-  private element: HTMLElement;
+  private panelElement: HTMLElement;
 
   public fields: { [k: string]: CheckBox | NumField } = {};
 
   private $slider: JQuery<object>;
 
   constructor(elem: HTMLElement) {
-    this.element = elem;
+    this.panelElement = elem;
     this.init();
   }
 
@@ -35,7 +35,7 @@ class Panel {
 
   @boundMethod
   public getElement(): HTMLElement {
-    return this.element;
+    return this.panelElement;
   }
 
   protected init(): void {
@@ -44,8 +44,8 @@ class Panel {
   }
 
   private foundFields(): HTMLElement[] {
-    const foundNulFields = Array.from(this.element.querySelectorAll('.js-panel__field'));
-    const foundCheckboxes = Array.from(this.element.querySelectorAll('.js-panel__checkbox'));
+    const foundNulFields = Array.from(this.panelElement.querySelectorAll('.js-panel__field'));
+    const foundCheckboxes = Array.from(this.panelElement.querySelectorAll('.js-panel__checkbox'));
     const foundList = [...foundNulFields, ...foundCheckboxes];
 
     return foundList.map((elem) => elem.firstElementChild as HTMLElement);
@@ -151,7 +151,7 @@ class Panel {
   }
 
   private setSlider(): void {
-    const slider = this.element.querySelector('.js-panel__slider')?.firstElementChild!;
+    const slider = this.panelElement.querySelector('.js-panel__slider')?.firstElementChild!;
 
     this.$slider = $(slider).oSlider() as JQuery<object>;
     this.subscribe(this.handleSliderChanges);
