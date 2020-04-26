@@ -161,6 +161,40 @@ class View extends Observable {
     event.preventDefault();
   }
 
+  private handleDocumentMouseMoveContent(
+    mouseMoveEvent: MouseEvent,
+    thumbElement: HTMLElement,
+    sliderBound: number,
+    shift: number,
+  ): void {
+    const client = this.options.vertical ? mouseMoveEvent.clientY : mouseMoveEvent.clientX;
+    const position = client - sliderBound - shift;
+    const value = this.calculateValue(position);
+    const data: { [k: string]: number } = {};
+    const { key } = thumbElement.dataset;
+
+    key === '0' ? (data.from = value) : (data.to = value);
+
+    this.notify(data);
+    this.isGrabbed
+      ? this.setActiveThumbIndex(key as string)
+      : delete this.activeThumbIndex;
+  }
+
+  private handleDocumentMouseUpContent(
+    thumbMouseMoveHandler: EventListener,
+    thumbMouseUpHandler: EventListener,
+  ): void {
+    document.removeEventListener('mousemove', thumbMouseMoveHandler);
+    document.removeEventListener('mouseup', thumbMouseUpHandler);
+
+    this.deleteActiveThumbMod();
+    this.coverElement('off');
+
+    delete this.activeThumbIndex;
+    delete this.isGrabbed;
+  }
+
   @boundMethod
   private handleThumbMouseDown(mouseDownEvent: MouseEvent): void {
     // if it isn't left click
@@ -177,45 +211,102 @@ class View extends Observable {
     this.isGrabbed = true;
 
     const { vertical } = this.options;
-    const slider = this.root;
-
     const targetLength = vertical ? target.clientHeight : target.clientWidth;
     const offset = vertical ? offsetY : offsetX;
     const shift = offset - (targetLength / 2);
     const sliderBound = vertical
-      ? slider.getBoundingClientRect().y
-      : slider.getBoundingClientRect().x;
+      ? this.root.getBoundingClientRect().y
+      : this.root.getBoundingClientRect().x;
 
-    const handleDocumentMouseMove = throttle((event: MouseEvent): void => {
-      const client = vertical ? event.clientY : event.clientX;
-      const position = client - sliderBound - shift;
-      const value = this.calculateValue(position);
-      const data: { [k: string]: number } = {};
-      const { key } = thumbElement.dataset;
-
-      key === '0' ? (data.from = value) : (data.to = value);
-
-      this.notify(data);
-      this.isGrabbed
-        ? this.setActiveThumbIndex(key as string)
-        : delete this.activeThumbIndex;
+    const handleDocumentMouseMove = throttle((mouseMoveEvent: MouseEvent): void => {
+      this.handleDocumentMouseMoveContent(mouseMoveEvent, thumbElement, sliderBound, shift);
     }, 40);
 
     const handleDocumentMouseUp = (): void => {
-      document.removeEventListener('mousemove', handleDocumentMouseMove);
-      document.removeEventListener('mouseup', handleDocumentMouseUp);
-
-      this.deleteActiveThumbMod();
-      this.coverElement('off');
-
-      delete this.activeThumbIndex;
-      delete this.isGrabbed;
+      this.handleDocumentMouseUpContent(handleDocumentMouseMove, handleDocumentMouseUp);
     };
 
     document.addEventListener('mousemove', handleDocumentMouseMove);
     document.addEventListener('mouseup', handleDocumentMouseUp);
-
     mouseDownEvent.preventDefault();
+  }
+
+  private handleThumbTouchMoveContent(
+    touchMoveEvent: TouchEvent,
+    thumbElement: HTMLElement,
+    sliderBound: number,
+    shift: number,
+  ): void {
+    if (touchMoveEvent.touches.length > 1) return;
+
+    const client = this.options.vertical
+      ? touchMoveEvent.touches[0].clientY
+      : touchMoveEvent.touches[0].clientX;
+
+    const position = client - sliderBound - shift;
+    const value = this.calculateValue(position);
+    const data: { [k: string]: number } = {};
+    const { key } = thumbElement.dataset;
+
+    key === '0' ? (data.from = value) : (data.to = value);
+
+    this.notify(data);
+    this.isGrabbed
+      ? this.setActiveThumbIndex(key as string)
+      : delete this.activeThumbIndex;
+  }
+
+  private handleThumbTouchEndContent(
+    target: HTMLElement,
+    thumbTouchMoveHandler: EventListener,
+    thumbTouchUpHandler: EventListener,
+  ): void {
+    target.removeEventListener('touchmove', thumbTouchMoveHandler);
+    target.removeEventListener('touchend', thumbTouchUpHandler);
+
+    this.deleteActiveThumbMod();
+    delete this.activeThumbIndex;
+    delete this.isGrabbed;
+  }
+
+  @boundMethod
+  private handleThumbTouchStart(touchStartEvent: TouchEvent): void {
+    if (touchStartEvent.touches.length > 1) return;
+
+    const target = touchStartEvent.target as HTMLElement;
+    const thumbElement = target.closest(`.${this.className}__thumb`) as HTMLElement;
+
+    if (!thumbElement) return;
+
+    thumbElement.classList.add(`${this.className}__thumb_type_active`);
+    this.isGrabbed = true;
+
+    const { vertical } = this.options;
+    const targetLength = vertical ? target.clientHeight : target.clientWidth;
+    const offset = vertical
+      ? touchStartEvent.touches[0].clientY
+      : touchStartEvent.touches[0].clientX;
+
+    const targetBound = vertical
+      ? target.getBoundingClientRect().y
+      : target.getBoundingClientRect().x;
+
+    const sliderBound = vertical
+      ? this.root.getBoundingClientRect().y
+      : this.root.getBoundingClientRect().x;
+    const shift = offset - targetBound - (targetLength / 2);
+
+    const handleThumbTouchMove = throttle((touchMoveEvent: TouchEvent): void => {
+      this.handleThumbTouchMoveContent(touchMoveEvent, thumbElement, sliderBound, shift);
+    }, 40);
+
+    const handleThumbTouchEnd = (): void => {
+      this.handleThumbTouchEndContent(target, handleThumbTouchMove, handleThumbTouchEnd);
+    };
+
+    target.addEventListener('touchmove', handleThumbTouchMove, { passive: false });
+    target.addEventListener('touchend', handleThumbTouchEnd);
+    touchStartEvent.preventDefault();
   }
 
   private deleteActiveThumbMod(): void {
@@ -262,72 +353,6 @@ class View extends Observable {
       subscribe: (): void => observer.observe(root, config),
       unsubscribe: (): void => observer.disconnect(),
     };
-  }
-
-  @boundMethod
-  private handleThumbTouchStart(touchStartEvent: TouchEvent): void {
-    if (touchStartEvent.touches.length > 1) return;
-
-    const target = touchStartEvent.target as HTMLElement;
-    const thumbElement = target.closest(`.${this.className}__thumb`) as HTMLElement;
-
-    if (!thumbElement) return;
-
-    thumbElement.classList.add(`${this.className}__thumb_type_active`);
-    this.isGrabbed = true;
-
-    const { vertical } = this.options;
-    const slider = this.root;
-
-    const targetLength = vertical ? target.clientHeight : target.clientWidth;
-
-    const offset = vertical
-      ? touchStartEvent.touches[0].clientY
-      : touchStartEvent.touches[0].clientX;
-
-    const targetBound = vertical
-      ? target.getBoundingClientRect().y
-      : target.getBoundingClientRect().x;
-
-    const sliderBound = vertical
-      ? slider.getBoundingClientRect().y
-      : slider.getBoundingClientRect().x;
-
-    const shift = offset - targetBound - (targetLength / 2);
-
-    const handleThumbTouchMove = throttle((touchMoveEvent: TouchEvent): void => {
-      if (touchMoveEvent.touches.length > 1) return;
-
-      const client = vertical
-        ? touchMoveEvent.touches[0].clientY
-        : touchMoveEvent.touches[0].clientX;
-
-      const position = client - sliderBound - shift;
-      const value = this.calculateValue(position);
-      const data: { [k: string]: number } = {};
-      const { key } = thumbElement.dataset;
-
-      key === '0' ? (data.from = value) : (data.to = value);
-
-      this.notify(data);
-      this.isGrabbed
-        ? this.setActiveThumbIndex(key as string)
-        : delete this.activeThumbIndex;
-    }, 40);
-
-    const handleThumbTouchEnd = (): void => {
-      target.removeEventListener('touchmove', handleThumbTouchMove);
-      target.removeEventListener('touchend', handleThumbTouchEnd);
-
-      this.deleteActiveThumbMod();
-      delete this.activeThumbIndex;
-      delete this.isGrabbed;
-    };
-
-    target.addEventListener('touchmove', handleThumbTouchMove, { passive: false });
-    target.addEventListener('touchend', handleThumbTouchEnd);
-
-    touchStartEvent.preventDefault();
   }
 
   private coverElement(value: 'on' | 'off'): void {
