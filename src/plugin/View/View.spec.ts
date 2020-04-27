@@ -3,7 +3,7 @@ import defaultState from '../Model/default-state';
 import { hasChild } from '../helpers/helpers';
 import View from './View';
 
-document.body.innerHTML = '<div id="test" class="o-slider"></div>';
+document.body.innerHTML = '<div id="test"></div>';
 const sliderElement = document.body.querySelector('#test')!;
 const view = new View(sliderElement as HTMLElement, defaultState);
 

@@ -12,7 +12,7 @@ const options: TrackOptions = {
   range: false,
   tip: false,
   bar: false,
-  values: [10, 50],
+  values: [70, 90],
   min: 0,
   max: 100,
 };

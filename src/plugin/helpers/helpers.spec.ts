@@ -37,6 +37,18 @@ describe('propertyFilter', () => {
     const filteredProps = propertyFilter(obj, properties);
     expect(filteredProps).toEqual({ night: true });
   });
+
+  test('throws error if property consist a colon at the begining or a the end of property name', () => {
+    let obj = { day: true };
+    let properties = ['day:'];
+
+    expect(() => propertyFilter(obj, properties)).toThrowError();
+
+    obj = { day: true };
+    properties = [':day'];
+
+    expect(() => propertyFilter(obj, properties)).toThrowError();
+  });
 });
 
 describe('throttle', () => {

@@ -1,4 +1,5 @@
 import Model from './Model';
+import defaultState from './default-state';
 import { State } from './Interfaces';
 
 const testeeState: State = {
@@ -15,6 +16,11 @@ const testeeState: State = {
 const model = new Model(testeeState);
 
 describe('Model', () => {
+  test('if options isn\'t found the state is equal to default state', () => {
+    const anotherModel = new Model();
+    expect(anotherModel.getState()).toEqual(defaultState);
+  });
+
   test('getState should return current state', () => expect(model.getState()).toEqual(testeeState));
 
   describe('setState', () => {
@@ -23,6 +29,16 @@ describe('Model', () => {
 
       // @ts-ignore
       expect(() => model.setState()).toThrowError(new Error(errorMessage));
+    });
+
+    test('throws error if the first setState argument isn\'t an object', () => {
+      // @ts-ignore
+      expect(() => model.setState('string')).toThrowError();
+    });
+
+    test('throws error if the second setState argument isn\'t a boolean', () => {
+      // @ts-ignore
+      expect(() => model.setState(testeeState, 10)).toThrowError();
     });
 
     test('throws error if called with empty object', () => {
@@ -44,6 +60,11 @@ describe('Model', () => {
         expect(model.getState().min).toBe(99);
       });
 
+      test('throws error if gotten value isn\'t a number', () => {
+        // @ts-ignore
+        expect(() => model.setState({ min: false })).toThrowError();
+      });
+
       test('throws error if get Infinity value', () => {
         expect(() => model.setState({ min: Infinity })).toThrowError();
       });
@@ -53,6 +74,11 @@ describe('Model', () => {
       test('shouldn\'t be less than min', () => {
         model.setState({ max: -1 });
         expect(model.getState().max).toBe(1);
+      });
+
+      test('throws error if gotten value isn\'t a number', () => {
+        // @ts-ignore
+        expect(() => model.setState({ max: false })).toThrowError();
       });
 
       test('throws error if get Infinity value', () => {
@@ -74,6 +100,11 @@ describe('Model', () => {
         expect(model.getState().step).toBe(100);
       });
 
+      test('throws error if gotten value isn\'t a number', () => {
+        // @ts-ignore
+        expect(() => model.setState({ step: false })).toThrowError();
+      });
+
       test('throws error if get Infinity value', () => {
         expect(() => model.setState({ step: Infinity })).toThrowError();
       });
@@ -85,10 +116,16 @@ describe('Model', () => {
       test('should be greater than or equal to min', () => {
         model.setState({ from: -1 });
         expect(model.getState().from).toBeGreaterThanOrEqual(model.getState().min);
+
+        model.setState({ min: model.getState().from + 1 });
+        expect(model.getState().from).toBeGreaterThanOrEqual(model.getState().min);
       });
 
       test('should be less than or equal to max', () => {
         model.setState({ from: 101 });
+        expect(model.getState().from).toBeLessThanOrEqual(model.getState().max);
+
+        model.setState({ max: model.getState().from - 1 });
         expect(model.getState().from).toBeLessThanOrEqual(model.getState().max);
       });
 
@@ -112,9 +149,23 @@ describe('Model', () => {
       });
 
       test('should be less than property to', () => {
-        model.setState({ from: 10, range: true });
-        model.setState({ to: 5 });
+        model.setState({ range: true, from: 10, to: 5 });
         expect(model.getState().from).toBeLessThan(model.getState().to as number);
+
+        model.setState({ to: 100, step: 40 });
+        model.setState({ from: 120 });
+        expect(model.getState().from).toBeLessThan(model.getState().to as number);
+
+        model.setState({ from: 100, to: 80 });
+        expect(model.getState().from).toBeLessThan(model.getState().to as number);
+
+        model.setState({ from: 60, to: 60 });
+        expect(model.getState().from).toBeLessThan(model.getState().to as number);
+      });
+
+      test('throws error if gotten value isn\'t a number', () => {
+        // @ts-ignore
+        expect(() => model.setState({ from: false })).toThrowError();
       });
 
       test('throws error if get Infinity value', () => {
@@ -158,11 +209,31 @@ describe('Model', () => {
         model.setState({ to: 5 });
         model.setState({ from: 10 });
         expect(model.getState().to).toBeGreaterThan(model.getState().from);
+
+        model.setState({ range: false, from: 80, step: 40 });
+        model.setState({ range: true, to: 80 });
+        expect(model.getState().to).toBeGreaterThan(model.getState().from);
+      });
+
+      test('throws error if gotten value isn\'t a number', () => {
+        // @ts-ignore
+        expect(() => model.setState({ to: false })).toThrowError();
       });
 
       test('throws error if get Infinity value', () => {
         expect(() => model.setState({ to: Infinity })).toThrowError();
       });
+    });
+
+    test('throw error if options bar, tip, vertical, range isn\'t a boolean', () => {
+        // @ts-ignore
+        expect(() => model.setState({ bar: 0 })).toThrowError();
+        // @ts-ignore
+        expect(() => model.setState({ tip: 0 })).toThrowError();
+        // @ts-ignore
+        expect(() => model.setState({ vertical: 0 })).toThrowError();
+        // @ts-ignore
+        expect(() => model.setState({ range: 0 })).toThrowError();
     });
   });
 });

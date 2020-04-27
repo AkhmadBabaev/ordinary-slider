@@ -52,7 +52,7 @@ declare global {
         $firstItemFound.data('oSlider').setState(options as PState); break;
       case 'subscribe': $firstItemFound.data('oSlider').subscribe(options as Function); break;
       case 'unsubscribe': $firstItemFound.data('oSlider').unsubscribe(options as Function); break;
-      default: break;
+      default: throw new Error(`${method} isn't found`);
     }
 
     return $(this).first();

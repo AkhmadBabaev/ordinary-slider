@@ -18,7 +18,6 @@ describe('oSlider', () => {
 
   test('initialization with options allow to set options to state', () => {
     const $slider = $('.o-slider').oSlider({ from: 10 }) as JQuery<object>;
-    // console.log($slider.oSlider('settings'))
     expect($slider.oSlider('settings')).toEqual({ ...defaultState, from: 10 });
   });
 
@@ -54,5 +53,27 @@ describe('oSlider', () => {
     $slider.oSlider('settings', { from: 10 });
 
     expect(callback).not.toHaveBeenCalled();
+  });
+
+  test('throws error if oSlider initialization options isn\'t an object', () => {
+    // @ts-ignore
+    expect(() => $('.o-slider').oSlider(false)).toThrowError();
+  });
+
+  test('throws error if connection to non-existent element', () => {
+    // @ts-ignore
+    expect(() => $('.non-existed-element').oSlider()).toThrowError();
+  });
+
+  test('throws error if method name isn\'t a string', () => {
+    const $slider = $('.o-slider').oSlider() as JQuery<object>;
+    // @ts-ignore
+    expect(() => $slider.oSlider(10, { from: 10 })).toThrowError();
+  });
+
+  test('throws error if send nonexisted method', () => {
+    const $slider = $('.o-slider').oSlider() as JQuery<object>;
+    // @ts-ignore
+    expect(() => $slider.oSlider('something', { from: 10 })).toThrowError();
   });
 });
