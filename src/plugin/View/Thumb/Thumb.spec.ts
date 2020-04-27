@@ -1,10 +1,12 @@
 import { hasChild } from '../../helpers/helpers';
-import { Thumb, thumbHTML as thumb } from './Thumb';
 import Component from '../Component/Component';
+import Thumb from './Thumb';
 import { ThumbOptions } from './Interfaces';
 
 document.body.innerHTML = '<div id="test"></div>';
 const testElement = document.body.querySelector('#test')!;
+
+const thumb = (options: ThumbOptions): string => new Thumb(options).getElement();
 
 const options: ThumbOptions = {
   className: 'o-slider',

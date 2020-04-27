@@ -1,10 +1,12 @@
 import { hasChild } from '../../helpers/helpers';
 import Component from '../Component/Component';
-import { Track, trackHTML as track } from './Track';
+import Track from './Track';
 import { TrackOptions } from './Interfaces';
 
 document.body.innerHTML = '<div id="test"></div>';
 const testElement = document.body.querySelector('#test') as HTMLElement;
+
+const track = (options: TrackOptions): string => new Track(options).getElement();
 
 const options: TrackOptions = {
   activeThumbIndex: 0,

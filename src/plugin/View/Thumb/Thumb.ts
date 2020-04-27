@@ -1,4 +1,3 @@
-import { getComponentHTML } from '../../helpers/helpers';
 import Component from '../Component/Component';
 import { ThumbOptions } from './Interfaces';
 
@@ -23,6 +22,4 @@ class Thumb extends Component<ThumbOptions> {
   }
 }
 
-const thumbHTML = getComponentHTML<ThumbOptions>(Thumb);
-
-export { Thumb, thumbHTML };
+export default Thumb;

@@ -1,10 +1,12 @@
 import { hasChild } from '../../helpers/helpers';
 import Component from '../Component/Component';
-import { Bar, barHTML as bar } from './Bar';
+import Bar from './Bar';
 import { BarOptions } from './Interfaces';
 
 document.body.innerHTML = '<div id="test"></div>';
 const testElement = document.body.querySelector('#test')!;
+
+const bar = (options: BarOptions): string => new Bar(options).getElement();
 
 const options: BarOptions = {
   className: 'o-slider',

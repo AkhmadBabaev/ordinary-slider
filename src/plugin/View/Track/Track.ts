@@ -1,8 +1,7 @@
-import { getComponentHTML, convertSliderUnitToPercent as convertToPercent } from '../../helpers/helpers';
+import { convertSliderUnitToPercent as convertToPercent } from '../../helpers/helpers';
 import Component from '../Component/Component';
-import { thumbHTML as thumb } from '../Thumb/Thumb';
+import { create } from '../ComponentsFactory/ComponentsFactory';
 import { ThumbOptions, PThumbOptions } from '../Thumb/Interfaces';
-import { barHTML as bar } from '../Bar/Bar';
 import { BarOptions, PBarOptions } from '../Bar/Interfaces';
 import { TrackOptions } from './Interfaces';
 
@@ -10,8 +9,8 @@ class Track extends Component<TrackOptions> {
   public render(options: TrackOptions): string {
     return `
       <div class=${options.className}__track>
-        ${options.bar ? bar(this.generateBarOptions()) : ''}
-        ${options.values.map((value, key) => thumb(this.generateThumbOptions(value, key))).join('')}
+        ${options.bar ? create('bar', this.generateBarOptions()) : ''}
+        ${options.values.map((value, key) => create('thumb', this.generateThumbOptions(value, key))).join('')}
       </div>
     `;
   }
@@ -58,6 +57,4 @@ class Track extends Component<TrackOptions> {
   }
 }
 
-const trackHTML = getComponentHTML<TrackOptions>(Track);
-
-export { Track, trackHTML };
+export default Track;

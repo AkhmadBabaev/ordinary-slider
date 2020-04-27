@@ -1,4 +1,3 @@
-import { getComponentHTML } from '../../helpers/helpers';
 import Component from '../Component/Component';
 import { BarOptions } from './Interfaces';
 
@@ -16,6 +15,4 @@ class Bar extends Component<BarOptions> {
   }
 }
 
-const barHTML = getComponentHTML<BarOptions>(Bar);
-
-export { Bar, barHTML };
+export default Bar;

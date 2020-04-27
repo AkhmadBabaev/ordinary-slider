@@ -114,13 +114,8 @@ function objectReflection<T extends object>(a: T, b: T): T {
   return result;
 }
 
-function getComponentHTML<T>(Component: { new (options: T): any }): (options: T) => string {
-  return (options: T): string => new Component(options).getElement();
-}
-
 export {
   convertSliderUnitToPercent,
-  getComponentHTML,
   objectReflection,
   propertyFilter,
   softRounding,
