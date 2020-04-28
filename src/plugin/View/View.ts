@@ -226,9 +226,16 @@ class View extends Observable {
       this.handleDocumentMouseUpContent(handleDocumentMouseMove, handleDocumentMouseUp);
     };
 
-    document.addEventListener('mousemove', handleDocumentMouseMove);
-    document.addEventListener('mouseup', handleDocumentMouseUp);
+    this.addInnerMouseDownListeners(handleDocumentMouseMove, handleDocumentMouseUp);
     mouseDownEvent.preventDefault();
+  }
+
+  private addInnerMouseDownListeners(
+    thumbMouseMoveHandler: EventListener,
+    thumbMouseUpHandler: EventListener,
+  ): void {
+    document.addEventListener('mousemove', thumbMouseMoveHandler);
+    document.addEventListener('mouseup', thumbMouseUpHandler);
   }
 
   private handleThumbTouchMoveContent(
@@ -304,9 +311,17 @@ class View extends Observable {
       this.handleThumbTouchEndContent(target, handleThumbTouchMove, handleThumbTouchEnd);
     };
 
-    target.addEventListener('touchmove', handleThumbTouchMove, { passive: false });
-    target.addEventListener('touchend', handleThumbTouchEnd);
+    this.addInnerTouchStartListeners(target, handleThumbTouchMove, handleThumbTouchEnd);
     touchStartEvent.preventDefault();
+  }
+
+  private addInnerTouchStartListeners(
+    target: HTMLElement,
+    thumbTouchMoveHandler: EventListener,
+    thumbTouchUpHandler: EventListener,
+  ): void {
+    target.addEventListener('touchmove', thumbTouchMoveHandler, { passive: false });
+    target.addEventListener('touchend', thumbTouchUpHandler);
   }
 
   private deleteActiveThumbMod(): void {
