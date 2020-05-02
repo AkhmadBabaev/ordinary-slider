@@ -1,7 +1,7 @@
 import { factory } from './ComponentsFactory';
 
 describe('Factory', () => {
-  test('method create - returns a HTML as string', () => {
+  test('method create - returns a string', () => {
     const barOptions = {
       className: 'hello',
       vertical: false,

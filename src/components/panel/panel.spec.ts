@@ -60,8 +60,6 @@ document.body.innerHTML = `
   </div>
 `;
 
-type Settings = { [k: string]: unknown };
-
 const panel = new Panel(document.body.querySelector('.js-panel') as HTMLElement);
 
 const options = {

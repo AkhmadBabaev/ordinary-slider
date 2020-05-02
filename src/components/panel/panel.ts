@@ -48,7 +48,6 @@ class Panel {
     const foundCheckboxes = Array.from(this.panelElement.querySelectorAll('.js-panel__checkbox'));
     const foundList = [...foundNulFields, ...foundCheckboxes];
 
-    if (!foundList.length) throw new Error('No fields found');
     return foundList.map((elem) => elem.firstElementChild as HTMLElement);
   }
 
