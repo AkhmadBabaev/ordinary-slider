@@ -1,11 +1,11 @@
 import { boundMethod } from 'autobind-decorator';
 
 class CheckBox {
-  protected checkboxElement: HTMLElement;
+  private checkboxElement: HTMLElement;
 
-  protected titleElement: HTMLElement;
+  private titleElement: HTMLElement;
 
-  protected input: HTMLInputElement;
+  private input: HTMLInputElement;
 
   constructor(element: HTMLElement) {
     this.checkboxElement = element;
@@ -27,7 +27,7 @@ class CheckBox {
     this.titleElement.textContent = title;
   }
 
-  protected init(): void {
+  private init(): void {
     this.input = this.checkboxElement.querySelector('.checkbox__input') as HTMLInputElement;
     this.titleElement = this.checkboxElement.querySelector('.checkbox__title') as HTMLElement;
     this.addListeners();

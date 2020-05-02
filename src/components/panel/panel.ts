@@ -38,7 +38,7 @@ class Panel {
     return this.panelElement;
   }
 
-  protected init(): void {
+  private init(): void {
     this.defineFields();
     this.setSlider();
   }

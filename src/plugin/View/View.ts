@@ -341,7 +341,7 @@ class View extends Observable {
     this.setRatio();
   }
 
-  protected createAttributesObserver(): void {
+  private createAttributesObserver(): void {
     const { root, notify } = this;
 
     function callback(options: any): void {
