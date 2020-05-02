@@ -1,7 +1,7 @@
 import { boundMethod } from 'autobind-decorator';
 
 import Observable from '../Observable/Observable';
-import { State, PState } from '../Model/Interfaces';
+import { IState, IPState } from '../Model/Interfaces';
 import {
   propertyFilter,
   isDefined,
@@ -10,14 +10,14 @@ import {
   isBooleanSpy,
 } from '../helpers/helpers';
 import { create } from './ComponentsFactory/ComponentsFactory';
-import { TrackOptions, PTrackOptions } from './Track/Interfaces';
+import { ITrackOptions, IPTrackOptions } from './Track/Interfaces';
 
 class View extends Observable {
   private readonly root: HTMLElement;
 
-  private options: State;
+  private options: IState;
 
-  private updates: PState;
+  private updates: IPState;
 
   private ratio: number;
 
@@ -31,7 +31,7 @@ class View extends Observable {
 
   private readonly className = 'o-slider';
 
-  constructor(rootElem: HTMLElement, options: State) {
+  constructor(rootElem: HTMLElement, options: IState) {
     super();
 
     this.root = rootElem;
@@ -44,7 +44,7 @@ class View extends Observable {
   }
 
   @boundMethod
-  public applyState(options: PState): void {
+  public applyState(options: IPState): void {
     this.options = { ...this.options, ...options };
     this.updates = options;
 
@@ -64,7 +64,7 @@ class View extends Observable {
   }
 
   @boundMethod
-  public getOptions(): State {
+  public getOptions(): IState {
     return this.options;
   }
 
@@ -93,16 +93,16 @@ class View extends Observable {
     !this.root.classList.contains(this.className) && this.root.classList.add(this.className);
   }
 
-  private generateTrackOptions(): TrackOptions {
+  private generateTrackOptions(): ITrackOptions {
     const values = this.getValues();
     const trackOptionsList = ['vertical', 'range', 'bar', 'tip', 'min', 'max', 'className', 'activeThumbIndex'];
-    const trackOptions: PTrackOptions = propertyFilter({
+    const trackOptions: IPTrackOptions = propertyFilter({
       ...this,
       ...this.options,
     }, trackOptionsList);
 
     trackOptions.values = values;
-    return trackOptions as TrackOptions;
+    return trackOptions as ITrackOptions;
   }
 
   private getValues(): number[] {

@@ -1,4 +1,4 @@
-export interface State {
+export interface IState {
   vertical: boolean;
   range: boolean;
   bar: boolean;
@@ -10,4 +10,4 @@ export interface State {
   to?: number;
 }
 
-export type PState = Partial<State>;
+export type IPState = Partial<IState>;

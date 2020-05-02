@@ -1,6 +1,6 @@
-import { ComponentOptions } from '../Component/Interface';
+import { IComponentOptions } from '../Component/Interface';
 
-export interface ThumbOptions extends ComponentOptions {
+export interface IThumbOptions extends IComponentOptions {
   isActive: boolean;
   vertical: boolean;
   isPriority?: boolean;
@@ -10,4 +10,4 @@ export interface ThumbOptions extends ComponentOptions {
   key?: number;
 }
 
-export type PThumbOptions = Partial<ThumbOptions>;
+export type IPThumbOptions = Partial<IThumbOptions>;

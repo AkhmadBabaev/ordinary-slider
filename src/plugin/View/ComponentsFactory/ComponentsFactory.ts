@@ -1,7 +1,7 @@
 import Track from '../Track/Track';
 import Thumb from '../Thumb/Thumb';
 import Bar from '../Bar/Bar';
-import { Components } from './IComponents';
+import { IComponents } from './IComponents';
 
 class ComponentsFactory {
   private static componentsList = {
@@ -10,7 +10,7 @@ class ComponentsFactory {
     bar: Bar,
   };
 
-  public create<T extends keyof Components>(name: T, options: Components[T]): string {
+  public create<T extends keyof IComponents>(name: T, options: IComponents[T]): string {
     const Constructor = ComponentsFactory.componentsList[name];
     const componentData = options as unknown as any;
     const component = new Constructor(componentData);

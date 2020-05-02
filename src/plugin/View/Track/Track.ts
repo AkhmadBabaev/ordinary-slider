@@ -1,12 +1,12 @@
 import { convertSliderUnitToPercent as convertToPercent } from '../../helpers/helpers';
 import Component from '../Component/Component';
 import { create } from '../ComponentsFactory/ComponentsFactory';
-import { ThumbOptions, PThumbOptions } from '../Thumb/Interfaces';
-import { BarOptions, PBarOptions } from '../Bar/Interfaces';
-import { TrackOptions } from './Interfaces';
+import { IThumbOptions, IPThumbOptions } from '../Thumb/Interfaces';
+import { IBarOptions, IPBarOptions } from '../Bar/Interfaces';
+import { ITrackOptions } from './Interfaces';
 
-class Track extends Component<TrackOptions> {
-  public render(options: TrackOptions): string {
+class Track extends Component<ITrackOptions> {
+  public render(options: ITrackOptions): string {
     return `
       <div class=${options.className}__track>
         ${options.bar ? create('bar', this.generateBarOptions()) : ''}
@@ -15,9 +15,9 @@ class Track extends Component<TrackOptions> {
     `;
   }
 
-  private generateThumbOptions(value: number, key: number): ThumbOptions {
+  private generateThumbOptions(value: number, key: number): IThumbOptions {
     const { min, max, activeThumbIndex } = this.options;
-    const options: PThumbOptions = {
+    const options: IPThumbOptions = {
       className: this.options.className,
       vertical: this.options.vertical,
       tip: this.options.tip,
@@ -33,13 +33,13 @@ class Track extends Component<TrackOptions> {
       distanceToMax < distanceToMin && (options.isPriority = true);
     }
 
-    return options as ThumbOptions;
+    return options as IThumbOptions;
   }
 
-  private generateBarOptions(): BarOptions {
+  private generateBarOptions(): IBarOptions {
     const { min, max, range } = this.options;
     const [from, to] = this.options.values;
-    const options: PBarOptions = {};
+    const options: IPBarOptions = {};
     let shift;
 
     const length = range
@@ -53,7 +53,7 @@ class Track extends Component<TrackOptions> {
     options.length = `${length}%`;
     shift && (options.shift = `${shift}%`);
 
-    return options as BarOptions;
+    return options as IBarOptions;
   }
 }
 

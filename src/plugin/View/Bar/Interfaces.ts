@@ -1,9 +1,9 @@
-import { ComponentOptions } from '../Component/Interface';
+import { IComponentOptions } from '../Component/Interface';
 
-export interface BarOptions extends ComponentOptions {
+export interface IBarOptions extends IComponentOptions {
   vertical: boolean;
   length: string;
   shift?: string;
 }
 
-export type PBarOptions = Partial<BarOptions>;
+export type IPBarOptions = Partial<IBarOptions>;

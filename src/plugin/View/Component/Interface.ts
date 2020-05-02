@@ -1,3 +1,3 @@
-export interface ComponentOptions {
+export interface IComponentOptions {
   className?: string;
 }

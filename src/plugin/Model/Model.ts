@@ -6,22 +6,22 @@ import {
   isDefined, softRounding, objectReflection,
 } from '../helpers/helpers';
 import defaultState from './default-state';
-import { State, PState } from './Interfaces';
+import { IState, IPState } from './Interfaces';
 
 class Model extends Observable {
-  private state: State = defaultState;
+  private state: IState = defaultState;
 
-  private temporaryState: State;
+  private temporaryState: IState;
 
-  private changes: PState;
+  private changes: IPState;
 
-  constructor(options: PState = {}) {
+  constructor(options: IPState = {}) {
     super();
     Object.keys(options).length && this.setState(options, false);
   }
 
   @boundMethod
-  public setState(properties: PState, notify = true): void {
+  public setState(properties: IPState, notify = true): void {
     // no arguments
     if (!arguments.length) throw new Error('setState has not arguments');
 
@@ -41,7 +41,7 @@ class Model extends Observable {
     this.validateChanges();
 
     // temporary storage contained old state and current changes
-    this.temporaryState = { ...this.getState(), ...this.changes } as State;
+    this.temporaryState = { ...this.getState(), ...this.changes } as IState;
 
     // handle gotten properties
     Object.keys(this.changes).forEach((key) => this.handleProperty(key));
@@ -60,7 +60,7 @@ class Model extends Observable {
     delete this.changes;
   }
 
-  public getState(): State {
+  public getState(): IState {
     return this.state;
   }
 
@@ -151,7 +151,7 @@ class Model extends Observable {
 
   private validateChanges(): void {
     Object.keys(this.changes).forEach((prop) => {
-      const value = this.changes[prop as keyof State];
+      const value = this.changes[prop as keyof IState];
 
       switch (prop) {
         case 'from':

@@ -1,14 +1,14 @@
 import { hasChild } from '../../helpers/helpers';
 import Component from '../Component/Component';
 import Thumb from './Thumb';
-import { ThumbOptions } from './Interfaces';
+import { IThumbOptions } from './Interfaces';
 
 document.body.innerHTML = '<div id="test"></div>';
 const testElement = document.body.querySelector('#test')!;
 
-const thumb = (options: ThumbOptions): string => new Thumb(options).getElement();
+const thumb = (options: IThumbOptions): string => new Thumb(options).getElement();
 
-const options: ThumbOptions = {
+const options: IThumbOptions = {
   className: 'o-slider',
   vertical: false,
   isActive: true,

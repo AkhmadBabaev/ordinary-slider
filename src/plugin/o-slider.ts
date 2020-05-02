@@ -1,4 +1,4 @@
-import { State, PState } from './Model/Interfaces';
+import { IState, IPState } from './Model/Interfaces';
 import Presenter from './Presenter/Presenter';
 import { isObject, isDefined } from './helpers/helpers';
 
@@ -9,15 +9,15 @@ declare global {
 
   interface JQuery {
     oSlider: (
-      ...params: [(PState | string)?, (PState | Function)?],
-    ) => JQuery<object> | JQuery<HTMLElement> | State;
+      ...params: [(IPState | string)?, (IPState | Function)?],
+    ) => JQuery<object> | JQuery<HTMLElement> | IState;
   }
 }
 
 (function selfInvokingFunction($): void {
   function init(
     this: JQuery,
-    options: PState = {},
+    options: IPState = {},
     $firstItemFound: JQuery<HTMLElement>,
   ): void {
     if (!this.length) throw new ReferenceError('Connection to non-existent element');
@@ -32,12 +32,12 @@ declare global {
 
   // eslint-disable-next-line no-param-reassign
   $.fn.oSlider = function oSlider(
-    ...params: [(PState | string)?, (PState | Function)?]
-  ): JQuery<object> | JQuery<HTMLElement> | State {
+    ...params: [(IPState | string)?, (IPState | Function)?]
+  ): JQuery<object> | JQuery<HTMLElement> | IState {
     const $firstItemFound = $(this).first();
 
     if (!$firstItemFound.data('oSlider')) {
-      const settings = params[0] as PState;
+      const settings = params[0] as IPState;
       init.call(this, settings, $firstItemFound);
       return $(this).first();
     }
@@ -48,8 +48,8 @@ declare global {
 
     switch (method) {
       case 'settings':
-        if (!isDefined(options)) return $firstItemFound.data('oSlider').getState() as State;
-        $firstItemFound.data('oSlider').setState(options as PState); break;
+        if (!isDefined(options)) return $firstItemFound.data('oSlider').getState() as IState;
+        $firstItemFound.data('oSlider').setState(options as IPState); break;
       case 'subscribe': $firstItemFound.data('oSlider').subscribe(options as Function); break;
       case 'unsubscribe': $firstItemFound.data('oSlider').unsubscribe(options as Function); break;
       default: throw new Error(`${method} isn't found`);

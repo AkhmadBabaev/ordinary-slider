@@ -1,6 +1,6 @@
-import { ComponentOptions } from '../Component/Interface';
+import { IComponentOptions } from '../Component/Interface';
 
-export interface TrackOptions extends ComponentOptions {
+export interface ITrackOptions extends IComponentOptions {
   vertical: boolean;
   range: boolean;
   bar: boolean;
@@ -11,4 +11,4 @@ export interface TrackOptions extends ComponentOptions {
   activeThumbIndex: number;
 }
 
-export type PTrackOptions = Partial<TrackOptions>;
+export type IPTrackOptions = Partial<ITrackOptions>;

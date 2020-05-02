@@ -1,14 +1,14 @@
 import { hasChild } from '../../helpers/helpers';
 import Component from '../Component/Component';
 import Bar from './Bar';
-import { BarOptions } from './Interfaces';
+import { IBarOptions } from './Interfaces';
 
 document.body.innerHTML = '<div id="test"></div>';
 const testElement = document.body.querySelector('#test')!;
 
-const bar = (options: BarOptions): string => new Bar(options).getElement();
+const bar = (options: IBarOptions): string => new Bar(options).getElement();
 
-const options: BarOptions = {
+const options: IBarOptions = {
   className: 'o-slider',
   vertical: false,
   length: '10%',

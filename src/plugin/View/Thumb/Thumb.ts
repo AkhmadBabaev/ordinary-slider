@@ -1,8 +1,8 @@
 import Component from '../Component/Component';
-import { ThumbOptions } from './Interfaces';
+import { IThumbOptions } from './Interfaces';
 
-class Thumb extends Component<ThumbOptions> {
-  public render(options: ThumbOptions): string {
+class Thumb extends Component<IThumbOptions> {
+  public render(options: IThumbOptions): string {
     const side = options.vertical ? 'bottom' : 'left';
     const componentClass = `${options.className}__thumb`;
 

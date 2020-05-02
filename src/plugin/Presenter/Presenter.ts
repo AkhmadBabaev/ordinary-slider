@@ -1,7 +1,7 @@
 import { boundMethod } from 'autobind-decorator';
 
 import Model from '../Model/Model';
-import { State, PState } from '../Model/Interfaces';
+import { IState, IPState } from '../Model/Interfaces';
 import View from '../View/View';
 
 class Presenter {
@@ -9,7 +9,7 @@ class Presenter {
 
   private model: Model;
 
-  constructor(rootElement: HTMLElement, options: PState) {
+  constructor(rootElement: HTMLElement, options: IPState) {
     this.model = new Model(options);
     this.view = new View(rootElement, this.model.getState());
     this.init();
@@ -26,12 +26,12 @@ class Presenter {
   }
 
   @boundMethod
-  public setState(options: PState): void {
+  public setState(options: IPState): void {
     this.model.setState(options);
   }
 
   @boundMethod
-  public getState(): State {
+  public getState(): IState {
     return this.model.getState();
   }
 
@@ -41,13 +41,13 @@ class Presenter {
   }
 
   @boundMethod
-  private ViewNotifier(options: PState): void {
+  private ViewNotifier(options: IPState): void {
     const viewOptions = this.view.getOptions();
     const stateChanges = { ...options };
 
     Object.keys(stateChanges).forEach((key) => {
-      const value = stateChanges[key as keyof State];
-      (viewOptions[key as keyof State] === value) && delete stateChanges[key as keyof State];
+      const value = stateChanges[key as keyof IState];
+      (viewOptions[key as keyof IState] === value) && delete stateChanges[key as keyof IState];
     });
 
     Object.keys(stateChanges).length && this.view.applyState(stateChanges);

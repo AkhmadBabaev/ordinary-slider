@@ -1,9 +1,9 @@
-import { TrackOptions } from '../Track/Interfaces';
-import { ThumbOptions } from '../Thumb/Interfaces';
-import { BarOptions } from '../Bar/Interfaces';
+import { ITrackOptions } from '../Track/Interfaces';
+import { IThumbOptions } from '../Thumb/Interfaces';
+import { IBarOptions } from '../Bar/Interfaces';
 
-export interface Components {
-  track: TrackOptions;
-  thumb: ThumbOptions;
-  bar: BarOptions;
+export interface IComponents {
+  track: ITrackOptions;
+  thumb: IThumbOptions;
+  bar: IBarOptions;
 }

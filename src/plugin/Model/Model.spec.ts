@@ -1,8 +1,8 @@
 import Model from './Model';
 import defaultState from './default-state';
-import { State } from './Interfaces';
+import { IState } from './Interfaces';
 
-const testeeState: State = {
+const testeeState: IState = {
   min: 0,
   max: 100,
   step: 1,

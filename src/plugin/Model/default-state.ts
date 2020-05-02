@@ -1,6 +1,6 @@
-import { State } from './Interfaces';
+import { IState } from './Interfaces';
 
-const defaultState: State = {
+const defaultState: IState = {
   vertical: false,
   range: false,
   tip: false,
