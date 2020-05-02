@@ -3,8 +3,8 @@ import NumField from './NumField';
 document.body.innerHTML = `
   <div class="num-field">
     <label class="num-field__label">
-      <span class="num-field__title">title</span>
-      <input class="num-field__input">
+      <span class="js-num-field__title">title</span>
+      <input class="js-num-field__input">
     </label>
   </div>
 `;
@@ -23,7 +23,7 @@ describe('Number field', () => {
   test('setTitle should set title', () => {
     numField.setTitle('hello');
     const numFieldElem = numField.getElement();
-    expect(numFieldElem.querySelector('.num-field__title')?.textContent).toBe('hello');
+    expect(numFieldElem.querySelector('.js-num-field__title')?.textContent).toBe('hello');
   });
 
   test('setAttr should set specified attribute', () => {

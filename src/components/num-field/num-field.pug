@@ -3,9 +3,9 @@ mixin num-field({ title = "title", name = "", min = null, max = null, step = 1, 
 
   div(class = className)
     label(class = `${className}__label`)
-      span(class = `${className}__title`)= title
+      span(class = `${className}__title js-${className}__title`)= title
       input(
-        class = `${className}__input`
+        class = `${className}__input js-${className}__input`
         type = "number"
         name = name
         min = min

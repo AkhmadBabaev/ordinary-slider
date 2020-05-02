@@ -28,8 +28,8 @@ class CheckBox {
   }
 
   private init(): void {
-    this.input = this.checkboxElement.querySelector('.checkbox__input') as HTMLInputElement;
-    this.titleElement = this.checkboxElement.querySelector('.checkbox__title') as HTMLElement;
+    this.input = this.checkboxElement.querySelector('.js-checkbox__input') as HTMLInputElement;
+    this.titleElement = this.checkboxElement.querySelector('.js-checkbox__title') as HTMLElement;
     this.addListeners();
   }
 

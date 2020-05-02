@@ -37,8 +37,8 @@ class NumField {
   }
 
   private init(): void {
-    this.input = this.numFieldElement.querySelector('.num-field__input') as HTMLInputElement;
-    this.titleElement = this.numFieldElement.querySelector('.num-field__title') as HTMLElement;
+    this.input = this.numFieldElement.querySelector('.js-num-field__input') as HTMLInputElement;
+    this.titleElement = this.numFieldElement.querySelector('.js-num-field__title') as HTMLElement;
   }
 }
 

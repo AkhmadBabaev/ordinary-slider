@@ -10,8 +10,8 @@ document.body.innerHTML = `
     <div class="js-panel__field">
       <div class="num-field">
         <div class "num-field__label">
-          <span class="num-field__title">from</span>
-          <input class="num-field__input" name="from" type="number">
+          <span class="js-num-field__title">from</span>
+          <input class="js-num-field__input" name="from" type="number">
         </div>
       </div>
     </div>
@@ -19,8 +19,8 @@ document.body.innerHTML = `
     <div class="js-panel__field">
       <div class="num-field">
         <div class "num-field__label">
-          <span class="num-field__title">to</span>
-          <input class="num-field__input" name="to" type="number">
+          <span class="js-num-field__title">to</span>
+          <input class="js-num-field__input" name="to" type="number">
         </div>
       </div>
     </div>
@@ -28,33 +28,33 @@ document.body.innerHTML = `
     <div class="js-panel__field">
       <div class="num-field">
         <div class "num-field__label">
-          <span class="num-field__title">step</span>
-          <input class="num-field__input" name="step" type="number">
+          <span class="js-num-field__title">step</span>
+          <input class="js-num-field__input" name="step" type="number">
         </div>
       </div>
     </div>
 
     <div class="js-panel__checkbox">
       <div class="checkbox">
-        <input class="checkbox__input" name="range" type="checkbox">
+        <input class="js-checkbox__input" name="range" type="checkbox">
       </div>
     </div>
 
     <div class="js-panel__checkbox">
       <div class="checkbox">
-        <input class="checkbox__input" name="bar" type="checkbox">
+        <input class="js-checkbox__input" name="bar" type="checkbox">
       </div>
     </div>
 
     <div class="js-panel__checkbox">
       <div class="checkbox">
-        <input class="checkbox__input" name="tip" type="checkbox">
+        <input class="js-checkbox__input" name="tip" type="checkbox">
       </div>
     </div>
 
     <div class="js-panel__checkbox">
       <div class="checkbox">
-        <input class="checkbox__input" name="fake" type="checkbox">
+        <input class="js-checkbox__input" name="fake" type="checkbox">
       </div>
     </div>
   </div>

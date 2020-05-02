@@ -3,8 +3,8 @@ import Checkbox from './Checkbox';
 document.body.innerHTML = `
   <div class="checkbox">
     <label class="checkbox__label">
-      <input class="checkbox__input">
-      <span class="checkbox__title">title</span>
+      <input class="js-checkbox__input">
+      <span class="js-checkbox__title">title</span>
       <div class="checkbox__toggler"></div>
     </label>
   </div>
@@ -24,7 +24,7 @@ describe('Checkbox', () => {
   test('setTitle should set title', () => {
     checkbox.setTitle('hello');
     const checkboxElem = checkbox.getElement();
-    expect(checkboxElem.querySelector('.checkbox__title')?.textContent).toBe('hello');
+    expect(checkboxElem.querySelector('.js-checkbox__title')?.textContent).toBe('hello');
   });
 
   test('should generate Change Event if press Enter on focused checkbox', () => {
