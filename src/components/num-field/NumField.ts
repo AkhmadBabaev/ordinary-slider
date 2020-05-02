@@ -28,9 +28,12 @@ class NumField {
   }
 
   @boundMethod
-  public setAttr(name: string, value: unknown): void {
+  public setAttr<
+    T extends keyof HTMLInputElement,
+    R extends HTMLInputElement[T]
+  >(name: T, value: R): void {
+    this.input[name] = value;
     this.input.setAttribute(name, String(value));
-    (this.input as { [k: string]: any })[name] = value;
   }
 
   private init(): void {

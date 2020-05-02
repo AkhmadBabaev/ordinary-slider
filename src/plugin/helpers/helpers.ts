@@ -32,11 +32,11 @@ function softRounding(num: number): number {
   return Number(num.toFixed(1));
 }
 
-function propertyFilter<T extends object>(obj: T, props: string[]): T {
+function propertyFilter<T extends {[k: string]: any}>(obj: T, props: string[]): T {
   const result: T = {} as T;
 
   props.forEach((prop: string) => {
-    let value = obj[prop as keyof T];
+    let value = obj[prop];
     let propName = prop;
 
     if (prop.includes(':')) {
@@ -47,7 +47,7 @@ function propertyFilter<T extends object>(obj: T, props: string[]): T {
       if (!secondPart.length) throw new SyntaxError('Invalid value');
 
       propName = secondPart;
-      value = obj[firstPart as keyof T];
+      value = obj[firstPart];
     }
 
     isDefined(value) && (result[propName as keyof T] = value);
@@ -89,7 +89,7 @@ function throttle(fn: Function, wait: number): () => void {
 }
 
 function debounce(fn: Function, wait: number): () => void {
-  let timer: any;
+  let timer: NodeJS.Timer;
   return (...params: unknown[]): void => {
     clearTimeout(timer);
     timer = setTimeout(() => fn(...params), wait);
@@ -97,7 +97,7 @@ function debounce(fn: Function, wait: number): () => void {
 }
 
 function hasChild<T extends Element>(parent: T, child: T): boolean {
-  return Object.keys(parent.children).some((x, i: number) => parent.children[i] === child);
+  return Object.keys(parent.children).some((x, i) => parent.children[i] === child);
 }
 
 function convertSliderUnitToPercent({ min, max, value }: { [k: string]: number }): number {

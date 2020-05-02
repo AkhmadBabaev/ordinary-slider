@@ -48,6 +48,7 @@ class Panel {
     const foundCheckboxes = Array.from(this.panelElement.querySelectorAll('.js-panel__checkbox'));
     const foundList = [...foundNulFields, ...foundCheckboxes];
 
+    if (!foundList.length) throw new Error('No fields found');
     return foundList.map((elem) => elem.firstElementChild as HTMLElement);
   }
 
@@ -109,7 +110,7 @@ class Panel {
         case 'min':
         case 'max':
         case 'step':
-          (fields[key] as NumField).setAttr('value', value);
+          (fields[key] as NumField).setAttr('value', String(value));
           break;
 
         case 'bar':
@@ -124,16 +125,16 @@ class Panel {
 
       switch (key) {
         case 'from':
-          range && (fields.to as NumField).setAttr('min', value);
+          range && (fields.to as NumField).setAttr('min', String(value));
           break;
 
         case 'to':
-          (fields.from as NumField).setAttr('max', value);
+          (fields.from as NumField).setAttr('max', String(value));
           break;
 
         case 'step':
-          (fields.from as NumField).setAttr('step', value);
-          (fields.to as NumField).setAttr('step', value);
+          (fields.from as NumField).setAttr('step', String(value));
+          (fields.to as NumField).setAttr('step', String(value));
           break;
 
         case 'range':

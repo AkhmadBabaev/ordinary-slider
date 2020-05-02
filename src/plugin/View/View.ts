@@ -13,7 +13,7 @@ import { create } from './ComponentsFactory/ComponentsFactory';
 import { TrackOptions, PTrackOptions } from './Track/Interfaces';
 
 class View extends Observable {
-  private root: HTMLElement;
+  private readonly root: HTMLElement;
 
   private options: State;
 
@@ -29,7 +29,7 @@ class View extends Observable {
 
   private attributesObserver: { [k: string]: Function };
 
-  private className = 'o-slider';
+  private readonly className = 'o-slider';
 
   constructor(rootElem: HTMLElement, options: State) {
     super();
