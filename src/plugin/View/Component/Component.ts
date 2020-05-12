@@ -26,7 +26,12 @@ abstract class Component<T> {
   private renderDecorator(fn: Function): (options: T) => string {
     return (options: T): string => {
       this.options = options;
-      this.element = fn.call(this, options).replace(/>\s+</mg, '><');
+
+      let str = fn.call(this, options);
+      str = str.replace(/([>\w\W])\s+</mg, '$1<');
+      str = str.replace(/>\s+([<\w\W])/mg, '>$1');
+
+      this.element = str;
       return this.element;
     };
   }
