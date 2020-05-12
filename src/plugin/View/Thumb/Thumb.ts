@@ -2,7 +2,7 @@ import Component from '../Component/Component';
 import { IThumbOptions } from './Interfaces';
 
 class Thumb extends Component<IThumbOptions> {
-  public render(options: IThumbOptions): string {
+  protected render(options: IThumbOptions): string {
     const side = options.vertical ? 'bottom' : 'left';
     const componentClass = `${options.className}__thumb`;
 

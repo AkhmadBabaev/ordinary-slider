@@ -6,7 +6,7 @@ import { IBarOptions, IPBarOptions } from '../Bar/Interfaces';
 import { ITrackOptions } from './Interfaces';
 
 class Track extends Component<ITrackOptions> {
-  public render(options: ITrackOptions): string {
+  protected render(options: ITrackOptions): string {
     return `
       <div class=${options.className}__track>
         ${options.bar ? create('bar', this.generateBarOptions()) : ''}

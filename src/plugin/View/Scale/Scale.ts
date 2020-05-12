@@ -3,7 +3,7 @@ import Component from '../Component/Component';
 import { IScaleOptions } from './Interfaces';
 
 class Scale extends Component<IScaleOptions> {
-  public render(options: IScaleOptions): string {
+  protected render(options: IScaleOptions): string {
     const componentClass = 'scale';
     const side = options.vertical ? 'bottom' : 'left';
     const points = this.createPointsValues();

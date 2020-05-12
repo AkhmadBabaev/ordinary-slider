@@ -11,7 +11,7 @@ abstract class Component<T> {
     this.render(options);
   }
 
-  public abstract render(options: T): string;
+  protected abstract render(options: T): string;
 
   @boundMethod
   public getElement(): string {
@@ -25,8 +25,6 @@ abstract class Component<T> {
 
   private renderDecorator(fn: Function): (options: T) => string {
     return (options: T): string => {
-      this.options = options;
-
       let str = fn.call(this, options);
       str = str.replace(/([>\w\W])\s+</mg, '$1<');
       str = str.replace(/>\s+([<\w\W])/mg, '>$1');

@@ -2,7 +2,7 @@ import Component from '../Component/Component';
 import { IBarOptions } from './Interfaces';
 
 class Bar extends Component<IBarOptions> {
-  public render(options: IBarOptions): string {
+  protected render(options: IBarOptions): string {
     const dimension = options.vertical ? 'height' : 'width';
     const side = options.vertical ? 'bottom' : 'left';
 
