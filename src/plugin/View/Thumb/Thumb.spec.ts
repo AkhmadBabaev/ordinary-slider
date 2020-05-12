@@ -24,7 +24,7 @@ describe('Thumb', () => {
     thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
   });
 
-  test('is valid HTML string', () => {
+  test('is valid HTML', () => {
     expect(hasChild(testElement, thumbElement)).toBeTruthy();
   });
 

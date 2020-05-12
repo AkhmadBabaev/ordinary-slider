@@ -7,6 +7,7 @@ class Thumb extends Component<IThumbOptions> {
     const componentClass = `${options.className}__thumb`;
 
     let classes = componentClass;
+    classes += ` js-${componentClass}`;
     options.isActive && (classes += ` ${componentClass}_type_active`);
     options.isPriority && (classes += ` ${componentClass}_type_priority`);
 

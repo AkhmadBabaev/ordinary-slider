@@ -20,7 +20,7 @@ describe('Bar', () => {
     barElement = testElement.querySelector(`.${options.className}__bar`) as HTMLElement;
   });
 
-  test('is valid HTML string', () => {
+  test('is valid HTML', () => {
     expect(hasChild(testElement, barElement)).toBeTruthy();
   });
 

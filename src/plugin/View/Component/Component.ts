@@ -14,11 +14,8 @@ abstract class Component<T> {
 
   private renderDecorator(fn: Function): (options: T) => string {
     return (options: T): string => {
-      let str = fn.call(this, options);
-      str = str.replace(/([>\w\W])\s+</mg, '$1<');
-      str = str.replace(/>\s+([<\w\W])/mg, '>$1');
-
-      return str;
+      const str = fn.call(this, options);
+      return str.replace(/([>\w\W])\s+</mg, '$1<').replace(/>\s+([<\w\W])/mg, '>$1');
     };
   }
 }

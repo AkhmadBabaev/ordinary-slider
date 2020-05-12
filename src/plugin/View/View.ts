@@ -98,14 +98,14 @@ class View extends Observable {
 
   private generateTrackOptions(): ITrackOptions {
     const values = this.getValues();
-    const trackOptionsList = ['vertical', 'range', 'bar', 'tip', 'min', 'max', 'className', 'activeThumbIndex'];
-    const trackOptions: IPTrackOptions = propertyFilter({
+    const optionsList = ['vertical', 'range', 'bar', 'tip', 'min', 'max', 'className', 'activeThumbIndex'];
+    const options: IPTrackOptions = propertyFilter({
       ...this,
       ...this.options,
-    }, trackOptionsList);
+    }, optionsList);
 
-    trackOptions.values = values;
-    return trackOptions as ITrackOptions;
+    options.values = values;
+    return options as ITrackOptions;
   }
 
   private generateScaleOptions(): IScaleOptions {
@@ -150,7 +150,7 @@ class View extends Observable {
   private handleTrackClick(event: MouseEvent): void {
     const { vertical, range } = this.options;
     const target = event.target as HTMLElement;
-    const trackElement = target.closest(`.${this.className}__track`) as HTMLElement;
+    const trackElement = target.closest(`.js-${this.className}__track`) as HTMLElement;
 
     if (!trackElement) return;
 
@@ -218,7 +218,7 @@ class View extends Observable {
     if (!(mouseDownEvent.which === 1)) return;
 
     const target = mouseDownEvent.target as HTMLElement;
-    const thumbElement = target.closest(`.${this.className}__thumb`) as HTMLElement;
+    const thumbElement = target.closest(`.js-${this.className}__thumb`) as HTMLElement;
     const { offsetX, offsetY } = mouseDownEvent;
 
     if (!thumbElement) return;
@@ -298,7 +298,7 @@ class View extends Observable {
     if (touchStartEvent.touches.length > 1) return;
 
     const target = touchStartEvent.target as HTMLElement;
-    const thumbElement = target.closest(`.${this.className}__thumb`) as HTMLElement;
+    const thumbElement = target.closest(`.js-${this.className}__thumb`) as HTMLElement;
 
     if (!thumbElement) return;
 

@@ -8,7 +8,7 @@ import { ITrackOptions } from './Interfaces';
 class Track extends Component<ITrackOptions> {
   protected render(options: ITrackOptions): string {
     return `
-      <div class=${options.className}__track>
+      <div class='${options.className}__track js-${options.className}__track'>
         ${options.bar ? create('bar', this.generateBarOptions()) : ''}
         ${options.values.map((value, key) => create('thumb', this.generateThumbOptions(value, key))).join('')}
       </div>

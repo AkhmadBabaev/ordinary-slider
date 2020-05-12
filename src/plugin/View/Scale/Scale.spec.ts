@@ -23,7 +23,7 @@ describe('Scale', () => {
     scaleElement = testElement.querySelector('.scale') as HTMLElement;
   });
 
-  test('is valid HTML string', () => {
+  test('is valid HTML', () => {
     expect(hasChild(testElement, scaleElement)).toBeTruthy();
   });
 

@@ -24,7 +24,7 @@ describe('Track', () => {
     trackElement = testElement.querySelector(`.${options.className}__track`) as HTMLElement;
   });
 
-  test('is valid HTML string', () => {
+  test('is valid HTML', () => {
     expect(hasChild(testElement, trackElement)).toBeTruthy();
   });
 

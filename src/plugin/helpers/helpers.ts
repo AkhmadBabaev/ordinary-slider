@@ -97,7 +97,7 @@ function debounce(fn: Function, wait: number): () => void {
 }
 
 function hasChild<T extends Element>(parent: T, child: T): boolean {
-  return Object.keys(parent.children).some((x, i) => parent.children[i] === child);
+  return Object.keys(parent.children).some((_, i) => parent.children[i] === child);
 }
 
 function convertSliderUnitToPercent({ min, max, value }: { [k: string]: number }): number {
