@@ -1,3 +1,5 @@
+@import './View/Scale/scale.scss';
+
 .o-slider {
   --slider-color-light: HSL(var(--h, 0), var(--s, 0%), calc(var(--l, 50%) + 25%));
   --slider-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 50%));
@@ -5,6 +7,7 @@
 
   background-color: var(--slider-color-light);
   box-sizing: border-box;
+  position: relative;
 
   &_direction_horizontal {
     min-width: 12.5em;
@@ -100,6 +103,10 @@
 
     user-select: none;
     cursor: pointer;
+  }
+
+  &__scale.scale_direction_horizontal {
+    margin-top: 1em;
   }
 
   &__window-cover {

@@ -9,6 +9,7 @@ const testeeState: IState = {
   from: 0,
   tip: false,
   bar: false,
+  scale: false,
   range: false,
   vertical: false,
 };

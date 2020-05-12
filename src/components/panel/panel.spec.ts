@@ -65,6 +65,7 @@ const panel = new Panel(document.body.querySelector('.js-panel') as HTMLElement)
 const options = {
   vertical: true,
   range: false,
+  scale: false,
   tip: true,
   bar: true,
   min: 0,

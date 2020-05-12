@@ -2,6 +2,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import Track from '../Track/Track';
 import Thumb from '../Thumb/Thumb';
+import Scale from '../Scale/Scale';
 import Bar from '../Bar/Bar';
 import { IComponents } from './Interfaces';
 
@@ -30,6 +31,7 @@ class ComponentsFactory {
   private defineComponents(): void {
     this.add('track', Track);
     this.add('thumb', Thumb);
+    this.add('scale', Scale);
     this.add('bar', Bar);
   }
 }

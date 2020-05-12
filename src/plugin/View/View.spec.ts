@@ -8,6 +8,8 @@ const sliderElement = document.body.querySelector('#test')!;
 const view = new View(sliderElement as HTMLElement, defaultState);
 
 describe('View', () => {
+  beforeEach(() => view.applyState(defaultState));
+
   test('is an instance of class Observable', () => expect(view).toBeInstanceOf(Observable));
 
   test('should be merged into parent', () => {
@@ -17,6 +19,12 @@ describe('View', () => {
   test('contains element track', () => {
     const trackElement = sliderElement.querySelector('.o-slider__track')!;
     expect(hasChild(sliderElement, trackElement)).toBeTruthy();
+  });
+
+  test('contains element scale if option scale set s true', () => {
+    view.applyState({ scale: true });
+    const scaleElement = sliderElement.querySelector('.o-slider__scale')!;
+    expect(hasChild(sliderElement, scaleElement)).toBeTruthy();
   });
 
   test('contains data attributes', () => {

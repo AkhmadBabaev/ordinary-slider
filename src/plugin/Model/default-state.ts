@@ -3,6 +3,7 @@ import { IState } from './Interfaces';
 const defaultState: IState = {
   vertical: false,
   range: false,
+  scale: false,
   tip: false,
   bar: false,
   min: 0,

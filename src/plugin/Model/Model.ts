@@ -166,6 +166,7 @@ class Model extends Observable {
 
         case 'tip':
         case 'bar':
+        case 'scale':
         case 'range':
         case 'vertical':
           if (!isBoolean(value)) throw new TypeError(`${prop} is not a boolean`);

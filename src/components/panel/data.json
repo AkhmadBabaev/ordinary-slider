@@ -9,6 +9,7 @@
   "checkboxes": [
     { "title": "vertical", "name": "vertical" },
     { "title": "range", "name": "range" },
+    { "title": "scale", "name": "scale" },
     { "title": "bar", "name": "bar" },
     { "title": "tip", "name": "tip" }
   ]

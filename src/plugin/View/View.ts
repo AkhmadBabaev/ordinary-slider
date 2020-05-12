@@ -11,6 +11,7 @@ import {
 } from '../helpers/helpers';
 import { create } from './ComponentsFactory/ComponentsFactory';
 import { ITrackOptions, IPTrackOptions } from './Track/Interfaces';
+import { IScaleOptions, IPScaleOptions } from './Scale/Interfaces';
 
 class View extends Observable {
   private readonly root: HTMLElement;
@@ -53,12 +54,11 @@ class View extends Observable {
     const isRatioUpdated = isDirectionUpdated || isDefined(min) || isDefined(max);
 
     isDirectionUpdated && this.handleOptionVertical();
-
-    this.setDataAttributes();
-    this.createTrack();
-
     isDirectionUpdated && this.setSliderLength();
     isRatioUpdated && this.setRatio();
+
+    this.setDataAttributes();
+    this.createElements();
 
     delete this.updates;
   }
@@ -68,8 +68,11 @@ class View extends Observable {
     return this.options;
   }
 
-  private createTrack(): void {
-    this.root.innerHTML = create('track', this.generateTrackOptions());
+  private createElements(): void {
+    this.root.innerHTML = `
+      ${create('track', this.generateTrackOptions())}
+      ${this.options.scale ? create('scale', this.generateScaleOptions()) : ''}
+    `;
   }
 
   private handleOptionVertical(): void {
@@ -105,6 +108,18 @@ class View extends Observable {
     return trackOptions as ITrackOptions;
   }
 
+  private generateScaleOptions(): IScaleOptions {
+    const optionsList = ['vertical', 'min', 'max', 'step', 'className', 'sliderLength:scaleLength'];
+    const options: IPScaleOptions = propertyFilter({ ...this, ...this.options }, optionsList);
+    const { fontSize, lineHeight } = getComputedStyle(this.root);
+
+    options.symbolLength = this.options.vertical
+      ? parseFloat(lineHeight)
+      : parseFloat(fontSize) / 2;
+
+    return options as IScaleOptions;
+  }
+
   private getValues(): number[] {
     const { from, to, range } = this.options;
     const values = range ? [from, to] : [from];
@@ -137,6 +152,8 @@ class View extends Observable {
     const target = event.target as HTMLElement;
     const trackElement = target.closest(`.${this.className}__track`) as HTMLElement;
 
+    if (!trackElement) return;
+
     const client = vertical ? event.clientY : event.clientX;
     const trackBound = vertical
       ? trackElement.getBoundingClientRect().y
@@ -150,15 +167,15 @@ class View extends Observable {
       return;
     }
 
+    this.notify({ [this.detectNearestThumb(value)]: value });
+    event.preventDefault();
+  }
+
+  private detectNearestThumb(value: number): string {
     const [first, second] = this.getValues();
     const distanceToFirst = value - first;
     const distanceToSecond = second - value;
-
-    distanceToFirst >= distanceToSecond
-      ? this.notify({ to: value })
-      : this.notify({ from: value });
-
-    event.preventDefault();
+    return (distanceToFirst >= distanceToSecond) ? 'to' : 'from';
   }
 
   private handleDocumentMouseMoveContent(
@@ -339,6 +356,7 @@ class View extends Observable {
     if (this.sliderLength === this.getSliderLength()) return;
     this.setSliderLength();
     this.setRatio();
+    this.createElements();
   }
 
   private createAttributesObserver(): void {
@@ -382,8 +400,19 @@ class View extends Observable {
     } else coverElement.style.display = 'none';
   }
 
+  @boundMethod
+  private handleScaleItemClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.classList.contains('js-scale__item')) return;
+
+    const value = Number(target.textContent);
+    this.notify({ [this.detectNearestThumb(value)]: value });
+    event.preventDefault();
+  }
+
   private addListeners(): void {
     this.root.addEventListener('click', this.handleTrackClick);
+    this.root.addEventListener('click', this.handleScaleItemClick);
     this.root.addEventListener('mousedown', this.handleThumbMouseDown);
     this.root.addEventListener('touchstart', this.handleThumbTouchStart, { passive: false });
 

@@ -4,7 +4,8 @@
     "max": 50,
     "step": 10,
     "bar": "true",
-    "tip": "true"
+    "tip": "true",
+    "scale": "true"
   }, {
     "hue": 170,
     "saturation": "15%",

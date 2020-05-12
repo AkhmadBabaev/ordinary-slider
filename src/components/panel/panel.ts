@@ -76,6 +76,7 @@ class Panel {
         case 'bar':
         case 'tip':
         case 'range':
+        case 'scale':
         case 'vertical':
           this.setField(field as NumField | CheckBox, name);
           break;
@@ -114,6 +115,7 @@ class Panel {
 
         case 'bar':
         case 'tip':
+        case 'scale':
         case 'range':
         case 'vertical':
           input.checked = value as boolean;

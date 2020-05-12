@@ -1,6 +1,7 @@
 export interface IState {
   vertical: boolean;
   range: boolean;
+  scale: boolean;
   bar: boolean;
   tip: boolean;
   min: number;
