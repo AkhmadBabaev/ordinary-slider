@@ -16,9 +16,7 @@ class ComponentsFactory {
   @boundMethod
   public create<T extends keyof IComponents>(name: T, options: IComponents[T]): string {
     const Constructor = this.componentsList[name];
-    const component = new Constructor(options);
-
-    return component.getElement();
+    return `${new Constructor(options)}`;
   }
 
   private add<N extends keyof IComponents>(

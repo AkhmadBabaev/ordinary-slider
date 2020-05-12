@@ -1,12 +1,9 @@
 import { hasChild } from '../../helpers/helpers';
-import Component from '../Component/Component';
 import Track from './Track';
 import { ITrackOptions } from './Interfaces';
 
 document.body.innerHTML = '<div id="test"></div>';
 const testElement = document.body.querySelector('#test') as HTMLElement;
-
-const track = (options: ITrackOptions): string => new Track(options).getElement();
 
 const options: ITrackOptions = {
   activeThumbIndex: 0,
@@ -23,11 +20,9 @@ describe('Track', () => {
   let trackElement: HTMLElement;
 
   beforeEach(() => {
-    testElement.innerHTML = track(options);
+    testElement.innerHTML = `${new Track(options)}`;
     trackElement = testElement.querySelector(`.${options.className}__track`) as HTMLElement;
   });
-
-  test('is an instance of class Component', () => expect(new Track(options)).toBeInstanceOf(Component));
 
   test('is valid HTML string', () => {
     expect(hasChild(testElement, trackElement)).toBeTruthy();
@@ -39,7 +34,7 @@ describe('Track', () => {
   });
 
   test('contains 2 thumbs elements if range set as true', () => {
-    testElement.innerHTML = track({ ...options, range: true });
+    testElement.innerHTML = `${new Track({ ...options, range: true })}`;
     trackElement = testElement.querySelector(`.${options.className}__track`) as HTMLElement;
 
     const thumbs = trackElement.querySelectorAll(`.${options.className}__thumb`);
@@ -52,7 +47,7 @@ describe('Track', () => {
   });
 
   test('contains element bar if bar set as true', () => {
-    testElement.innerHTML = track({ ...options, bar: true });
+    testElement.innerHTML = `${new Track({ ...options, bar: true })}`;
     trackElement = testElement.querySelector(`.${options.className}__track`) as HTMLElement;
 
     const barElement = trackElement.querySelector(`.${options.className}__bar`)!;

@@ -1,26 +1,15 @@
-import { boundMethod } from 'autobind-decorator';
-
 abstract class Component<T> {
-  protected element: string;
-
   protected options: T;
 
   constructor(options: T) {
     this.options = options;
     this.render = this.renderDecorator(this.render);
-    this.render(options);
   }
 
   protected abstract render(options: T): string;
 
-  @boundMethod
-  public getElement(): string {
-    return this.element;
-  }
-
-  @boundMethod
-  public getOptions(): T {
-    return this.options;
+  private toString(): string {
+    return this.render(this.options);
   }
 
   private renderDecorator(fn: Function): (options: T) => string {
@@ -29,8 +18,7 @@ abstract class Component<T> {
       str = str.replace(/([>\w\W])\s+</mg, '$1<');
       str = str.replace(/>\s+([<\w\W])/mg, '>$1');
 
-      this.element = str;
-      return this.element;
+      return str;
     };
   }
 }

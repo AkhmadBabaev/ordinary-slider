@@ -6,18 +6,10 @@ class Testee extends Component<{ sunny: boolean }> {
   }
 }
 
-const testee = new Testee({ sunny: true });
-document.body.innerHTML = testee.getElement();
-
 describe('Simple', () => {
-  test('getElement should return valid HTML string', () => {
-    const element = document.body.firstElementChild;
-
-    expect(typeof testee.getElement()).toBe('string');
-    expect(!!element).toBeTruthy();
-  });
-
-  test('getOptions should return current options', () => {
-    expect(testee.getOptions()).toEqual({ sunny: true });
+  test('should return string of method render', () => {
+    const testee = `${new Testee({ sunny: true })}`;
+    expect(typeof testee).toBe('string');
+    expect(testee).toBe('<div>true</div>');
   });
 });
