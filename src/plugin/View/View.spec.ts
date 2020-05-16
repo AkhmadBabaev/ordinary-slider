@@ -47,14 +47,11 @@ describe('View', () => {
     expect(view.getOptions()).toEqual(defaultState);
   });
 
-  test('should react to click on the track element', () => {
-    view.notify = jest.fn();
+  test('getValues returns from/to values as array', () => {
+    view.applyState({ from: 10 });
+    expect(view.getValues()).toEqual([10]);
 
-    const trackElement = sliderElement.querySelector('.o-slider__track')!;
-    trackElement.dispatchEvent(new Event('click', {
-      bubbles: true,
-    }));
-
-    expect(view.notify).toHaveBeenCalled();
+    view.applyState({ range: true, to: 50 });
+    expect(view.getValues()).toEqual([10, 50]);
   });
 });
