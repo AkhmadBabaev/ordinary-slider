@@ -42,7 +42,7 @@ class Scale extends Component<IScaleOptions> {
 
     let { step } = this.options;
     let stepsNumber = gap / step;
-    const maxSymbolsNumber = String(max).length;
+    const maxSymbolsNumber = Math.max(String(max).length, String(min).length);
     const maxSymbolsLength = vertical ? symbolLength / 2 : symbolLength * maxSymbolsNumber;
 
     while (stepsNumber * maxSymbolsLength > scaleLength) {
