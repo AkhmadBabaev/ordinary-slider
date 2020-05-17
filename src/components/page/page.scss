@@ -1,3 +1,5 @@
+@import '../../styles/mixins.scss';
+
 .page {
   height: 100%;
   margin: 0;
@@ -9,6 +11,8 @@
   }
 
   &__container {
+    @include container;
+
     padding-top: 8em;
     padding-bottom: 8em;
     display: flex;

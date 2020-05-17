@@ -1,11 +1,9 @@
 extends /components/layout/layout
-include /components/container/container
 
 block body
   body.page
     .page__inner
       .page__container
-        +container
-          block page-content
+        block page-content
 
     block scripts
