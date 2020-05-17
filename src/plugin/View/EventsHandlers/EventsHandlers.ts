@@ -60,7 +60,7 @@ class EventsHandlers {
   @boundMethod
   private handleThumbMouseDown(mouseDownEvent: MouseEvent): void {
     // if it isn't left click
-    if (!(mouseDownEvent.which === 1)) return;
+    if (mouseDownEvent.button !== 0) return;
 
     const target = mouseDownEvent.target as HTMLElement;
     const thumbElement = target.closest(`.js-${this.view.className}__thumb`) as HTMLElement;
