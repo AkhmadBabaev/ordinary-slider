@@ -10,6 +10,8 @@ class EventsHandlers {
 
   private view: View;
 
+  private coverElement: HTMLElement;
+
   constructor(view: View) {
     this.view = view;
   }
@@ -67,17 +69,17 @@ class EventsHandlers {
     if (!thumbElement) return;
 
     thumbElement.classList.add(`${this.view.className}__thumb_type_active`);
-    this.coverElement('on');
+    this.cover('on');
     this.isGrabbed = true;
 
     const { vertical } = this.view.getOptions();
     const targetLength = vertical ? target.clientHeight : target.clientWidth;
     const offset = vertical ? mouseDownEvent.offsetY : mouseDownEvent.offsetX;
-    const shift = offset - (targetLength / 2);
     const sliderBound = this.getClientBound(this.view.root);
+    const shift = sliderBound + offset - (targetLength / 2);
 
     const handleDocumentMouseMoveWrapper = throttle((mouseMoveEvent: MouseEvent): void => {
-      this.handleDocumentMouseMove(mouseMoveEvent, thumbElement, sliderBound, shift);
+      this.handleDocumentMouseMove(mouseMoveEvent, thumbElement, shift);
     }, 40);
 
     const handleDocumentMouseUpWrapper = (): void => {
@@ -91,14 +93,13 @@ class EventsHandlers {
   private handleDocumentMouseMove(
     mouseMoveEvent: MouseEvent,
     thumbElement: HTMLElement,
-    sliderBound: number,
     shift: number,
   ): void {
     const client = this.view.getOptions().vertical
       ? mouseMoveEvent.clientY
       : mouseMoveEvent.clientX;
 
-    const position = client - sliderBound - shift;
+    const position = client - shift;
     const value = this.view.calculateValue(position);
     const data: { [k: string]: number } = {};
     const { key } = thumbElement.dataset;
@@ -116,7 +117,7 @@ class EventsHandlers {
     document.removeEventListener('mouseup', upHandler);
 
     this.deleteActiveThumbMod();
-    this.coverElement('off');
+    this.cover('off');
 
     delete this.activeThumbIndex;
     delete this.isGrabbed;
@@ -146,10 +147,10 @@ class EventsHandlers {
 
     const targetBound = this.getClientBound(target);
     const sliderBound = this.getClientBound(this.view.root);
-    const shift = offset - targetBound - (targetLength / 2);
+    const shift = sliderBound + offset - targetBound - (targetLength / 2);
 
     const handleThumbTouchMoveWrapper = throttle((touchMoveEvent: TouchEvent): void => {
-      this.handleThumbTouchMove(touchMoveEvent, thumbElement, sliderBound, shift);
+      this.handleThumbTouchMove(touchMoveEvent, thumbElement, shift);
     }, 40);
 
     const handleThumbTouchEndWrapper = (): void => {
@@ -167,7 +168,6 @@ class EventsHandlers {
   private handleThumbTouchMove(
     touchMoveEvent: TouchEvent,
     thumbElement: HTMLElement,
-    sliderBound: number,
     shift: number,
   ): void {
     if (touchMoveEvent.touches.length > 1) return;
@@ -176,7 +176,7 @@ class EventsHandlers {
       ? touchMoveEvent.touches[0].clientY
       : touchMoveEvent.touches[0].clientX;
 
-    const position = client - sliderBound - shift;
+    const position = client - shift;
     const value = this.view.calculateValue(position);
     const data: { [k: string]: number } = {};
     const { key } = thumbElement.dataset;
@@ -212,23 +212,26 @@ class EventsHandlers {
   }
 
   private handleWindowResize(): void {
+    const oldSliderLength = this.view.getSliderLength();
+    this.view.updateSliderLength();
+
     // if length was not changed
-    if (this.view.sliderLength === this.view.getSliderLength()) return;
-    this.view.setSliderLength();
-    this.view.setRatio();
+    if (oldSliderLength === this.view.getSliderLength()) return;
+
+    this.view.updateRatio();
     this.view.createElements();
   }
 
-  private coverElement(value: 'on' | 'off'): void {
+  private cover(state: 'on' | 'off'): void {
     const { body } = document;
     const className = `${this.view.className}__window-cover`;
-    const cover = body.querySelector(`.${className}`) as HTMLElement;
+    !this.coverElement && (this.coverElement = body.querySelector(`.${className}`) as HTMLElement);
 
-    if (value === 'on') {
-      cover
-        ? cover.removeAttribute('style')
+    if (state === 'on') {
+      this.coverElement
+        ? this.coverElement.removeAttribute('style')
         : body.insertAdjacentHTML('afterbegin', `<div class=${className}></div>`);
-    } else cover.style.display = 'none';
+    } else this.coverElement.style.display = 'none';
   }
 
   private detectNearestThumb(value: number): string {
@@ -250,8 +253,8 @@ class EventsHandlers {
 
   private getClientBound(element: Element): number {
     return this.view.getOptions().vertical
-    ? element.getBoundingClientRect().y
-    : element.getBoundingClientRect().x;
+      ? element.getBoundingClientRect().y
+      : element.getBoundingClientRect().x;
   }
 }
 
