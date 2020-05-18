@@ -81,7 +81,7 @@ $(selector).oSlider({
 Тоже самое что и выше только с помощью дата атрибутов
 
 ```html
-<div class="o-slider" data-from="50"></div>
+<div class = "o-slider" data-from = "50"></div>
 
 <script>
   $('.o-slider').oSlider();
@@ -105,6 +105,7 @@ $(selector).oSlider({
 | to | number | null | верхняя граница интервала, этот параметр не имеет смысла если `range: false` |
 | tip | boolean | false | добавить подсказку |
 | bar | boolean | false | добавить бар |
+| scale | boolean | false | добавить шкалу |
 | range | boolean | false | создать интервал |
 | vertical | boolean | false | сменить направление слайдера на вертикальное |
 
