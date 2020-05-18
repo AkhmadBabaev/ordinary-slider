@@ -1,0 +1,14 @@
+:root {
+  --basic-font-name: 'Consolas', 'lucida console', monospace;
+  --basic-color: #000;
+
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+html {
+  color: var(--basic-color);
+  font: 16px/1.5 var(--basic-font-name);
+  font-kerning: none;
+
+  height: 100%;
+}

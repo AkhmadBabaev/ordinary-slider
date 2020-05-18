@@ -1,61 +1,78 @@
-import Thumb from './Thumb';
-import Simple from '../Templates/Simple/Simple';
-
-import { ThumbOptions } from './Interfaces';
-
 import { hasChild } from '../../helpers/helpers';
+import Thumb from './Thumb';
+import { IThumbOptions } from './Interfaces';
 
-const options: ThumbOptions = {
-  parent: document.body,
+document.body.innerHTML = '<div id="test"></div>';
+const testElement = document.body.querySelector('#test')!;
+
+const options: IThumbOptions = {
+  className: 'o-slider',
   vertical: false,
   isActive: true,
-  tip: true,
-  key: '0',
+  isPriority: true,
+  tip: false,
+  key: 0,
   position: '10%',
-  value: 0,
+  value: 5,
 };
 
-let thumb: Thumb;
-
 describe('Thumb', () => {
-  beforeEach(() => { thumb = new Thumb(options); });
+  let thumbElement: HTMLElement;
 
-  test('is an instance of class Simple', () => expect(thumb).toBeInstanceOf(Simple));
+  beforeEach(() => {
+    testElement.innerHTML = `${new Thumb(options)}`;
+    thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
+  });
 
-  test('should be added to parent', () => {
-    expect(hasChild(thumb.getOptions().parent, thumb.getElement())).toBeTruthy();
+  test('is valid HTML', () => {
+    expect(hasChild(testElement, thumbElement)).toBeTruthy();
   });
 
   describe('Options tip', () => {
-    test('contains element tip if tip set as true', () => {
-      const tip = thumb.getElement().querySelector('.o-slider__tip') as HTMLElement;
-      expect(hasChild(thumb.getElement(), tip)).toBeTruthy();
+    test('doesn\'t contain element tip if tip set as false', () => {
+      const tipElement = thumbElement.querySelector(`.${options.className}__tip`)!;
+      expect(hasChild(thumbElement, tipElement)).toBeFalsy();
     });
 
-    test('doesn\'t contain element tip if tip set as false', () => {
-      thumb.render({ ...thumb.getOptions(), tip: false });
+    test('contains element tip if tip set as true', () => {
+      testElement.innerHTML = `${new Thumb({ ...options, tip: true })}`;
+      thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
 
-      const tip = thumb.getElement().querySelector('.o-slider__tip') as HTMLElement;
-      expect(hasChild(thumb.getElement(), tip)).toBeFalsy();
+      const tipElement = thumbElement.querySelector(`.${options.className}__tip`)!;
+      expect(hasChild(thumbElement, tipElement)).toBeTruthy();
     });
   });
 
   describe('Options position', () => {
     test('should be set as left if vertical is false', () => {
-      expect(thumb.getElement().style.left).toBe('10%');
+      expect(thumbElement.style.left).toBe('10%');
     });
 
     test('should be set as bottom if vertical is true', () => {
-      thumb.render({ ...thumb.getOptions(), vertical: true });
-      expect(thumb.getElement().style.bottom).toBe('10%');
+      testElement.innerHTML = `${new Thumb({ ...options, vertical: true })}`;
+      thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
+
+      expect(thumbElement.style.bottom).toBe('10%');
     });
   });
 
-  test('set option key as data-key value', () => {
-    expect(thumb.getElement().dataset.key).toBe('0');
+  test('option "value" should be placed inside tip element if tip set as true', () => {
+    testElement.innerHTML = `${new Thumb({ ...options, tip: true })}`;
+    thumbElement = testElement.querySelector(`.${options.className}__thumb`) as HTMLElement;
+
+    const tipElement = thumbElement.querySelector(`.${options.className}__tip`)!;
+    expect(tipElement.textContent).toBe('5');
   });
 
-  test('adds is_active modifier to thumb element', () => {
-    expect(thumb.getElement().hasAttribute('data-active')).toBeTruthy();
+  test('set option key as data-key value', () => {
+    expect(thumbElement.dataset.key).toBe('0');
+  });
+
+  test('adds BEM modifier priority', () => {
+    expect(thumbElement.classList.contains(`${options.className}__thumb_type_priority`)).toBeTruthy();
+  });
+
+  test('adds BEM modifier active', () => {
+    expect(thumbElement.classList.contains(`${options.className}__thumb_type_active`)).toBeTruthy();
   });
 });

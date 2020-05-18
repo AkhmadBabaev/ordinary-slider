@@ -1,3 +1,5 @@
+@import './View/Scale/scale.scss';
+
 .o-slider {
   --slider-color-light: HSL(var(--h, 0), var(--s, 0%), calc(var(--l, 50%) + 25%));
   --slider-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 50%));
@@ -5,18 +7,19 @@
 
   background-color: var(--slider-color-light);
   box-sizing: border-box;
+  position: relative;
 
-  &_is_horizontal {
+  &_direction_horizontal {
     min-width: 12.5em;
     height: .62em;
   }
 
-  &_is_horizontal &__bar {
+  &_direction_horizontal &__bar {
     width: 0;
     height: 100%;
   }
 
-  &_is_horizontal &__thumb {
+  &_direction_horizontal &__thumb {
     width: .62em;
     height: 1.6em;
     bottom: 50%;
@@ -24,23 +27,23 @@
     transform: translate(-50%, 50%);
   }
 
-  &_is_horizontal &__tip {
+  &_direction_horizontal &__tip {
     bottom: 2.3em;
     transform: translateX(-50%);
   }
 
-  &_is_vertical {
+  &_direction_vertical {
     height: 100%;
     width: .62em;
   }
 
-  &_is_vertical &__bar {
+  &_direction_vertical &__bar {
     width: 100%;
     height: 0;
     bottom: 0;
   }
 
-  &_is_vertical &__thumb {
+  &_direction_vertical &__thumb {
     height: .62em;
     width: 1.6em;
     left: 50%;
@@ -48,7 +51,7 @@
     transform: translate(-50%, 50%);
   }
 
-  &_is_vertical &__tip {
+  &_direction_vertical &__tip {
     transform: translateY(-50%);
     left: 2.3em;
     top: 50%;
@@ -76,9 +79,13 @@
 
     cursor: pointer;
 
-    &[data-active='true'] {
+    &_type_active {
       --slider-color: var(--slider-color-dark);
       z-index: 10;
+    }
+
+    &_type_priority {
+      z-index: 5;
     }
   }
 
@@ -86,11 +93,13 @@
     font-size: .9em;
     color: #fff;
     background-color: var(--slider-color);
-    line-height: 1;
 
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     width: auto;
-    padding: .35em .5em;
+    height: 1.7em;
+    padding: 0 .5em;
 
     position: absolute;
 
@@ -98,8 +107,16 @@
     cursor: pointer;
   }
 
-  &-grabbed {
+  &__scale.scale_direction_horizontal {
+    margin-top: 1em;
+  }
+
+  &__window-cover {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 999999;
+
     cursor: pointer;
-    & > * { pointer-events: none; }
   }
 }

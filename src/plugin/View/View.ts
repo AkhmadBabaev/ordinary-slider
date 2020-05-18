@@ -1,247 +1,177 @@
+import { boundMethod } from 'autobind-decorator';
+
 import Observable from '../Observable/Observable';
-import Track from './Track/Track';
-
-import { State, PState } from '../Model/Interfaces';
-import { TrackOptions } from './Track/Interfaces';
-
-import {
-  propertyFilter,
-  isBooleanSpy,
-  debounce,
-  isDefined,
-  asyncRender,
-} from '../helpers/helpers';
-
-import { EVENT_THUMBMOVE, EVENT_THUMBSTOP } from './constants';
+import { IState, IPState } from '../Model/Interfaces';
+import { propertyFilter, isDefined, isBooleanSpy } from '../helpers/helpers';
+import EventsHandlers from './EventsHandlers/EventsHandlers';
+import { create } from './ComponentsFactory/ComponentsFactory';
+import { ITrackOptions, IPTrackOptions } from './Track/Interfaces';
+import { IScaleOptions, IPScaleOptions } from './Scale/Interfaces';
 
 class View extends Observable {
-  private element: HTMLElement;
+  public readonly root: HTMLElement;
 
-  private fragment: HTMLElement;
+  public readonly className: string;
 
-  private options: State;
+  private options: IState;
 
-  private updates: PState;
+  private updates: IPState;
 
   private ratio: number;
 
-  private activeThumbIndex: number;
-
   private sliderLength: number;
 
-  constructor(rootElem: HTMLElement, options: State) {
+  private eventsHandlers: EventsHandlers;
+
+  private attributesObserver: { [k: string]: Function };
+
+  constructor(rootElem: HTMLElement, options: IState) {
     super();
 
-    this.element = rootElem;
-    this.getOptions = this.getOptions.bind(this);
-    this.handleThumbMove = this.handleThumbMove.bind(this);
-    this.handleThumbStop = this.handleThumbStop.bind(this);
-    this.handleWindowResize = debounce(this.handleWindowResize.bind(this), 150);
-    this.render = asyncRender(this.render.bind(this));
+    this.root = rootElem;
+    this.options = options;
+    this.className = 'o-slider';
+    this.eventsHandlers = new EventsHandlers(this);
 
+    this.createAttributesObserver();
     this.setComponentClass();
-    this.addOtherListeners();
-    this.render(options);
+    this.applyState(options);
+    this.eventsHandlers.setListeners();
   }
 
-  public async render(options: PState): Promise<void> {
+  @boundMethod
+  public applyState(options: IPState): void {
     this.options = { ...this.options, ...options };
     this.updates = options;
 
-    this.createFragment();
-    this.createTrack();
+    const { min, max, vertical } = this.updates;
+    const isDirectionUpdated = isDefined(vertical);
+    const isRatioUpdated = isDirectionUpdated || isDefined(min) || isDefined(max);
 
-    await this.reflow();
+    isDirectionUpdated && this.handleOptionVertical();
+    isDirectionUpdated && this.updateSliderLength();
+    isRatioUpdated && this.updateRatio();
 
-    this.updateElement();
-
-    this.setSliderLength();
-    this.setRatio();
-
-    this.addElementListeners();
-    this.addAttributesWatcher();
+    this.setDataAttributes();
+    this.createElements();
 
     delete this.updates;
   }
 
-  public getOptions(): State {
+  @boundMethod
+  public getOptions(): IState {
     return this.options;
   }
 
-  private updateElement(): void {
-    this.element = this.fragment;
-    delete this.fragment;
+  @boundMethod
+  public calculateValue(position: number): number {
+    return this.options.vertical
+      ? this.options.max - position / this.ratio
+      : position / this.ratio + this.options.min;
   }
 
-  private setComponentClass(): void {
-    this.element.classList.add('o-slider');
-  }
-
-  private getValues(): number[] {
+  @boundMethod
+  public getValues(): number[] {
     const { from, to, range } = this.options;
     const values = range ? [from, to] : [from];
 
     return values as number[];
   }
 
-  private async reflow(): Promise<void> {
-    await new Promise((resolve) => requestAnimationFrame(() => {
-      this.element.replaceWith(this.fragment);
-      resolve();
-    }));
+  @boundMethod
+  public getSliderLength(): number {
+    return this.sliderLength;
   }
 
-  private createFragment(): void {
-    this.fragment = this.element.cloneNode() as HTMLElement;
-
-    this.handleVerticalParameter();
-    this.setDataAttributes();
+  @boundMethod
+  public updateSliderLength(): void {
+    this.sliderLength = this.options.vertical ? this.root.clientHeight : this.root.clientWidth;
   }
 
-  private createTrack(): void {
-    const propsList: string[] = [
-      'activeThumbIndex',
-      'fragment:parent',
-      'vertical',
-      'range',
-      'tip',
-      'bar',
-      'min',
-      'max',
-    ];
-
-    const props = propertyFilter({ ...this, ...this.options }, propsList);
-    const values = this.getValues();
-
-    new Track({ ...props, values } as TrackOptions);
-  }
-
-  private getSliderLength(): number {
-    return this.options.vertical ? this.element.clientHeight : this.element.clientWidth;
-  }
-
-  private setSliderLength(): void {
-    if (!isDefined(this.options.vertical)) return;
-    this.sliderLength = this.getSliderLength();
-  }
-
-  private setRatio(): void {
+  @boundMethod
+  public updateRatio(): void {
     const { min, max } = this.options;
-    this.ratio = this.sliderLength / (max - min);
+    this.ratio = this.getSliderLength() / (max - min);
   }
 
-  private handleVerticalParameter(): void {
-    if (!isDefined(this.updates.vertical)) return;
+  @boundMethod
+  public createElements(): void {
+    this.root.innerHTML = `
+      ${create('track', this.generateTrackOptions())}
+      ${this.options.scale ? create('scale', this.generateScaleOptions()) : ''}
+    `;
+  }
 
+  private handleOptionVertical(): void {
     if (this.options.vertical) {
-      this.fragment.classList.add('o-slider_is_vertical');
-      this.fragment.classList.remove('o-slider_is_horizontal');
+      this.root.classList.add(`${this.className}_direction_vertical`);
+      this.root.classList.remove(`${this.className}_direction_horizontal`);
     } else {
-      this.fragment.classList.add('o-slider_is_horizontal');
-      this.fragment.classList.remove('o-slider_is_vertical');
+      this.root.classList.add(`${this.className}_direction_horizontal`);
+      this.root.classList.remove(`${this.className}_direction_vertical`);
     }
   }
 
   private setDataAttributes(): void {
+    this.attributesObserver.unsubscribe();
     const attrs = this.updates as { [k: string]: string };
-    Object.keys(attrs).forEach((key) => this.fragment.setAttribute(`data-${key}`, attrs[key]));
+    Object.keys(attrs).forEach((key) => this.root.setAttribute(`data-${key}`, attrs[key]));
+    this.attributesObserver.subscribe();
   }
 
-  private handleThumbMove(event: CustomEvent): void {
-    const { position, element } = event.detail;
-    const { min, max, vertical } = this.options;
-
-    const value = vertical
-      ? max - position / this.ratio
-      : position / this.ratio + min;
-
-    const isTrack = element.dataset.name === 'track';
-    const isThumb = element.dataset.name === 'thumb';
-    let data: { [k: string]: unknown } = {};
-
-    isTrack && (data = this.handleThumbMoveFromTrack(value));
-    isThumb && (data = this.handleThumbMoveFromThumbs(element, value));
-
-    this.notify(data);
-    event.stopPropagation();
+  private setComponentClass(): void {
+    !this.root.classList.contains(this.className) && this.root.classList.add(this.className);
   }
 
-  private handleThumbMoveFromTrack(value: number): { [k: string]: number } {
-    const data: { [k: string]: number } = {};
-    const [first, second] = this.getValues();
+  private generateTrackOptions(): ITrackOptions {
+    const optionsList = ['vertical', 'range', 'bar', 'tip', 'min', 'max', 'className'];
+    const options: IPTrackOptions = propertyFilter({ ...this, ...this.options }, optionsList);
 
-    if (!this.options.range) return { from: value };
-
-    const distanceToFirst = value - first;
-    const distanceToSecond = second - value;
-
-    distanceToFirst >= distanceToSecond
-      ? data.to = value
-      : data.from = value;
-
-    return data;
+    options.values = this.getValues();
+    options.activeThumbIndex = this.eventsHandlers.getActiveThumbIndex();
+    return options as ITrackOptions;
   }
 
-  private handleThumbMoveFromThumbs(thumb: HTMLElement, value: number): { [k: string]: number } {
-    const { key, active: isActive } = thumb.dataset;
-    const data: { [k: string]: number } = {};
+  private generateScaleOptions(): IScaleOptions {
+    const optionsList = ['vertical', 'min', 'max', 'step', 'className'];
+    const options: IPScaleOptions = propertyFilter({ ...this, ...this.options }, optionsList);
+    const { fontSize, lineHeight } = getComputedStyle(this.root);
 
-    key === '0' && (data.from = value);
-    key === '1' && (data.to = value);
+    options.scaleLength = this.getSliderLength();
+    options.symbolLength = this.options.vertical
+      ? parseFloat(lineHeight)
+      : parseFloat(fontSize) / 2;
 
-    isActive && this.handleActiveThumbIndex(key as string);
-    return data;
+    return options as IScaleOptions;
   }
 
-  private handleActiveThumbIndex(key: string): void {
-    this.activeThumbIndex = 0;
-    this.options.range && (this.activeThumbIndex = (key === '0') ? 0 : 1);
-  }
-
-  private handleThumbStop(event: CustomEvent): void {
-    const thumbSelector = '[data-name="thumb"][data-active="true"]';
-    setTimeout(() => this.element.querySelector(thumbSelector)?.removeAttribute('data-active'), 0);
-
-    delete this.activeThumbIndex;
-    event.stopPropagation();
-  }
-
-  private handleWindowResize(): void {
-    // if length was not changed
-    if (this.sliderLength === this.getSliderLength()) return;
-
-    this.sliderLength = this.getSliderLength();
-    this.setRatio();
-  }
-
-  private addAttributesWatcher(): void {
-    const { notify, element } = this;
+  private createAttributesObserver(): void {
+    const { root, notify } = this;
 
     function callback(options: any): void {
       Object.keys(options).forEach((record) => {
         const { attributeName, oldValue } = options[record];
         const property = attributeName.split('-')[1];
-        let value: string | boolean = element.getAttribute(attributeName) as string;
+        let value: string | boolean = root.getAttribute(attributeName) as string;
 
         isBooleanSpy(oldValue) && (value = value === 'true');
         notify({ [property]: value });
       });
     }
 
-    new MutationObserver(callback).observe(element, {
+    const observer = new MutationObserver(callback);
+    const config = {
       attributes: true,
       attributeOldValue: true,
       attributeFilter: Object.keys(this.options).map((key) => `data-${key}`),
-    });
-  }
+    };
 
-  private addElementListeners(): void {
-    this.element.addEventListener(EVENT_THUMBMOVE, this.handleThumbMove as EventListener);
-    this.element.addEventListener(EVENT_THUMBSTOP, this.handleThumbStop as EventListener);
-  }
+    observer.observe(root, config);
 
-  private addOtherListeners(): void {
-    window.addEventListener('resize', this.handleWindowResize);
+    this.attributesObserver = {
+      subscribe: (): void => observer.observe(root, config),
+      unsubscribe: (): void => observer.disconnect(),
+    };
   }
 }
 

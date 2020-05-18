@@ -5,42 +5,38 @@ function getType(param: unknown): string {
   return readableType;
 }
 
-function compareType(type: string, value: unknown): boolean {
-  return type.toLowerCase() === getType(value).toLowerCase();
-}
-
-export function isNumber(value: unknown): boolean {
+function isNumber(value: unknown): boolean {
   const result: unknown = (value as string).length ? Number(value) : value;
 
   if (Number.isNaN(result as number)) return false;
   return typeof result === 'number';
 }
 
-export function isObject(value: unknown): boolean {
-  return compareType('object', value);
+function isObject(value: unknown): boolean {
+  return getType(value).toLowerCase() === 'object';
 }
 
-export function isBoolean(value: unknown): boolean {
+function isBoolean(value: unknown): boolean {
   return typeof value === 'boolean';
 }
 
-export function isBooleanSpy(value: string): boolean {
+function isBooleanSpy(value: string): boolean {
   return (value === 'true') || (value === 'false');
 }
 
-export function isDefined(value: unknown): boolean {
+function isDefined(value: unknown): boolean {
   return (value !== undefined) && (value !== null);
 }
 
-export function softRounding(num: number): number {
+function softRounding(num: number): number {
   return Number(num.toFixed(1));
 }
 
-export function propertyFilter(obj: { [k: string]: any }, props: string[]): { [k: string]: any } {
-  const result: { [k: string]: unknown } = {};
+function propertyFilter<T extends {[k: string]: any}>(obj: T, props: string[]): T {
+  const result: T = {} as T;
 
   props.forEach((prop: string) => {
-    let value: unknown = obj[prop];
+    let value = obj[prop];
     let propName = prop;
 
     if (prop.includes(':')) {
@@ -54,13 +50,13 @@ export function propertyFilter(obj: { [k: string]: any }, props: string[]): { [k
       value = obj[firstPart];
     }
 
-    isDefined(value) && (result[propName] = value);
+    isDefined(value) && (result[propName as keyof T] = value);
   });
 
   return result;
 }
 
-export function throttle(fn: Function, wait: number): () => void {
+function throttle(fn: Function, wait: number): () => void {
   let isThrottled = false;
   let context: unknown;
   let args: unknown[] | null;
@@ -92,23 +88,23 @@ export function throttle(fn: Function, wait: number): () => void {
   return wrapper;
 }
 
-export function debounce(fn: Function, wait: number): () => void {
-  let timer: any;
-  return function wrapper(...params: unknown[]): void {
+function debounce(fn: Function, wait: number): () => void {
+  let timer: NodeJS.Timer;
+  return (...params: unknown[]): void => {
     clearTimeout(timer);
     timer = setTimeout(() => fn(...params), wait);
   };
 }
 
-export function hasChild(parent: HTMLElement, child: HTMLElement): boolean {
-  return Object.keys(parent.children).some((x, i: number) => parent.children[i] === child);
+function hasChild<T extends Element>(parent: T, child: T): boolean {
+  return Object.keys(parent.children).some((_, i) => parent.children[i] === child);
 }
 
-export function convertSliderUnitToPercent({ min, max, value }: { [k: string]: number }): number {
+function convertSliderUnitToPercent({ min, max, value }: { [k: string]: number }): number {
   return (100 / (max - min)) * (value - min);
 }
 
-export function objectReflection(a: object, b: object): object {
+function objectReflection<T extends object>(a: T, b: T): T {
   const result = { ...a, ...b };
 
   Object.keys(a).forEach((key) => {
@@ -118,28 +114,17 @@ export function objectReflection(a: object, b: object): object {
   return result;
 }
 
-export function asyncRender(fn: Function): (options: {}) => Promise<void> {
-  let isRendering = false;
-  let context: unknown;
-  let updates: {} | null;
-
-  async function wrapper(this: unknown, options: {}): Promise<void> {
-    if (isRendering) {
-      updates = { ...updates, ...options };
-      context = this;
-      return;
-    }
-
-    isRendering = true;
-    await fn.call(this, options);
-    isRendering = false;
-
-    if (updates) {
-      wrapper.call(context, updates);
-      context = null;
-      updates = null;
-    }
-  }
-
-  return wrapper;
-}
+export {
+  convertSliderUnitToPercent,
+  objectReflection,
+  propertyFilter,
+  softRounding,
+  isBooleanSpy,
+  isBoolean,
+  isDefined,
+  isNumber,
+  isObject,
+  hasChild,
+  debounce,
+  throttle,
+};

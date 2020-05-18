@@ -1,0 +1,35 @@
+.scale {
+  position: relative;
+  color: var(--slider-color);
+
+  &_direction_horizontal {
+    width: 100%;
+  }
+
+  &_direction_vertical {
+    position: absolute;
+    top: 0;
+    left: -1em;
+    height: 100%;
+  }
+
+  &_direction_horizontal &__item {
+    transform: translateX(-50%);
+  }
+
+  &_direction_vertical &__item {
+    transform: translate(-100%, 50%);
+  }
+
+  &__item {
+    cursor: pointer;
+    font-size: 0.812em;
+    position: absolute;
+    user-select: none;
+
+    &:hover {
+      font-weight: bold;
+      color: var(--slider-color-dark);
+    }
+  }
+}

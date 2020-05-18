@@ -1,23 +1,14 @@
-/* eslint-disable no-console */
 const merge = require('webpack-merge');
-const chalk = require('chalk');
 const common = require('./webpack.common');
+const dirs = require('./dirs');
+const { complitionLogHook, projectInfoHook } = require('./hooks');
+const { projectName, getNetworkIp, getAvailabelPort } = require('./utils');
 
-const paths = require('./paths');
-const {
-  port,
-  url,
-  localUrl,
-  projectName,
-} = require('./utils');
-
-module.exports = merge(common, {
+const config = {
   mode: 'development',
   devtool: 'eval',
   devServer: {
-    contentBase: paths.output,
-    public: url,
-    port,
+    contentBase: dirs.output.relativeName,
     host: '0.0.0.0',
     progress: true,
     noInfo: true,
@@ -44,35 +35,26 @@ module.exports = merge(common, {
     errors: true,
     warnings: true,
   },
-  plugins: [
-    {
-      apply: (compiler) => {
-        compiler.hooks.entryOption.tap('start', () => {
-          console.clear();
-          console.log(chalk.yellow('Compilation in progress...\n'));
-        });
+  plugins: [],
+};
 
-        compiler.hooks.done.tap('finish', () => {
-          const data = {
-            name: {
-              content: projectName || 'not found',
-              color: projectName ? 'green' : 'red',
-            },
-            network: {
-              content: localUrl || 'not found',
-              color: localUrl ? 'blue' : 'red',
-            },
-          };
+module.exports = async () => {
+  const protocol = 'http';
+  const domain = 'localhost';
+  const networkIp = getNetworkIp();
+  const port = await getAvailabelPort();
+  const url = `${protocol}://${domain}:${port}`;
+  const localUrl = networkIp && `${protocol}://${networkIp}:${port}`;
 
-          console.clear();
-          console.log();
-          console.log(`Name:                ${chalk[data.name.color](data.name.content)}`);
-          console.log();
-          console.log(`Local:               ${chalk.blue(url)}`);
-          console.log(`Network:             ${chalk[data.network.color](data.network.content)}`);
-          console.log();
-        });
-      },
+  config.devServer.port = port;
+  config.devServer.public = url;
+
+  config.plugins.push({
+    apply: (compiler) => {
+      compiler.hooks.entryOption.tap('compilationLog', complitionLogHook);
+      compiler.hooks.done.tap('projectInfo', () => projectInfoHook({ projectName, localUrl, url }));
     },
-  ],
-});
+  });
+
+  return merge(common, config);
+};

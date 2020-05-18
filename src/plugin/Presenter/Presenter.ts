@@ -1,32 +1,37 @@
-import { Model, State, PState } from '../Model/Interfaces';
-import { View } from '../View/Interfaces';
+import { boundMethod } from 'autobind-decorator';
+
+import Model from '../Model/Model';
+import { IState, IPState } from '../Model/Interfaces';
+import View from '../View/View';
 
 class Presenter {
-  constructor(
-    private model: Model,
-    private view: View,
-  ) {
-    this.getState = this.getState.bind(this);
-    this.subscribe = this.subscribe.bind(this);
-    this.unsubscribe = this.unsubscribe.bind(this);
-    this.setState = this.setState.bind(this);
-    this.ViewNotifier = this.ViewNotifier.bind(this);
+  private view: View;
+
+  private model: Model;
+
+  constructor(rootElement: HTMLElement, options: IPState) {
+    this.model = new Model(options);
+    this.view = new View(rootElement, this.model.getState());
     this.init();
   }
 
+  @boundMethod
   public subscribe(callback: Function): void {
     this.model.subscribe(callback);
   }
 
+  @boundMethod
   public unsubscribe(callback: Function): void {
     this.model.unsubscribe(callback);
   }
 
-  public setState(options: PState): void {
+  @boundMethod
+  public setState(options: IPState): void {
     this.model.setState(options);
   }
 
-  public getState(): State {
+  @boundMethod
+  public getState(): IState {
     return this.model.getState();
   }
 
@@ -35,16 +40,17 @@ class Presenter {
     this.view.subscribe(this.model.setState);
   }
 
-  private ViewNotifier(options: PState): void {
+  @boundMethod
+  private ViewNotifier(options: IPState): void {
     const viewOptions = this.view.getOptions();
-    const stateChanges = options;
+    const stateChanges = { ...options };
 
     Object.keys(stateChanges).forEach((key) => {
-      const value = stateChanges[key as keyof State];
-      (viewOptions[key as keyof State] === value) && delete stateChanges[key as keyof State];
+      const value = stateChanges[key as keyof IState];
+      (viewOptions[key as keyof IState] === value) && delete stateChanges[key as keyof IState];
     });
 
-    Object.keys(stateChanges).length && this.view.render(stateChanges);
+    Object.keys(stateChanges).length && this.view.applyState(stateChanges);
   }
 }
 

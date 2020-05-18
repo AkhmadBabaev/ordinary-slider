@@ -1,58 +1,71 @@
-import Input from '../input/input';
+import { boundMethod } from 'autobind-decorator';
 
-import { PState } from '../../plugin/Model/Interfaces';
-
-import { isDefined } from '../../plugin/helpers/helpers';
+import CheckBox from '../checkbox/Checkbox';
+import NumField from '../num-field/NumField';
 
 type Settings = { [k: string]: unknown };
 
 class Panel {
-  private element: HTMLElement;
+  private panelElement: HTMLElement;
 
-  public fields: { [k: string]: Input } = {};
+  public fields: { [k: string]: CheckBox | NumField } = {};
 
   private $slider: JQuery<object>;
 
   constructor(elem: HTMLElement) {
-    this.element = elem;
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSliderChanges = this.handleSliderChanges.bind(this);
-    this.settings = this.settings.bind(this);
-    this.subscribe = this.subscribe.bind(this);
-    this.unsubscribe = this.unsubscribe.bind(this);
+    this.panelElement = elem;
     this.init();
   }
 
+  @boundMethod
   public settings(options?: Settings): Settings | void {
-    if (isDefined(options)) this.$slider.oSlider('settings', options);
-    return this.$slider.oSlider('settings') as PState as Settings;
+    if (arguments.length) this.$slider.oSlider('settings', options);
+    return { ...this.$slider.oSlider('settings') };
   }
 
+  @boundMethod
   public subscribe(callback: Function): void {
     this.$slider.oSlider('subscribe', callback);
   }
 
+  @boundMethod
   public unsubscribe(callback: Function): void {
     this.$slider.oSlider('unsubscribe', callback);
   }
 
+  @boundMethod
   public getElement(): HTMLElement {
-    return this.element;
+    return this.panelElement;
   }
 
-  protected init(): void {
+  private init(): void {
     this.defineFields();
     this.setSlider();
   }
 
-  private defineFields(): void {
-    const foundFields = Array.from(this.element.querySelectorAll('.js-panel__field'));
-    const foundCheckboxes = Array.from(this.element.querySelectorAll('.js-panel__checkbox'));
+  private foundFields(): HTMLElement[] {
+    const foundNulFields = Array.from(this.panelElement.querySelectorAll('.js-panel__field'));
+    const foundCheckboxes = Array.from(this.panelElement.querySelectorAll('.js-panel__checkbox'));
+    const foundList = [...foundNulFields, ...foundCheckboxes];
 
-    [...foundFields, ...foundCheckboxes].forEach((elem) => {
-      const field = new Input(elem.querySelector('.input') as HTMLInputElement);
-      const name = field.getAttr('name');
+    return foundList.map((elem) => elem.firstElementChild as HTMLElement);
+  }
+
+  private setField(field: NumField | CheckBox, name: string): void {
+    this.fields[name] = field;
+    this.fields[name].getInput().addEventListener('change', this.handleInputChange);
+  }
+
+  private defineFields(): void {
+    this.foundFields().forEach((elem) => {
+      const isCheckbox = elem.className.includes('checkbox');
+      const isNumField = elem.className.includes('num-field');
+      let field;
+
+      isNumField && (field = new NumField(elem));
+      isCheckbox && (field = new CheckBox(elem));
+
+      const name = field?.getInput().getAttribute('name');
 
       switch (name) {
         case 'from':
@@ -63,9 +76,9 @@ class Panel {
         case 'bar':
         case 'tip':
         case 'range':
+        case 'scale':
         case 'vertical':
-          this.fields[name] = field;
-          field.getElement().addEventListener('change', this.handleInputChange);
+          this.setField(field as NumField | CheckBox, name);
           break;
 
         default: break;
@@ -73,6 +86,7 @@ class Panel {
     });
   }
 
+  @boundMethod
   private handleInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     const data = { [target.name]: target.type === 'checkbox' ? target.checked : Number(target.value) };
@@ -80,13 +94,15 @@ class Panel {
     this.settings(data);
   }
 
-  private handleSliderChanges(options: PState): void {
+  @boundMethod
+  private handleSliderChanges(options: Settings): void {
     const { range } = this.settings() as Settings;
     const { fields } = this;
 
     Object.keys(options).forEach((key) => {
       if (!Object.prototype.hasOwnProperty.call(fields, key)) return;
-      const value = options[key as keyof PState] as number | boolean;
+      const input = fields[key].getInput();
+      const value = options[key];
 
       switch (key) {
         case 'from':
@@ -94,14 +110,15 @@ class Panel {
         case 'min':
         case 'max':
         case 'step':
-          fields[key].setAttr('value', value);
+          (fields[key] as NumField).setAttr('value', String(value));
           break;
 
         case 'bar':
         case 'tip':
+        case 'scale':
         case 'range':
         case 'vertical':
-          fields[key].setAttr('checked', value);
+          input.checked = value as boolean;
           break;
 
         default: break;
@@ -109,21 +126,25 @@ class Panel {
 
       switch (key) {
         case 'from':
-          range && fields.to.setAttr('min', value);
+          range && (fields.to as NumField).setAttr('min', String(value));
           break;
 
         case 'to':
-          fields.from.setAttr('max', value);
+          (fields.from as NumField).setAttr('max', String(value));
           break;
 
         case 'step':
-          fields.from.setAttr('step', value);
-          range && fields.to.setAttr('step', value);
+          (fields.from as NumField).setAttr('step', String(value));
+          (fields.to as NumField).setAttr('step', String(value));
           break;
 
         case 'range':
-          options.range ? this.setFieldTo() : this.removeFieldTo();
-          !options.range && fields.from.getElement().removeAttribute('max');
+          if (options.range) {
+            this.fields.to.getInput().disabled = false;
+          } else {
+            this.fields.to.getInput().disabled = true;
+            fields.from.getInput().removeAttribute('max');
+          }
           break;
 
         default: break;
@@ -132,38 +153,11 @@ class Panel {
   }
 
   private setSlider(): void {
-    const slider = this.element.querySelector('.js-panel__slider') as HTMLElement;
+    const slider = this.panelElement.querySelector('.js-panel__slider')?.firstElementChild!;
 
     this.$slider = $(slider).oSlider() as JQuery<object>;
     this.subscribe(this.handleSliderChanges);
     this.handleSliderChanges(this.settings() as Settings);
-  }
-
-  private setFieldTo(): void {
-    // eslint-disable-next-line no-bitwise
-    const ID = `${(~~(Math.random() * 1e12)).toString(32)}`;
-    const fromContainer = this.fields.from.getElement().closest('.js-panel__field');
-    const toContainer = fromContainer?.cloneNode(true) as HTMLElement;
-
-    (toContainer.querySelector('.num-field__label') as HTMLElement).setAttribute('for', ID);
-    (toContainer.querySelector('.num-field__title') as HTMLElement).textContent = 'to';
-
-    const { from } = this.settings() as PState;
-
-    this.fields.to = new Input(toContainer.querySelector('.input') as HTMLElement);
-    this.fields.to.setAttr('name', 'to');
-    this.fields.to.setAttr('id', ID);
-    this.fields.to.setAttr('min', String(from));
-    this.fields.to.getElement().removeAttribute('max');
-    this.fields.to.getElement().addEventListener('change', this.handleInputChange);
-    fromContainer?.after(toContainer);
-  }
-
-  private removeFieldTo(): void {
-    const toContainer = this.fields.to?.getElement().closest('.js-panel__field');
-    toContainer?.remove();
-
-    delete this.fields.to;
   }
 }
 

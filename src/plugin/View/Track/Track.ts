@@ -1,100 +1,59 @@
-import Simple from '../Templates/Simple/Simple';
-import Thumb from '../Thumb/Thumb';
-import Bar from '../Bar/Bar';
+import { convertSliderUnitToPercent as convertToPercent } from '../../helpers/helpers';
+import Component from '../Component/Component';
+import { create } from '../ComponentsFactory/ComponentsFactory';
+import { IThumbOptions, IPThumbOptions } from '../Thumb/Interfaces';
+import { IBarOptions, IPBarOptions } from '../Bar/Interfaces';
+import { ITrackOptions } from './Interfaces';
 
-import { TrackOptions } from './Interfaces';
-import { ThumbOptions, PThumbOptions } from '../Thumb/Interfaces';
-import { BarOptions, PBarOptions } from '../Bar/Interfaces';
-
-import { convertSliderUnitToPercent, propertyFilter, isDefined } from '../../helpers/helpers';
-
-import { EVENT_THUMBMOVE } from '../constants';
-
-class Track extends Simple<TrackOptions> {
-  public render(options: TrackOptions): void {
-    this.options = options;
-
-    this.createElement('div', { class: 'o-slider__track' });
-    this.createThumbs();
-    this.createBar();
-
-    this.addListener();
-    this.addToParent();
+class Track extends Component<ITrackOptions> {
+  protected render(options: ITrackOptions): string {
+    return `
+      <div class='${options.className}__track js-${options.className}__track'>
+        ${options.bar ? create('bar', this.generateBarOptions()) : ''}
+        ${options.values.map((value, key) => create('thumb', this.generateThumbOptions(value, key))).join('')}
+      </div>
+    `;
   }
 
-  private createThumbs(): void {
-    const propsList: string[] = ['tip', 'vertical', 'element:parent'];
-    const props = propertyFilter({ ...this, ...this.options }, propsList);
+  private generateThumbOptions(value: number, key: number): IThumbOptions {
+    const { min, max, activeThumbIndex } = this.options;
+    const options: IPThumbOptions = {
+      className: this.options.className,
+      vertical: this.options.vertical,
+      tip: this.options.tip,
+      position: `${convertToPercent({ value, min, max })}%`,
+      isActive: activeThumbIndex === key,
+      value,
+      key,
+    };
 
-    const {
-      min,
-      max,
-      values,
-      activeThumbIndex: active,
-    } = this.options;
+    if (this.options.range && key === 0) {
+      const distanceToMax = max - value;
+      const distanceToMin = value - min;
+      distanceToMax < distanceToMin && (options.isPriority = true);
+    }
 
-    values.forEach((value, index: number) => {
-      const individualProps: PThumbOptions = {};
-      const position = convertSliderUnitToPercent({ min, max, value });
-
-      individualProps.key = String(index);
-      individualProps.position = `${position}%`;
-      individualProps.value = value;
-      isDefined(active) && (active === index) && (individualProps.isActive = true);
-
-      new Thumb({ ...props, ...individualProps } as ThumbOptions);
-    });
+    return options as IThumbOptions;
   }
 
-  private createBar(): void {
-    if (!this.options.bar) return;
-
-    const {
-      min,
-      max,
-      values,
-      range,
-      vertical,
-    } = this.options;
-
-    const props: PBarOptions = { parent: this.element, vertical };
+  private generateBarOptions(): IBarOptions {
+    const { min, max, range } = this.options;
+    const [from, to] = this.options.values;
+    const options: IPBarOptions = {};
     let shift;
 
     const length = range
-      ? (100 / (max - min)) * (values[1] - values[0])
-      : convertSliderUnitToPercent({ min, max, value: values[0] });
+      ? convertToPercent({ min, max, value: to - from + min })
+      : convertToPercent({ min, max, value: from });
 
-    if (!length) return;
+    range && (shift = convertToPercent({ min, max, value: from }));
 
-    range && (shift = convertSliderUnitToPercent({ min, max, value: values[0] }));
+    options.className = this.options.className;
+    options.vertical = this.options.vertical;
+    options.length = `${length}%`;
+    shift && (options.shift = `${shift}%`);
 
-    props.length = `${length}%`;
-    shift && (props.shift = `${shift}%`);
-
-    new Bar(props as BarOptions);
-  }
-
-  private handleClick(event: MouseEvent): void {
-    const client = this.options.vertical ? event.clientY : event.clientX;
-    const bound = this.options.vertical
-      ? this.element.getBoundingClientRect().y
-      : this.element.getBoundingClientRect().x;
-
-    const position = client - bound;
-
-    this.element.dispatchEvent(new CustomEvent(EVENT_THUMBMOVE, {
-      detail: { position, element: this.element },
-      bubbles: true,
-    }));
-  }
-
-  private addListener(): void {
-    this.element.addEventListener('click', this.handleClick.bind(this));
-  }
-
-  private addToParent(): void {
-    this.element.dataset.name = 'track';
-    this.options.parent.append(this.element);
+    return options as IBarOptions;
   }
 }
 

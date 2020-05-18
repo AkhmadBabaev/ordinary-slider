@@ -1,0 +1,69 @@
+.num-field {
+  --field-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 0%));
+
+  max-width: 100%;
+  height: 2em;
+  border: .1em solid var(--field-color);
+  position: relative;
+
+  &:focus-within {
+    box-shadow: 0 0 0.3em 0.06em var(--field-color);
+  }
+
+  &__label {
+    display: inline-block;
+    color: #fff;
+    background-color: var(--field-color);
+    white-space: nowrap;
+    height: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+  }
+
+  &__title {
+    user-select: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-left: 1em;
+    padding-right: 1.1em;
+  }
+
+  &__input {
+    font-size: 0.812em;
+    color: var(--field-color);
+    background-color: #fff;
+    height: 100%;
+    width: 6em;
+    border: 0;
+    padding: .4em .4em .4em .8em;
+    outline: 0;
+    box-sizing: border-box;
+
+    &::selection {
+      color: #fff;
+      background-color: var(--field-color);
+    }
+  }
+
+  &__input:disabled ~ &__disable-cover {
+    display: block;
+  }
+
+  &__disable-cover {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      white 0,
+      white .5em,
+      var(--field-color) .5em,
+      var(--field-color) 1em
+    );
+    opacity: .5;
+    cursor: auto;
+  }
+}

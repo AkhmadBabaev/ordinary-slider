@@ -1,11 +1,13 @@
-export interface ThumbOptions {
-  parent: HTMLElement;
-  isActive?: boolean;
+import { IComponentOptions } from '../Component/Interface';
+
+export interface IThumbOptions extends IComponentOptions {
+  isActive: boolean;
   vertical: boolean;
+  isPriority?: boolean;
   tip: boolean;
-  value: number;
   position: string;
-  key?: string;
+  value: number;
+  key?: number;
 }
 
-export type PThumbOptions = Partial<ThumbOptions>;
+export type IPThumbOptions = Partial<IThumbOptions>;

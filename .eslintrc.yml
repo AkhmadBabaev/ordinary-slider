@@ -12,6 +12,8 @@ overrides:
     rules:
       "@typescript-eslint/no-explicit-any": off
       "@typescript-eslint/ban-ts-ignore": off
+      "@typescript-eslint/no-non-null-assertion": off
+      "@typescript-eslint/interface-name-prefix": off
 
 parser: "@typescript-eslint/parser"
 
@@ -42,9 +44,10 @@ rules:
     - error
     - devDependencies: true
 
-  no-console:
-    - error
-    - allow:
-      - warn
-
   no-new: off
+
+  indent: off
+
+  class-methods-use-this: off
+
+  import/extensions: off

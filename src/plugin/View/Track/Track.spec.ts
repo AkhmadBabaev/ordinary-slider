@@ -1,56 +1,56 @@
-import Track from './Track';
-import Simple from '../Templates/Simple/Simple';
-
-import { TrackOptions } from './Interfaces';
-
 import { hasChild } from '../../helpers/helpers';
+import Track from './Track';
+import { ITrackOptions } from './Interfaces';
 
-const options: TrackOptions = {
-  parent: document.body,
+document.body.innerHTML = '<div id="test"></div>';
+const testElement = document.body.querySelector('#test') as HTMLElement;
+
+const options: ITrackOptions = {
   activeThumbIndex: 0,
   vertical: false,
   range: false,
   tip: false,
-  bar: true,
-  values: [10, 50],
+  bar: false,
+  values: [70, 90],
   min: 0,
   max: 100,
 };
 
-let track: Track;
-
 describe('Track', () => {
-  beforeEach(() => { track = new Track(options as TrackOptions); });
+  let trackElement: HTMLElement;
 
-  test('is an instance of class Simple', () => expect(track).toBeInstanceOf(Simple));
+  beforeEach(() => {
+    testElement.innerHTML = `${new Track(options)}`;
+    trackElement = testElement.querySelector(`.${options.className}__track`) as HTMLElement;
+  });
 
-  test('should be added to parent', () => {
-    expect(hasChild(track.getOptions().parent, track.getElement())).toBeTruthy();
+  test('is valid HTML', () => {
+    expect(hasChild(testElement, trackElement)).toBeTruthy();
   });
 
   test('contains a thumb element if range set as false', () => {
-    const thumb = track.getElement().querySelector('.o-slider__thumb') as HTMLElement;
-    expect(hasChild(track.getElement(), thumb)).toBeTruthy();
+    const thumb = trackElement.querySelector(`.${options.className}__thumb`)!;
+    expect(hasChild(trackElement, thumb)).toBeTruthy();
   });
 
   test('contains 2 thumbs elements if range set as true', () => {
-    track.render({ ...track.getOptions(), range: true });
+    testElement.innerHTML = `${new Track({ ...options, range: true })}`;
+    trackElement = testElement.querySelector(`.${options.className}__track`) as HTMLElement;
 
-    const thumbs = track.getElement().querySelectorAll('.o-slider__thumb');
-    thumbs.forEach((thumb) => {
-      expect(hasChild(track.getElement(), thumb as HTMLElement)).toBeTruthy();
-    });
-  });
-
-  test('contains element bar if bar set as true', () => {
-    const bar = track.getElement().querySelector('.o-slider__bar') as HTMLElement;
-    expect(hasChild(track.getElement(), bar)).toBeTruthy();
+    const thumbs = trackElement.querySelectorAll(`.${options.className}__thumb`);
+    thumbs.forEach((thumb) => expect(hasChild(trackElement, thumb)).toBeTruthy());
   });
 
   test('shouldn\'t contain element bar if bar set as false', () => {
-    track.render({ ...track.getOptions(), bar: false });
+    const isBarFounded = !!trackElement.querySelector(`.${options.className}__bar`);
+    expect(isBarFounded).toBeFalsy();
+  });
 
-    const bar = track.getElement().querySelector('.o-slider__bar') as HTMLElement;
-    expect(hasChild(track.getElement(), bar)).toBeFalsy();
+  test('contains element bar if bar set as true', () => {
+    testElement.innerHTML = `${new Track({ ...options, bar: true })}`;
+    trackElement = testElement.querySelector(`.${options.className}__track`) as HTMLElement;
+
+    const barElement = trackElement.querySelector(`.${options.className}__bar`)!;
+    expect(hasChild(trackElement, barElement)).toBeTruthy();
   });
 });

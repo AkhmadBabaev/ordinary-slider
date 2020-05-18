@@ -1,97 +1,25 @@
-import Simple from '../Templates/Simple/Simple';
-import Tip from '../Tip/Tip';
+import Component from '../Component/Component';
+import { IThumbOptions } from './Interfaces';
 
-import { ThumbOptions } from './Interfaces';
+class Thumb extends Component<IThumbOptions> {
+  protected render(options: IThumbOptions): string {
+    const side = options.vertical ? 'bottom' : 'left';
+    const componentClass = `${options.className}__thumb`;
 
-import { throttle } from '../../helpers/helpers';
+    let classes = componentClass;
+    classes += ` js-${componentClass}`;
+    options.isActive && (classes += ` ${componentClass}_type_active`);
+    options.isPriority && (classes += ` ${componentClass}_type_priority`);
 
-import { EVENT_THUMBMOVE, EVENT_THUMBSTOP } from '../constants';
+    return `
+      <div
+        class='${classes}'
+        style='${side}: ${options.position}'
+        data-key=${options.key}>
 
-class Thumb extends Simple<ThumbOptions> {
-  public render(options: ThumbOptions): void {
-    this.options = options;
-
-    this.createElement('div', { class: 'o-slider__thumb' });
-    this.createTip();
-
-    this.setPosition();
-    this.setKey();
-    this.setActive();
-
-    this.addListeners();
-    this.addToParent();
-  }
-
-  private setPosition(): void {
-    const side = this.options.vertical ? 'bottom' : 'left';
-    this.element.style[side] = this.options.position;
-  }
-
-  private createTip(): void {
-    if (!this.options.tip) return;
-    new Tip({ value: this.options.value, parent: this.element });
-  }
-
-  private handleMouseDown(mouseDownEvent: MouseEvent): void {
-    // if it isn't left click
-    if (!(mouseDownEvent.which === 1)) return;
-
-    const target = mouseDownEvent.target as HTMLElement;
-    const { offsetX, offsetY } = mouseDownEvent;
-
-    this.element.dataset.active = 'true';
-    document.body.classList.add('o-slider-grabbed');
-
-    const { parent, vertical } = this.options;
-
-    const targetLength = vertical ? target.clientHeight : target.clientWidth;
-    const offset = vertical ? offsetY : offsetX;
-    const shift = offset - (targetLength / 2);
-    const parentBound = vertical
-      ? parent.getBoundingClientRect().y
-      : parent.getBoundingClientRect().x;
-
-    const handleMouseMove = throttle((event: MouseEvent): void => {
-      const client = vertical ? event.clientY : event.clientX;
-      const position = client - parentBound - shift;
-
-      this.element.dispatchEvent(new CustomEvent(EVENT_THUMBMOVE, {
-        detail: { position, element: this.element },
-        bubbles: true,
-      }));
-    }, 40);
-
-    const handleMouseUp = (): void => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-
-      document.body.classList.remove('o-slider-grabbed');
-
-      this.element.removeAttribute('data-active');
-      this.element.dispatchEvent(new CustomEvent(EVENT_THUMBSTOP, { bubbles: true }));
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-
-    mouseDownEvent.preventDefault();
-  }
-
-  private setKey(): void {
-    this.element.dataset.key = this.options.key;
-  }
-
-  private setActive(): void {
-    this.options.isActive && (this.element.dataset.active = 'true');
-  }
-
-  private addListeners(): void {
-    this.element.addEventListener('mousedown', this.handleMouseDown.bind(this));
-  }
-
-  private addToParent(): void {
-    this.element.dataset.name = 'thumb';
-    this.options.parent.append(this.element);
+        ${options.tip ? `<div class=${options.className}__tip>${options.value}</div>` : ''}
+      </div>
+    `;
   }
 }
 

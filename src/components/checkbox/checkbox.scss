@@ -1,0 +1,47 @@
+.checkbox {
+  --checkbox-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 0%));
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus &__toggler {
+    box-shadow: 0 0 0.3em 0.06em var(--checkbox-color);
+  }
+
+  &__label {
+    color: var(--checkbox-color);
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  &__input { display: none; }
+
+  &__input:checked ~ &__toggler:before {
+    margin-left: auto;
+  }
+
+  &__title {
+    margin-right: 1em;
+    cursor: pointer;
+  }
+
+  &__toggler {
+    background-color: var(--checkbox-color);
+    height: 2em;
+    width: 5em;
+    border: .1em solid var(--checkbox-color);
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &:before {
+      content: '';
+      background-color: #fff;
+      display: block;
+      width: 50%;
+      height: 100%;
+    }
+  }
+}

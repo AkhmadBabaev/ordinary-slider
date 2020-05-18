@@ -4,6 +4,49 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2020-05-18
+
+### Added
+
+- Mobile support.
+- Scale of values.
+
+### Removed
+
+- Request animation frame everywhere.
+
+### Fixed
+
+- Issue [#45](https://github.com/AkhmadBabaev/ordinary-slider/issues/45).
+- Issue [#43](https://github.com/AkhmadBabaev/ordinary-slider/issues/43).
+- Issue [#42](https://github.com/AkhmadBabaev/ordinary-slider/issues/42).
+- Issue [#41](https://github.com/AkhmadBabaev/ordinary-slider/issues/41).
+- Issue [#39](https://github.com/AkhmadBabaev/ordinary-slider/issues/39).
+- Issue [#38](https://github.com/AkhmadBabaev/ordinary-slider/issues/38).
+- Issue [#36](https://github.com/AkhmadBabaev/ordinary-slider/issues/36).
+- Issue [#33](https://github.com/AkhmadBabaev/ordinary-slider/issues/33).
+- Issue [#32](https://github.com/AkhmadBabaev/ordinary-slider/issues/32).
+- Issue [#31](https://github.com/AkhmadBabaev/ordinary-slider/issues/31).
+- Issue [#30](https://github.com/AkhmadBabaev/ordinary-slider/issues/30).
+- Issue [#28](https://github.com/AkhmadBabaev/ordinary-slider/issues/28).
+- Issue [#27](https://github.com/AkhmadBabaev/ordinary-slider/issues/27).
+- Issue [#26](https://github.com/AkhmadBabaev/ordinary-slider/issues/26).
+- Issue [#24](https://github.com/AkhmadBabaev/ordinary-slider/issues/24).
+- Issue [#23](https://github.com/AkhmadBabaev/ordinary-slider/issues/23).
+- Issue [#22](https://github.com/AkhmadBabaev/ordinary-slider/issues/22).
+- Issue [#21](https://github.com/AkhmadBabaev/ordinary-slider/issues/21).
+- Issue [#20](https://github.com/AkhmadBabaev/ordinary-slider/issues/20).
+- Issue [#19](https://github.com/AkhmadBabaev/ordinary-slider/issues/19).
+- Issue [#17](https://github.com/AkhmadBabaev/ordinary-slider/issues/17).
+- Issue [#16](https://github.com/AkhmadBabaev/ordinary-slider/issues/16).
+- Issue [#15](https://github.com/AkhmadBabaev/ordinary-slider/issues/15).
+
+### Security
+
+- Vulnerable dependencies:
+    - kind-of
+    - acorn
+
 ## [3.1.0] - 2020-03-28
 
 ### Added
@@ -70,6 +113,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 First working release.
 
+[3.2.0]: https://github.com/AkhmadBabaev/ordinary-slider/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/AkhmadBabaev/ordinary-slider/compare/3.0.1...3.1.0
 [3.0.1]: https://github.com/AkhmadBabaev/ordinary-slider/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/AkhmadBabaev/ordinary-slider/compare/2.0.0...3.0.0

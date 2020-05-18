@@ -7,16 +7,6 @@ module.exports = merge(common, {
   mode: 'production',
   module: {
     rules: [
-      // Scripts
-
-      {
-        enforce: 'pre',
-        test: /\.(ts|js)$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        options: { failOnError: true },
-      },
-
       // Styles
 
       {

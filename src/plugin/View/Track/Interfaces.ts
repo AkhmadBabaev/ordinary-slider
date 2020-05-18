@@ -1,11 +1,14 @@
-export interface TrackOptions {
-  parent: HTMLElement;
+import { IComponentOptions } from '../Component/Interface';
+
+export interface ITrackOptions extends IComponentOptions {
+  vertical: boolean;
+  range: boolean;
+  bar: boolean;
+  tip: boolean;
   min: number;
   max: number;
   values: number[];
-  tip: boolean;
-  bar: boolean;
-  range: boolean;
-  vertical: boolean;
-  activeThumbIndex?: number;
+  activeThumbIndex: number;
 }
+
+export type IPTrackOptions = Partial<ITrackOptions>;

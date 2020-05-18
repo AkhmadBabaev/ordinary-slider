@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
     "target": "ES5",
+    "lib": ["ES2015", "DOM"],
     "module": "commonjs",
     "strict": true,
     "allowJs": true,
     "sourceMap": true,
     "strictPropertyInitialization": false,
-    "outDir": "docs"
+    "experimentalDecorators": true,
+    "outDir": "docs",
+    "baseUrl": "src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@favicons/*": ["favicons/*"],
+    },
   }
 }

@@ -1,34 +1,17 @@
-import Simple from '../Templates/Simple/Simple';
+import Component from '../Component/Component';
+import { IBarOptions } from './Interfaces';
 
-import { BarOptions } from './Interfaces';
+class Bar extends Component<IBarOptions> {
+  protected render(options: IBarOptions): string {
+    const dimension = options.vertical ? 'height' : 'width';
+    const side = options.vertical ? 'bottom' : 'left';
 
-import { isDefined } from '../../helpers/helpers';
-
-class Bar extends Simple<BarOptions> {
-  public render(options: BarOptions): void {
-    this.options = options;
-
-    this.createElement('div', { class: 'o-slider__bar' });
-    this.setLength();
-    this.setShift();
-
-    this.addToParent();
-  }
-
-  private setLength(): void {
-    const dimension = this.options.vertical ? 'height' : 'width';
-    this.element.style[dimension] = this.options.length;
-  }
-
-  private setShift(): void {
-    if (!isDefined(this.options.shift)) return;
-
-    const side = this.options.vertical ? 'bottom' : 'left';
-    this.element.style[side] = this.options.shift as string;
-  }
-
-  private addToParent(): void {
-    this.options.parent.prepend(this.element);
+    return `
+      <div
+        class=${options.className}__bar
+        style='${dimension}: ${options.length}; ${side}: ${options.shift || 0}'>
+      </div>
+    `;
   }
 }
 

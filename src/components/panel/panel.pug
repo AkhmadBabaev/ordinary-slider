@@ -1,29 +1,31 @@
-mixin panel({ additionalClasses, mods, styles, options = {} } = {})
+include /components/num-field/num-field
+include /components/checkbox/checkbox
+include /components/slider/slider
+
+mixin panel({ hue = 255, saturation = "10%", lightness = "40%", min = 0, max = 100, step = 1, from = 0, to, tip = false, bar = false, scale = false, interval = false, direction = "horizontal" } = {})
   -
-    const className = 'panel';
-    const classes = generateClassList({ className, mods, additionalClasses });
-    const data = require('./components/panel/data.json');
+    const className = "panel";
+    const data = require("@components/panel/data.json");
 
     const sliderClass = `${className}__slider`;
     const fieldClass = `${className}__field`;
     const checkboxClass = `${className}__checkbox`;
 
+  div(
+    class = `${className} js-${className}`
+    style = `--h: ${hue}; --s: ${saturation}; --l: ${lightness}`
+  )
+    div(class = `${sliderClass} js-${sliderClass}`)
+      +slider({ min, max, step, from, to, tip, bar, scale, interval, direction })
 
-  div(class= `${classes} js-${className}` style= styles)
-    +slider({ additionalClasses: `${sliderClass} js-${sliderClass}`, options })
+    div(class = `${className}__raw`)
 
-    div(class= `${className}__raw`)
-      each field in data.fields
-        +num-field({
-          additionalClasses: `${fieldClass} js-${fieldClass}`,
-          title: field.title,
-          name: field.name,
-        })
+      each fieldData in data.fields
+        div(class = `${fieldClass} js-${fieldClass}`)
+          +num-field(fieldData)
 
-    div(class= `${className}__raw`)
-      each checkbox in data.checkboxes
-        +checkbox({
-          additionalClasses: `${checkboxClass} js-${checkboxClass}`,
-          title: checkbox.title,
-          name: checkbox.name,
-        })
+    div(class = `${className}__raw`)
+
+      each checkboxData in data.checkboxes
+        div(class = `${checkboxClass} js-${checkboxClass}`)
+          +checkbox(checkboxData)

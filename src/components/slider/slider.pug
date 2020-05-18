@@ -1,17 +1,16 @@
-mixin slider({ additionalClasses, mods, options = {} } = {})
-  -
-    const className = 'o-slider';
-    const classes = generateClassList({ className, mods, additionalClasses })
+mixin slider({ min = 0, max = 100, step = 1, from = 0, to = null, tip = false, bar = false, scale = false, interval = false, direction = "horizontal" } = {})
+  - const className = "o-slider";
 
   div(
-    class= classes
-    data-min= options.min
-    data-max= options.max
-    data-step= options.step
-    data-from= options.from
-    data-to= options.to
-    data-tip= options.tip
-    data-bar= options.bar
-    data-range= options.range
-    data-vertical= options.vertical
+    class = className
+    data-min = min
+    data-max = max
+    data-step = step
+    data-from = from
+    data-to = to
+    data-tip = tip
+    data-bar = bar
+    data-scale = scale
+    data-range = interval
+    data-vertical = `${direction === "vertical"}`
   )

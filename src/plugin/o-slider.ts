@@ -1,9 +1,5 @@
-import Model from './Model/Model';
-import View from './View/View';
+import { IState, IPState } from './Model/Interfaces';
 import Presenter from './Presenter/Presenter';
-
-import { State, PState } from './Model/Interfaces';
-
 import { isObject, isDefined } from './helpers/helpers';
 
 declare global {
@@ -13,57 +9,50 @@ declare global {
 
   interface JQuery {
     oSlider: (
-      ...params: [(PState | string)?, (PState | Function)?],
-    ) => JQuery<object> | JQuery<HTMLElement> | State;
+      ...params: [(IPState | string)?, (IPState | Function)?],
+    ) => JQuery<object> | JQuery<HTMLElement> | IState;
   }
 }
 
 (function selfInvokingFunction($): void {
   function init(
     this: JQuery,
-    options: PState = {},
-    $firstElement: JQuery<HTMLElement>,
+    options: IPState = {},
+    $firstItemFound: JQuery<HTMLElement>,
   ): void {
-    if (!this.length) {
-      throw new ReferenceError('Connection to non-existent element');
-    }
+    if (!this.length) throw new ReferenceError('Connection to non-existent element');
+    if (!isObject(options)) throw new TypeError('oSlider configuration should be an object');
 
-    if (!isObject(options)) {
-      throw new TypeError('oSlider configuration should be an object');
-    }
+    const sliderElement = $firstItemFound[0];
+    const dataFromAttributes = $(sliderElement).data();
+    const presenter = new Presenter(sliderElement, { ...options, ...dataFromAttributes });
 
-    const htmlElement = $firstElement[0];
-    const data = $(htmlElement).data();
-    const model: Model = new Model({ ...options, ...data });
-    const view: View = new View(htmlElement, model.getState());
-    const presenter = new Presenter(model, view);
-
-    $firstElement.data('oSlider', presenter);
+    $firstItemFound.data('oSlider', presenter);
   }
 
   // eslint-disable-next-line no-param-reassign
   $.fn.oSlider = function oSlider(
-    ...params: [(PState | string)?, (PState | Function)?]
-  ): JQuery<object> | JQuery<HTMLElement> | State {
-    const $firstElement = $(this).first();
+    ...params: [(IPState | string)?, (IPState | Function)?]
+  ): JQuery<object> | JQuery<HTMLElement> | IState {
+    const $firstItemFound = $(this).first();
 
-    if (!arguments.length) {
-      const settings = params[0] as PState;
-      init.call(this, settings, $firstElement);
+    if (!$firstItemFound.data('oSlider')) {
+      const settings = params[0] as IPState;
+      init.call(this, settings, $firstItemFound);
       return $(this).first();
     }
 
-    if (!(typeof params[0] === 'string')) throw new TypeError('oSlider methodd name should be a string');
+    if (!(typeof params[0] === 'string')) throw new TypeError('oSlider method name should be a string');
     const method = params[0];
     const options = params[1];
 
     switch (method) {
       case 'settings':
-        if (!isDefined(options)) return $firstElement.data('oSlider').getState() as State;
-        $firstElement.data('oSlider').setState(options as PState); break;
-      case 'subscribe': $firstElement.data('oSlider').subscribe(options as Function); break;
-      case 'unsubscribe': $firstElement.data('oSlider').unsubscribe(options as Function); break;
-      default: break;
+        if (!isDefined(options)) return $firstItemFound.data('oSlider').getState() as IState;
+        $firstItemFound.data('oSlider').setState(options as IPState); break;
+      case 'subscribe': $firstItemFound.data('oSlider').subscribe(options as Function); break;
+      case 'unsubscribe': $firstItemFound.data('oSlider').unsubscribe(options as Function); break;
+      default: throw new Error(`${method} isn't found`);
     }
 
     return $(this).first();
