@@ -66,11 +66,11 @@ describe('View Events', () => {
     thumbElement.dispatchEvent(new TouchEvent('touchend', { bubbles: true }));
   });
 
-  test('should add BEM modifier "type_active" to a thumb element when the element get mousedown event', () => {
+  test('should add BEM modifier "activated" to a thumb element when the element get mousedown event', () => {
     const thumbElement = sliderElement.querySelector('.js-o-slider__thumb')!;
     thumbElement.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
 
-    expect(thumbElement.classList.contains('o-slider__thumb_type_active')).toBeTruthy();
+    expect(thumbElement.classList.contains('o-slider__thumb_activated')).toBeTruthy();
     document.dispatchEvent(new MouseEvent('mouseup'));
   });
 

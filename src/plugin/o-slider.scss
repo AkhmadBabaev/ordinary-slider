@@ -79,12 +79,12 @@
 
     cursor: pointer;
 
-    &_type_active {
+    &_activated {
       --slider-color: var(--slider-color-dark);
       z-index: 10;
     }
 
-    &_type_priority {
+    &_priority {
       z-index: 5;
     }
   }

@@ -68,7 +68,7 @@ class EventsHandlers {
     const thumbElement = target.closest(`.js-${this.view.className}__thumb`) as HTMLElement;
     if (!thumbElement) return;
 
-    thumbElement.classList.add(`${this.view.className}__thumb_type_active`);
+    thumbElement.classList.add(`${this.view.className}__thumb_activated`);
     this.cover('on');
     this.isGrabbed = true;
 
@@ -136,7 +136,7 @@ class EventsHandlers {
     const thumbElement = target.closest(`.js-${this.view.className}__thumb`) as HTMLElement;
     if (!thumbElement) return;
 
-    thumbElement.classList.add(`${this.view.className}__thumb_type_active`);
+    thumbElement.classList.add(`${this.view.className}__thumb_activated`);
     this.isGrabbed = true;
 
     const { vertical } = this.view.getOptions();
@@ -242,7 +242,7 @@ class EventsHandlers {
   }
 
   private deleteActiveThumbMod(): void {
-    const activeClass = `${this.view.className}__thumb_type_active`;
+    const activeClass = `${this.view.className}__thumb_activated`;
     this.view.root.querySelector(`.${activeClass}`)?.classList.remove(activeClass);
   }
 
