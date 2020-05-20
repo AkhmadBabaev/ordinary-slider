@@ -98,7 +98,11 @@ class View extends Observable {
   public createElements(): void {
     this.root.innerHTML = `
       ${create('track', this.generateTrackOptions())}
-      ${this.options.scale ? create('scale', this.generateScaleOptions()) : ''}
+      ${this.options.scale ? `
+        <div class=${this.className}__scale>
+          ${create('scale', this.generateScaleOptions())}
+        </div>
+      ` : ''}
     `;
   }
 
@@ -133,8 +137,8 @@ class View extends Observable {
   }
 
   private generateScaleOptions(): IScaleOptions {
-    const optionsList = ['vertical', 'min', 'max', 'step', 'className'];
-    const options: IPScaleOptions = propertyFilter({ ...this, ...this.options }, optionsList);
+    const optionsList = ['vertical', 'min', 'max', 'step'];
+    const options: IPScaleOptions = propertyFilter(this.options, optionsList);
     const { fontSize, lineHeight } = getComputedStyle(this.root);
 
     options.scaleLength = this.getSliderLength();

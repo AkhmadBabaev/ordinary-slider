@@ -6,7 +6,6 @@ document.body.innerHTML = '<div id="test"></div>';
 const testElement = document.body.querySelector('#test')!;
 
 const options: IScaleOptions = {
-  className: 'o-slider',
   vertical: false,
   min: 0,
   max: 100,

@@ -13,11 +13,9 @@ class Scale extends Component<IScaleOptions> {
     options.vertical
       ? (classes += ` ${componentClass}_direction_vertical`)
       : (classes += ` ${componentClass}_direction_horizontal`);
-    options.className && (classes += ` ${options.className}__${componentClass}`);
 
     return `
       <div class='${classes}'>
-
         ${points.map((key) => `
           <span
             class='${componentClass}__item js-${componentClass}__item'
@@ -25,7 +23,6 @@ class Scale extends Component<IScaleOptions> {
               ${key}
           </span>
         `).join('')}
-
       </div>
     `;
   }
