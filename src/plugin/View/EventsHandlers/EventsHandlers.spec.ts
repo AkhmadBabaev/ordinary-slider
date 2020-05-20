@@ -77,7 +77,7 @@ describe('View Events', () => {
   describe('window cover element', () => {
     const thumbElement = sliderElement.querySelector('.js-o-slider__thumb')!;
     thumbElement.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, button: 0 }));
-    const coverElement = document.body.querySelector('.o-slider__window-cover') as HTMLElement;
+    const coverElement = document.body.querySelector('.o-slider-window-cover') as HTMLElement;
 
     test('should be created when a thumb get mousedown event', () => {
       expect(!!coverElement).toBeTruthy();

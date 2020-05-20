@@ -224,7 +224,7 @@ class EventsHandlers {
 
   private cover(state: 'on' | 'off'): void {
     const { body } = document;
-    const className = `${this.view.className}__window-cover`;
+    const className = `${this.view.className}-window-cover`;
     !this.coverElement && (this.coverElement = body.querySelector(`.${className}`) as HTMLElement);
 
     if (state === 'on') {
