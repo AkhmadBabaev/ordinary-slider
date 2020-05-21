@@ -12,6 +12,7 @@ document.body.innerHTML = `
 
 describe('Checkbox', () => {
   const checkbox = new Checkbox(document.body.querySelector('.checkbox') as HTMLElement);
+  checkbox.apply();
 
   test('getElement should return an element', () => {
     expect(checkbox.getElement()).toBeInstanceOf(HTMLElement);

@@ -27,10 +27,14 @@ class CheckBox {
     this.titleElement.textContent = title;
   }
 
+  @boundMethod
+  public apply(): void {
+    this.addListeners();
+  }
+
   private init(): void {
     this.input = this.checkboxElement.querySelector('.js-checkbox__input') as HTMLInputElement;
     this.titleElement = this.checkboxElement.querySelector('.js-checkbox__title') as HTMLElement;
-    this.addListeners();
   }
 
   @boundMethod

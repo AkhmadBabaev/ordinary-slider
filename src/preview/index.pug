@@ -19,6 +19,6 @@ block append scripts
   script(src = "index.min.js")
 
 block append page-content
-  - const data = require("./data.json");
+  - const { panels } = require("./data.json");
 
-  +panel-list(data.panels)
+  +panel-list(panels)

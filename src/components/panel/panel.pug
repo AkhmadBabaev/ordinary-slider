@@ -5,7 +5,7 @@ include /components/slider/slider
 mixin panel({ hue = 255, saturation = "10%", lightness = "40%", min = 0, max = 100, step = 1, from = 0, to, tip = false, bar = false, scale = false, interval = false, direction = "horizontal" } = {})
   -
     const className = "panel";
-    const data = require("@components/panel/data.json");
+    const { fields, checkboxes } = require("@components/panel/data.json");
 
     const sliderClass = `${className}__slider`;
     const fieldClass = `${className}__field`;
@@ -20,12 +20,12 @@ mixin panel({ hue = 255, saturation = "10%", lightness = "40%", min = 0, max = 1
 
     div(class = `${className}__raw`)
 
-      each fieldData in data.fields
+      each fieldData in fields
         div(class = `${fieldClass} js-${fieldClass}`)
           +num-field(fieldData)
 
     div(class = `${className}__raw`)
 
-      each checkboxData in data.checkboxes
+      each checkboxData in checkboxes
         div(class = `${checkboxClass} js-${checkboxClass}`)
           +checkbox(checkboxData)

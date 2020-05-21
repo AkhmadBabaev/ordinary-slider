@@ -1,5 +1,5 @@
 import '../../plugin/o-slider';
-import Panel from './panel';
+import Panel from './Panel';
 
 document.body.innerHTML = `
   <div class="js-panel">

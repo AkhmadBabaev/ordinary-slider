@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const ip = require('ip');
 const portUsed = require('port-used');
+
 const packageJson = require('../package.json');
 
 /**

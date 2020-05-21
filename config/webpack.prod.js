@@ -1,6 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
 const merge = require('webpack-merge');
+
 const common = require('./webpack.common');
 
 module.exports = merge(common, {
@@ -12,7 +12,7 @@ module.exports = merge(common, {
       {
         test: /\.css$/,
         use: [
-          { loader: MiniCssExtractPlugin.loader, options: { publicPath: '../' } },
+          { loader: MiniCssExtractPlugin.loader },
           { loader: 'css-loader' },
           { loader: 'postcss-loader' },
         ],
@@ -21,7 +21,7 @@ module.exports = merge(common, {
       {
         test: /\.(sa|sc)ss$/,
         use: [
-          { loader: MiniCssExtractPlugin.loader, options: { publicPath: '../' } },
+          { loader: MiniCssExtractPlugin.loader },
           { loader: 'css-loader' },
           { loader: 'postcss-loader' },
           { loader: 'resolve-url-loader' },

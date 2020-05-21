@@ -89,10 +89,10 @@ function throttle(fn: Function, wait: number): () => void {
 }
 
 function debounce(fn: Function, wait: number): () => void {
-  let timer: NodeJS.Timer;
+  let timer: number;
   return (...params: unknown[]): void => {
     clearTimeout(timer);
-    timer = setTimeout(() => fn(...params), wait);
+    timer = window.setTimeout(() => fn(...params), wait);
   };
 }
 
