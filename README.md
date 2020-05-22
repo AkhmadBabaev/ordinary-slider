@@ -46,15 +46,13 @@ yarn add ordinary-slider
 #####  ES2015+
 
 ```javascript
-import 'ordinary-slider/docs/o-slider.min';
-import 'ordinary-slider/docs/o-slider.min.css';
+import 'ordinary-slider;
 ```
 
 #### CommonJS
 
 ```javascript
-require('ordinary-slider/docs/o-slider.min');
-require('ordinary-slider/docs/o-slider.min.css');
+require('ordinary-slider');
 ```
 
 ### Инициализация 

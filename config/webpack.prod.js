@@ -20,8 +20,26 @@ module.exports = merge(common, {
 
       {
         test: /\.(sa|sc)ss$/,
+        exclude: /o-slider\.scss$/,
         use: [
           { loader: MiniCssExtractPlugin.loader },
+          { loader: 'css-loader' },
+          { loader: 'postcss-loader' },
+          { loader: 'resolve-url-loader' },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              sourceMapContents: false,
+            },
+          },
+        ],
+      },
+
+      {
+        test: /o-slider\.scss$/,
+        use: [
+          { loader: 'style-loader' },
           { loader: 'css-loader' },
           { loader: 'postcss-loader' },
           { loader: 'resolve-url-loader' },
