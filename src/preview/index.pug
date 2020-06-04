@@ -2,7 +2,7 @@ extends /components/page/page
 include /components/panel-list/panel-list
 
 block append variables
-  - const title = "Ordinary slider preview";
+  - const title = 'Ordinary slider preview';
 
 block append head
   if isProdEnv
@@ -18,6 +18,6 @@ block append scripts
   script(src = "index.min.js")
 
 block append page-content
-  - const { panels } = require("./data.json");
+  - const { panels } = require('./data.json');
 
   +panel-list(panels)

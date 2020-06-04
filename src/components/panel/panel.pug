@@ -2,10 +2,10 @@ include /components/num-field/num-field
 include /components/checkbox/checkbox
 include /components/slider/slider
 
-mixin panel({ hue = 255, saturation = "10%", lightness = "40%", min = 0, max = 100, step = 1, from = 0, to, tip = false, bar = false, scale = false, interval = false, direction = "horizontal" } = {})
+mixin panel({ hue = 255, saturation = '10%', lightness = '40%', min = 0, max = 100, step = 1, from = 0, to, tip = false, bar = false, scale = false, interval = false, direction = 'horizontal' } = {})
   -
-    const className = "panel";
-    const { fields, checkboxes } = require("@components/panel/data.json");
+    const className = 'panel';
+    const { fields, checkboxes } = require('@components/panel/data.json');
 
     const sliderClass = `${className}__slider`;
     const fieldClass = `${className}__field`;
