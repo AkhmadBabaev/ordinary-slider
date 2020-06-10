@@ -33,7 +33,7 @@ module.exports = {
       // Favicons
 
       {
-        test: /\.(png|svg)$/i,
+        test: /\.(png|jpe?g|gif|svg|ico|webmanifest)$/i,
         include: dirs.favicons.path,
         loader: 'file-loader',
         options: { name: '[path][name].[ext]' },
