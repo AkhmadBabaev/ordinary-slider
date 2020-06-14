@@ -1,17 +1,17 @@
 .panel {
   &__slider {
-    margin-bottom: 4.7em;
+    margin-bottom: 4.7rem;
 
     & .o-slider {
       margin-left: auto;
       margin-right: auto;
 
       &_direction_horizontal {
-        max-width: 25em;
+        max-width: 25rem;
       }
 
       &_direction_vertical {
-        height: 18em;
+        height: 18rem;
       }
     }
   }
@@ -22,20 +22,20 @@
     justify-content: center;
 
     & + & {
-      margin-top: 1em;
+      margin-top: 1rem;
     }
   }
 
   &__field {
-    margin: .5em;
+    margin: .5rem;
   }
 
   &__checkbox {
     width: 80%;
-    margin: .8em;
+    margin: .8rem;
     text-align: center;
 
-    @media screen and (min-width: 43.8em) {
+    @media screen and (min-width: 43.8rem) {
       width: auto;
     }
   }

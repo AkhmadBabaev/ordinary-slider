@@ -9,7 +9,7 @@
   &_direction_vertical {
     position: absolute;
     top: 0;
-    left: -1em;
+    left: -1rem;
     height: 100%;
   }
 
@@ -22,10 +22,11 @@
   }
 
   &__item {
-    cursor: pointer;
-    font-size: 0.812em;
+    font-size: .812rem;
     position: absolute;
     user-select: none;
+
+    cursor: pointer;
 
     &:hover {
       font-weight: bold;

@@ -2,12 +2,12 @@
   --field-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 0%));
 
   max-width: 100%;
-  height: 2em;
-  border: .1em solid var(--field-color);
+  height: 2rem;
+  border: .1rem solid var(--field-color);
   position: relative;
 
   &:focus-within {
-    box-shadow: 0 0 0.3em 0.06em var(--field-color);
+    box-shadow: 0 0 .3rem .06rem var(--field-color);
   }
 
   &__label {
@@ -24,18 +24,18 @@
     user-select: none;
     text-overflow: ellipsis;
     overflow: hidden;
-    padding-left: 1em;
-    padding-right: 1.1em;
+    padding-left: 1rem;
+    padding-right: 1.1rem;
   }
 
   &__input {
-    font-size: 0.812em;
+    font-size: .8rem;
     color: var(--field-color);
     background-color: #fff;
     height: 100%;
-    width: 6em;
+    width: 4.87rem;
     border: 0;
-    padding: .4em .4em .4em .8em;
+    padding: .35rem .325rem .325rem .65rem;
     outline: 0;
     box-sizing: border-box;
 
@@ -59,9 +59,9 @@
     background-image: repeating-linear-gradient(
       45deg,
       white 0,
-      white .5em,
-      var(--field-color) .5em,
-      var(--field-color) 1em
+      white .5rem,
+      var(--field-color) .5rem,
+      var(--field-color) 1rem
     );
     opacity: .5;
     cursor: auto;

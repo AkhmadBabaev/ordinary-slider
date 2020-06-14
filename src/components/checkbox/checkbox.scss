@@ -6,7 +6,7 @@
   }
 
   &:focus &__toggler {
-    box-shadow: 0 0 0.3em 0.06em var(--checkbox-color);
+    box-shadow: 0 0 .3rem .06rem var(--checkbox-color);
   }
 
   &__label {
@@ -30,9 +30,9 @@
 
   &__toggler {
     background-color: var(--checkbox-color);
-    height: 2em;
-    width: 5em;
-    border: .1em solid var(--checkbox-color);
+    height: 2rem;
+    width: 5rem;
+    border: .1rem solid var(--checkbox-color);
     box-sizing: border-box;
     cursor: pointer;
 

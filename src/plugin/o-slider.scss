@@ -10,8 +10,8 @@
   position: relative;
 
   &_direction_horizontal {
-    min-width: 12.5em;
-    height: .62em;
+    min-width: 12.5rem;
+    height: .62rem;
   }
 
   &_direction_horizontal &__bar {
@@ -20,21 +20,21 @@
   }
 
   &_direction_horizontal &__thumb {
-    width: .62em;
-    height: 1.6em;
+    width: .62rem;
+    height: 1.6rem;
     bottom: 50%;
     left: 0;
     transform: translate(-50%, 50%);
   }
 
   &_direction_horizontal &__tip {
-    bottom: 2.3em;
+    bottom: 2.1rem;
     transform: translateX(-50%);
   }
 
   &_direction_vertical {
     height: 100%;
-    width: .62em;
+    width: .62rem;
   }
 
   &_direction_vertical &__bar {
@@ -44,8 +44,8 @@
   }
 
   &_direction_vertical &__thumb {
-    height: .62em;
-    width: 1.6em;
+    height: .62rem;
+    width: 1.6rem;
     left: 50%;
     bottom: 0;
     transform: translate(-50%, 50%);
@@ -53,7 +53,7 @@
 
   &_direction_vertical &__tip {
     transform: translateY(-50%);
-    left: 2.3em;
+    left: 2.3rem;
     top: 50%;
   }
 
@@ -90,7 +90,7 @@
   }
 
   &__tip {
-    font-size: .9em;
+    font-size: .9rem;
     color: #fff;
     background-color: var(--slider-color);
 
@@ -98,8 +98,8 @@
     justify-content: center;
     align-items: center;
     width: auto;
-    height: 1.7em;
-    padding: 0 .5em;
+    height: 1.5rem;
+    padding: 0 .45rem;
 
     position: absolute;
 
@@ -108,7 +108,7 @@
   }
 
   &__scale .scale_direction_horizontal {
-    margin-top: 1em;
+    margin-top: 1rem;
   }
 
   &-window-cover {

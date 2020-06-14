@@ -13,8 +13,8 @@
   &__container {
     @include container;
 
-    padding-top: 8em;
-    padding-bottom: 8em;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
     display: flex;
     min-height: 100%;
     flex-direction: column;
