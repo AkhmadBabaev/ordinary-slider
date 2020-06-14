@@ -1,10 +1,7 @@
-include /components/panel/panel
+include ../panel/panel
 
-mixin panel-list(options)
-  - const className = 'panel-list';
-
-  div(class = className)
-
-    each panelData in options
-      div(class = `${className}__panel`)
-        +panel(panelData)
+mixin panel-list(panels)
+  .panel-list
+    each panel in panels
+      .panel-list__panel
+        +panel(panel)

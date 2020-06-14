@@ -1,16 +1,16 @@
 .checkbox {
   --checkbox-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 0%));
+  color: var(--checkbox-color);
 
   &:focus {
     outline: none;
   }
 
   &:focus &__toggler {
-    box-shadow: 0 0 .3rem .06rem var(--checkbox-color);
+    box-shadow: 0 0 .3rem .06rem currentColor;
   }
 
   &__label {
-    color: var(--checkbox-color);
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
@@ -29,10 +29,10 @@
   }
 
   &__toggler {
-    background-color: var(--checkbox-color);
+    background-color: currentColor;
     height: 2rem;
     width: 5rem;
-    border: .1rem solid var(--checkbox-color);
+    border: .1rem solid currentColor;
     box-sizing: border-box;
     cursor: pointer;
 

@@ -1,31 +1,20 @@
-include /components/num-field/num-field
-include /components/checkbox/checkbox
-include /components/slider/slider
+include ../num-field/num-field
+include ../checkbox/checkbox
+include ../slider/slider
 
 mixin panel({ hue = 255, saturation = '10%', lightness = '40%', min = 0, max = 100, step = 1, from = 0, to, tip = false, bar = false, scale = false, interval = false, direction = 'horizontal' } = {})
-  -
-    const className = 'panel';
-    const { fields, checkboxes } = require('@components/panel/data.json');
+  - const { fields, checkboxes } = require('@components/panel/data.json');
 
-    const sliderClass = `${className}__slider`;
-    const fieldClass = `${className}__field`;
-    const checkboxClass = `${className}__checkbox`;
-
-  div(
-    class = `${className} js-${className}`
-    style = `--h: ${hue}; --s: ${saturation}; --l: ${lightness}`
-  )
-    div(class = `${sliderClass} js-${sliderClass}`)
+  .panel.js-panel(style = `--h: ${hue}; --s: ${saturation}; --l: ${lightness}`)
+    .panel__slider.js-panel__slider
       +slider({ min, max, step, from, to, tip, bar, scale, interval, direction })
 
-    div(class = `${className}__raw`)
+    .panel__raw
+      each field in fields
+        .panel__field.js-panel__field
+          +num-field(field)
 
-      each fieldData in fields
-        div(class = `${fieldClass} js-${fieldClass}`)
-          +num-field(fieldData)
-
-    div(class = `${className}__raw`)
-
-      each checkboxData in checkboxes
-        div(class = `${checkboxClass} js-${checkboxClass}`)
-          +checkbox(checkboxData)
+    .panel__raw
+      each checkbox in checkboxes
+        .panel__checkbox.js-panel__checkbox
+          +checkbox(checkbox)

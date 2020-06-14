@@ -1,11 +1,12 @@
-extends /assets/markup-layouts/main
+extends ../../assets/markup-layouts/main
 
 block body
-  - const className = 'page';
 
-  body(class = className)
-    div(class = `${className}__inner`)
-      div(class = `${className}__container`)
+  body.page
+    main.page__main
+      .page__container
+        h1.page__title Ordinary-slider preview
+
         block page-content
 
     block scripts

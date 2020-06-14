@@ -14,7 +14,7 @@
     "lint": "eslint --ext .js,.ts, src",
     "prod": "rimraf ./docs && cross-env NODE_ENV=production webpack --config ./config/webpack.prod.js --progress",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./config/webpack.dev.js",
-    "start": "cross-env NODE_ENV=development webpack-dev-server --open --config ./config/webpack.dev.js",
+    "start": "yarn dev --open",
     "deploy": "gh-pages -d docs"
   },
   "main": "docs/o-slider.min.js",

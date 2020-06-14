@@ -1,8 +1,13 @@
 :root {
   --basic-font-name: 'Consolas', 'lucida console', monospace;
-  --basic-color: #000;
+  --basic-color: HSL(255, 10%, 40%);
 
   -webkit-tap-highlight-color: transparent !important;
+}
+
+::selection {
+  background-color: var(--basic-color);
+  color: #fff;
 }
 
 html {

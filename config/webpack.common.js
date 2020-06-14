@@ -27,7 +27,6 @@ module.exports = {
       {
         test: /\.pug$/,
         loader: 'pug-loader',
-        options: { root: dirs.input.path },
       },
 
       // Favicons

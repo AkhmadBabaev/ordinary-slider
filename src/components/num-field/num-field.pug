@@ -1,11 +1,8 @@
 mixin num-field({ title = 'title', name = '', min = null, max = null, step = 1, value = 0 } = {})
-  - const className = 'num-field';
-
-  div(class = className)
-    label(class = `${className}__label`)
-      span(class = `${className}__title js-${className}__title`)= title
-      input(
-        class = `${className}__input js-${className}__input`
+  .num-field
+    label.num-field__label
+      span.num-field__title.js-num-field__title= title
+      input.num-field__input.js-num-field__input(
         type = "number"
         name = name
         min = min
@@ -13,4 +10,4 @@ mixin num-field({ title = 'title', name = '', min = null, max = null, step = 1, 
         step = step
         value = value
       )
-      div(class = `${className}__disable-cover`)
+      .num-field__disable-cover
