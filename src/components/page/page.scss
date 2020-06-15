@@ -7,7 +7,31 @@
   &__title {
     text-align: center;
     margin-top: 0;
+    margin-bottom: .7rem;
+  }
+
+  &__repository-link {
+    text-align: center;
     margin-bottom: 1rem;
+
+    & a {
+      text-decoration: none;
+      font-weight: bold;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:focus {
+        text-decoration: underline;
+        outline: none;
+      }
+
+      &,
+      &:visited {
+        color: HSL(210, 82%, 60%);
+      }
+    }
   }
 
   &__container {
