@@ -27,10 +27,10 @@
 
 ```bash
 # Скачайте репозиторий
-git clone https://github.com/AkhmadBabaev/ordinary-slider
+git clone https://github.com/AkhmadBabaev/o-slider
   
 # Перейдите в папку с репозиторием
-cd ordinary-slider
+cd o-slider
 
 # Установите зависимости
 yarn install

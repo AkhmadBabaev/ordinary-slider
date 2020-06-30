@@ -1,8 +1,8 @@
-Ordinary slider
+oSlider
 ===============
 
 Это ещё один обыкновенный слайдер.  
-Опробовать слайдер в действии можно открыв [превью](https://akhmadbabaev.github.io/ordinary-slider/).
+Опробовать слайдер в действии можно открыв [превью](https://akhmadbabaev.github.io/o-slider/).
 
 
 ## 🏷️ Содержание
@@ -29,13 +29,13 @@ Ordinary slider
 С помощью **npm**
 
 ```bash
-npm install ordinary-slider
+npm install o-slider
 ```
 
 С помощью **yarn**
 
 ```bash
-yarn add ordinary-slider
+yarn add o-slider
 ```
 
 
@@ -46,13 +46,13 @@ yarn add ordinary-slider
 #####  ES2015+
 
 ```javascript
-import 'ordinary-slider;
+import 'o-slider';
 ```
 
 #### CommonJS
 
 ```javascript
-require('ordinary-slider');
+require('o-slider');
 ```
 
 ### Инициализация 

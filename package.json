@@ -1,13 +1,13 @@
 {
-  "name": "ordinary-slider",
+  "name": "o-slider",
   "version": "3.2.0",
   "author": "Akhmad Babaev <akhmad.babaev@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AkhmadBabaev/ordinary-slider.git"
+    "url": "https://github.com/AkhmadBabaev/o-slider.git"
   },
-  "bugs": "https://github.com/AkhmadBabaev/ordinary-slider/issues",
+  "bugs": "https://github.com/AkhmadBabaev/o-slider/issues",
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",
