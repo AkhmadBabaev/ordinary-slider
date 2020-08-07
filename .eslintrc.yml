@@ -38,16 +38,12 @@ ignorePatterns:
   - "/docs"
 
 rules:
-  no-unused-expressions: off
-
   import/no-extraneous-dependencies:
     - error
     - devDependencies: true
 
   no-new: off
-
   indent: off
-
   class-methods-use-this: off
-
+  no-unused-expressions: off
   import/extensions: off

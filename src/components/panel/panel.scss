@@ -2,19 +2,13 @@
   padding-top: 4rem;
 
   &__slider {
+    max-width: 25rem;
+    margin-right: auto;
+    margin-left: auto;
     margin-bottom: 4.7rem;
 
-    & .o-slider {
-      margin-left: auto;
-      margin-right: auto;
-
-      &_direction_horizontal {
-        max-width: 25rem;
-      }
-
-      &_direction_vertical {
-        height: 18rem;
-      }
+    & .o-slider_is_vertical {
+      height: 18rem;
     }
   }
 

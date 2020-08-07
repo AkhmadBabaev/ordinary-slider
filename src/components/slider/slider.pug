@@ -1,13 +1,13 @@
-mixin slider({ min = 0, max = 100, step = 1, from = 0, to = null, tip = false, bar = false, scale = false, interval = false, direction = 'horizontal' } = {})
+mixin slider({ min = 0, max = 100, step = 1, from = 0, to = null, tip = false, bar = false, scale = false, interval = false, isVertical = false } = {})
   .o-slider(
     data-min = min
     data-max = max
     data-step = step
     data-from = from
     data-to = to
-    data-tip = tip
-    data-bar = bar
-    data-scale = scale
-    data-range = interval
-    data-vertical = `${direction === 'vertical'}`
+    data-tip = `${tip}`
+    data-bar = `${bar}`
+    data-scale = `${scale}`
+    data-range = `${interval}`
+    data-vertical = `${isVertical}`
   )

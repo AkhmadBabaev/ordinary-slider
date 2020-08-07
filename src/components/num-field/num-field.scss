@@ -1,4 +1,6 @@
 .num-field {
+  $root: &;
+
   --field-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 0%));
 
   max-width: 100%;
@@ -45,10 +47,6 @@
     }
   }
 
-  &__input:disabled ~ &__disable-cover {
-    display: block;
-  }
-
   &__disable-cover {
     display: none;
     width: 100%;
@@ -65,5 +63,9 @@
     );
     opacity: .5;
     cursor: auto;
+
+    #{$root}__input:disabled ~ & {
+      display: block;
+    }
   }
 }

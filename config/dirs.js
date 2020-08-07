@@ -19,7 +19,7 @@ class Dirs {
 
   get components() {
     const name = 'components';
-    const dirPath = `${this.input.path}/${name}`;
+    const dirPath = path.resolve(this.input.path, name);
 
     return { name, path: dirPath };
   }

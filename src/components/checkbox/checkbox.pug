@@ -1,10 +1,4 @@
-mixin checkbox({ title = 'title', name = '', isChecked = false } = {})
-  .checkbox.js-checkbox(tabindex = 0)
-    label.checkbox__label
-      input.checkbox__input.js-checkbox__input(
-        type = "checkbox"
-        name = name
-        checked = isChecked
-      )
-      span.checkbox__title.js-checkbox__title= title
-      .checkbox__toggler
+mixin checkbox({ title = 'title', name = null, isChecked = false } = {})
+  .checkbox.js-checkbox(class = isChecked && 'checkbox_is_checked' data-name = name)
+    span.checkbox__title.js-checkbox__title= title
+    button.checkbox__button.js-checkbox__button(type = "button")

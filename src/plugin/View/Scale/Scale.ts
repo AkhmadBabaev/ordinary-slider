@@ -10,9 +10,7 @@ class Scale extends Component<IScaleOptions> {
     const { min, max } = options;
 
     let classes = componentClass;
-    options.vertical
-      ? (classes += ` ${componentClass}_direction_vertical`)
-      : (classes += ` ${componentClass}_direction_horizontal`);
+    options.vertical && (classes += ` ${componentClass}_is_vertical`);
 
     return `
       <div class='${classes}'>

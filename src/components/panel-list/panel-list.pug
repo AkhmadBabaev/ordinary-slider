@@ -1,6 +1,8 @@
 include ../panel/panel
 
-mixin panel-list(panels)
+mixin panel-list
+  - const panels = require('@components/panel-list/data.json');
+
   .panel-list
     each panel in panels
       .panel-list__panel

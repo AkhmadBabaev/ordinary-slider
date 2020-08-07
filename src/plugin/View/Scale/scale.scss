@@ -1,32 +1,27 @@
 .scale {
+  $root: &;
+
   position: relative;
   color: var(--slider-color);
+  width: 100%;
 
-  &_direction_horizontal {
-    width: 100%;
-  }
-
-  &_direction_vertical {
+  &_is_vertical {
     position: absolute;
     top: 0;
     left: -1rem;
     height: 100%;
   }
 
-  &_direction_horizontal &__item {
-    transform: translateX(-50%);
-  }
-
-  &_direction_vertical &__item {
-    transform: translate(-100%, 50%);
-  }
-
   &__item {
     font-size: .812rem;
     position: absolute;
     user-select: none;
-
+    transform: translateX(-50%);
     cursor: pointer;
+
+    #{$root}_is_vertical & {
+      transform: translate(-100%, 50%);
+    }
 
     &:hover {
       font-weight: bold;

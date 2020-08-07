@@ -46,8 +46,8 @@ describe('Scale', () => {
   });
 
   describe('Option vertical', () => {
-    test('if set as false should contain BEM modifier direction_horizontal', () => {
-      expect(scaleElement.classList.contains('scale_direction_horizontal')).toBeTruthy();
+    test('if set as false should not contain BEM modifier is_vertical', () => {
+      expect(scaleElement.classList.contains('scale_is_vertical')).toBeFalsy();
     });
 
     test('if set as false should be arranged on the horizontal axis', () => {
@@ -55,10 +55,10 @@ describe('Scale', () => {
       expect(scaleItem.style.left).toBe('0%');
     });
 
-    test('if set as true should contain BEM modifier direction_vertical', () => {
+    test('if set as true should contain BEM modifier is_vertical', () => {
       testElement.innerHTML = `${new Scale({ ...options, vertical: true })}`;
       scaleElement = testElement.querySelector('.scale') as HTMLElement;
-      expect(scaleElement.classList.contains('scale_direction_vertical')).toBeTruthy();
+      expect(scaleElement.classList.contains('scale_is_vertical')).toBeTruthy();
     });
 
     test('if set as true should be arranged on the vertical axis', () => {

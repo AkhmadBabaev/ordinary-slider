@@ -1,83 +1,61 @@
 @import './View/Scale/scale.scss';
 
 .o-slider {
+  $root: &;
+
   --slider-color-light: HSL(var(--h, 0), var(--s, 0%), calc(var(--l, 50%) + 25%));
   --slider-color: HSL(var(--h, 0), var(--s, 0%), var(--l, 50%));
   --slider-color-dark: HSL(var(--h, 0), var(--s, 0%), calc(var(--l, 50%) - 10%));
 
   background-color: var(--slider-color-light);
+  height: .62rem;
+  margin-right: auto;
+  margin-left: auto;
   box-sizing: border-box;
   position: relative;
 
-  &_direction_horizontal {
-    min-width: 12.5rem;
-    height: .62rem;
-  }
-
-  &_direction_horizontal &__bar {
-    width: 0;
-    height: 100%;
-  }
-
-  &_direction_horizontal &__thumb {
-    width: .62rem;
-    height: 1.6rem;
-    bottom: 50%;
-    left: 0;
-    transform: translate(-50%, 50%);
-  }
-
-  &_direction_horizontal &__tip {
-    bottom: 2.1rem;
-    transform: translateX(-50%);
-  }
-
-  &_direction_vertical {
+  &_is_vertical {
     height: 100%;
     width: .62rem;
-  }
-
-  &_direction_vertical &__bar {
-    width: 100%;
-    height: 0;
-    bottom: 0;
-  }
-
-  &_direction_vertical &__thumb {
-    height: .62rem;
-    width: 1.6rem;
-    left: 50%;
-    bottom: 0;
-    transform: translate(-50%, 50%);
-  }
-
-  &_direction_vertical &__tip {
-    transform: translateY(-50%);
-    left: 2.3rem;
-    top: 50%;
   }
 
   &__track {
     height: 100%;
     position: relative;
-
     cursor: pointer;
   }
 
   &__bar {
     background-color: var(--slider-color);
+    width: 0;
+    height: 100%;
     position: absolute;
+
+    #{$root}_is_vertical & {
+      width: 100%;
+      height: 0;
+      bottom: 0;
+    }
   }
 
   &__thumb {
     text-align: center;
     background-color: var(--slider-color);
-
+    width: .62rem;
+    height: 1.6rem;
     position: absolute;
     bottom: 50%;
     left: 0;
-
+    transform: translate(-50%, 50%);
     cursor: pointer;
+
+    #{$root}_is_vertical & {
+      height: .62rem;
+      width: 1.6rem;
+      left: 50%;
+      bottom: 0;
+      transform: translate(-50%, 50%);
+    }
 
     &_activated {
       --slider-color: var(--slider-color-dark);
@@ -93,21 +71,26 @@
     font-size: .9rem;
     color: #fff;
     background-color: var(--slider-color);
-
     display: inline-flex;
     justify-content: center;
     align-items: center;
     width: auto;
     height: 1.5rem;
     padding: 0 .45rem;
-
     position: absolute;
-
+    bottom: 2.1rem;
+    transform: translateX(-50%);
     user-select: none;
     cursor: pointer;
+
+    #{$root}_is_vertical & {
+      transform: translateY(-50%);
+      left: 2.3rem;
+      top: 50%;
+    }
   }
 
-  &__scale .scale_direction_horizontal {
+  &__scale {
     margin-top: 1rem;
   }
 
@@ -116,7 +99,6 @@
     height: 100vh;
     position: fixed;
     z-index: 999999;
-
     cursor: pointer;
   }
 }

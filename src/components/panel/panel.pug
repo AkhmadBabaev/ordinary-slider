@@ -2,12 +2,12 @@ include ../num-field/num-field
 include ../checkbox/checkbox
 include ../slider/slider
 
-mixin panel({ hue = 255, saturation = '10%', lightness = '40%', min = 0, max = 100, step = 1, from = 0, to, tip = false, bar = false, scale = false, interval = false, direction = 'horizontal' } = {})
+mixin panel({ hue = 255, saturation = '10%', lightness = '40%', sliderOptions } = {})
   - const { fields, checkboxes } = require('@components/panel/data.json');
 
-  .panel.js-panel(style = `--h: ${hue}; --s: ${saturation}; --l: ${lightness}`)
+  .panel.js-panel(style = { '--h': hue, '--s': saturation, '--l': lightness })
     .panel__slider.js-panel__slider
-      +slider({ min, max, step, from, to, tip, bar, scale, interval, direction })
+      +slider(sliderOptions)
 
     .panel__raw
       each field in fields

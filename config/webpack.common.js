@@ -32,7 +32,7 @@ module.exports = {
       // Favicons
 
       {
-        test: /\.(png|jpe?g|gif|svg|ico|webmanifest)$/i,
+        test: /\.(png|jpe?g|gif|svg|ico|webmanifest|xml)$/i,
         include: dirs.favicons.path,
         loader: 'file-loader',
         options: { name: '[path][name].[ext]' },

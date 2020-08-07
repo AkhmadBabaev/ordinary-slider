@@ -37,7 +37,7 @@ class Presenter {
 
   private init(): void {
     this.model.subscribe(this.ViewNotifier);
-    this.view.subscribe(this.model.setState);
+    this.view.subscribe(this.model.handlePresenterData);
   }
 
   @boundMethod

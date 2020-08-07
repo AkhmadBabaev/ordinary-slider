@@ -8,81 +8,110 @@ document.body.innerHTML = `
     </div>
 
     <div class="js-panel__field">
-      <div class="num-field">
-        <div class "num-field__label">
+      <div class="js-num-field" data-name="from">
+        <label class="num-field__label">
           <span class="js-num-field__title">from</span>
-          <input class="js-num-field__input" name="from" type="number">
-        </div>
+          <input class="js-num-field__input" type="number">
+        </label>
       </div>
     </div>
 
     <div class="js-panel__field">
-      <div class="num-field">
-        <div class "num-field__label">
+      <div class="js-num-field" data-name="to">
+        <label class="num-field__label">
           <span class="js-num-field__title">to</span>
-          <input class="js-num-field__input" name="to" type="number">
-        </div>
+          <input class="js-num-field__input" type="number">
+        </label>
       </div>
     </div>
 
     <div class="js-panel__field">
-      <div class="num-field">
-        <div class "num-field__label">
+      <div class="js-num-field" data-name="step">
+        <label class="num-field__label">
           <span class="js-num-field__title">step</span>
-          <input class="js-num-field__input" name="step" type="number">
-        </div>
+          <input class="js-num-field__input" type="number">
+        </label>
+      </div>
+    </div>
+
+    <div class="js-panel__field">
+      <div class="js-num-field" data-name="min">
+        <label class="num-field__label">
+          <span class="js-num-field__title">min</span>
+          <input class="js-num-field__input" type="number">
+        </label>
+      </div>
+    </div>
+
+    <div class="js-panel__field">
+      <div class="js-num-field" data-name="max">
+        <label class="num-field__label">
+          <span class="js-num-field__title">max</span>
+          <input class="js-num-field__input" type="number">
+        </label>
       </div>
     </div>
 
     <div class="js-panel__checkbox">
-      <div class="checkbox">
-        <input class="js-checkbox__input" name="range" type="checkbox">
+      <div class="js-checkbox" data-name="range">
+        <button class="js-checkbox__button" type="button"></button>
       </div>
     </div>
 
     <div class="js-panel__checkbox">
-      <div class="checkbox">
-        <input class="js-checkbox__input" name="bar" type="checkbox">
+      <div class="js-checkbox" data-name="vertical">
+        <button class="js-checkbox__button" type="button"></button>
       </div>
     </div>
 
     <div class="js-panel__checkbox">
-      <div class="checkbox">
-        <input class="js-checkbox__input" name="tip" type="checkbox">
+      <div class="js-checkbox" data-name="scale">
+        <button class="js-checkbox__button" type="button"></button>
       </div>
     </div>
 
     <div class="js-panel__checkbox">
-      <div class="checkbox">
-        <input class="js-checkbox__input" name="fake" type="checkbox">
+      <div class="js-checkbox" data-name="bar">
+        <button class="js-checkbox__button" type="button"></button>
+      </div>
+    </div>
+
+    <div class="js-panel__checkbox">
+      <div class="js-checkbox" data-name="tip">
+        <button class="js-checkbox__button" type="button"></button>
+      </div>
+    </div>
+
+    <div class="js-panel__checkbox">
+      <div class="js-checkbox" data-name="fake">
+        <button class="js-checkbox__button" type="button"></button>
       </div>
     </div>
   </div>
 `;
 
-const panel = new Panel(document.body.querySelector('.js-panel') as HTMLElement);
-
-const options = {
-  vertical: true,
-  range: false,
-  scale: false,
-  tip: true,
-  bar: true,
-  min: 0,
-  max: 100,
-  step: 1,
-  from: 10,
-};
-
 describe('Panel', () => {
+  const panel = new Panel(document.body.querySelector('.js-panel') as HTMLElement);
+  const panelElem = panel.getElement();
+
+  const options = {
+    vertical: true,
+    range: false,
+    scale: false,
+    tip: true,
+    bar: true,
+    min: 0,
+    max: 100,
+    step: 1,
+    from: 10,
+  };
+
   afterEach(() => panel.settings(options));
 
   test('getElement returns root element of panel', () => {
-    const element = panel.getElement();
-
-    expect(element).toBeInstanceOf(HTMLElement);
-    expect(element.tagName).toBe('DIV');
-    expect(element.classList.contains('js-panel')).toBeTruthy();
+    expect(panelElem).toBeInstanceOf(HTMLElement);
+    expect(panelElem.tagName).toBe('DIV');
+    expect(panelElem.classList.contains('js-panel')).toBeTruthy();
   });
 
   describe('Method settings', () => {
@@ -115,46 +144,48 @@ describe('Panel', () => {
     expect(callback).not.toHaveBeenCalled();
   });
 
-  test('if option range set as true the field "to" shouldn\'t be disabled', () => {
+  test('if option range set as true the field "to" shouldn\'t have the attribute disabled', () => {
     panel.settings({ range: true });
-    expect(panel.getElement().querySelector('[name="to"]')?.hasAttribute('disabled')).toBeFalsy();
+
+    const fieldTo = panelElem.querySelector('[data-name="to"]') as HTMLElement;
+    const input = fieldTo.querySelector('input') as HTMLInputElement;
+
+    expect(input.hasAttribute('disabled')).toBeFalsy();
   });
 
-  test('if option range set as false the field "to" should be disabled', () => {
+  test('if option range set as true the field "to" should have the attribute disabled', () => {
     panel.settings({ range: false });
-    expect(panel.getElement().querySelector('[name="to"]')?.hasAttribute('disabled')).toBeTruthy();
+
+    const fieldTo = panelElem.querySelector('[data-name="to"]') as HTMLElement;
+    const input = fieldTo.querySelector('input') as HTMLInputElement;
+
+    expect(input.hasAttribute('disabled')).toBeTruthy();
   });
 
   test('field "from" should have attribute step that equal to "step" value', () => {
     panel.settings({ step: 2 });
-    expect(panel.getElement().querySelector('[name="from"]')?.getAttribute('step')).toBe('2');
-  });
 
-  test('field "to" should have attribute step that equal to "step" value', () => {
-    panel.settings({ step: 2 });
-    expect(panel.getElement().querySelector('[name="to"]')?.getAttribute('step')).toBe('2');
+    const fieldFrom = panelElem.querySelector('[data-name="from"]') as HTMLElement;
+    const input = fieldFrom.querySelector('input') as HTMLInputElement;
+
+    expect(input.getAttribute('step')).toBe('2');
   });
 
   test('field "from" should have attribute max that equal to "to" value', () => {
     panel.settings({ to: 50 });
-    expect(panel.getElement().querySelector('[name="from"]')?.getAttribute('max')).toBe('50');
+
+    const fieldFrom = panelElem.querySelector('[data-name="from"]') as HTMLElement;
+    const input = fieldFrom.querySelector('input') as HTMLInputElement;
+
+    expect(input.getAttribute('max')).toBe('50');
   });
 
   test('field "to" should have attribute min that equal to "from" value', () => {
     panel.settings({ from: 20, range: true });
-    expect(panel.getElement().querySelector('[name="to"]')?.getAttribute('min')).toBe('20');
-  });
 
-  test('should listen "change" event of fields', () => {
-    const fieldBar = panel.getElement().querySelector('[name="bar"]') as HTMLInputElement;
-    const fieldFrom = panel.getElement().querySelector('[name="from"]') as HTMLInputElement;
+    const fieldTo = panelElem.querySelector('[data-name="to"]') as HTMLElement;
+    const input = fieldTo.querySelector('input') as HTMLInputElement;
 
-    fieldBar.checked = !fieldBar.checked;
-    fieldFrom.value = '20';
-    fieldBar.dispatchEvent(new Event('change', { bubbles: true }));
-    fieldFrom.dispatchEvent(new Event('change', { bubbles: true }));
-
-    expect((panel.settings() as any).bar).toBe(!options.bar);
-    expect((panel.settings() as any).from).toBe(20);
+    expect(input.getAttribute('min')).toBe('20');
   });
 });

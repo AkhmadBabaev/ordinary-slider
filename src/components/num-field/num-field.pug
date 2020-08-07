@@ -1,13 +1,6 @@
-mixin num-field({ title = 'title', name = '', min = null, max = null, step = 1, value = 0 } = {})
-  .num-field
+mixin num-field({ title = 'title', name = null, min = null, max = null, step = 1, value = 0 } = {})
+  .num-field.js-num-field(data-name = name)
     label.num-field__label
-      span.num-field__title.js-num-field__title= title
-      input.num-field__input.js-num-field__input(
-        type = "number"
-        name = name
-        min = min
-        max = max
-        step = step
-        value = value
-      )
+      span.num-field__title= title
+      input.num-field__input.js-num-field__input(type = "number")&attributes({ min, max, step, value })
       .num-field__disable-cover

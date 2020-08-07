@@ -24,8 +24,8 @@ function isBooleanSpy(value: string): boolean {
   return (value === 'true') || (value === 'false');
 }
 
-function isDefined(value: unknown): boolean {
-  return (value !== undefined) && (value !== null);
+function isDefined(value: string): boolean {
+  return value !== 'undefined';
 }
 
 function softRounding(num: number): number {
@@ -50,7 +50,7 @@ function propertyFilter<T extends {[k: string]: any}>(obj: T, props: string[]): 
       value = obj[firstPart];
     }
 
-    isDefined(value) && (result[propName as keyof T] = value);
+    isDefined(typeof value) && (result[propName as keyof T] = value);
   });
 
   return result;
