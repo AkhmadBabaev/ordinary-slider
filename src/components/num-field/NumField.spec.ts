@@ -9,25 +9,32 @@ document.body.innerHTML = `
   </div>
 `;
 
-const numField = new NumField(document.body.querySelector('.num-field') as HTMLElement);
-
 describe('Number field', () => {
+  const numField = new NumField(document.body.querySelector('.num-field') as HTMLElement);
+  const inputElem = numField.getElement().querySelector('.js-num-field__input') as HTMLInputElement;
+  numField.addListeners();
+
   test('getElement should return an element', () => {
     expect(numField.getElement()).toBeInstanceOf(HTMLElement);
   });
 
-  test('getInput should return an input element', () => {
-    expect(numField.getInput()).toBeInstanceOf(HTMLInputElement);
+  test('disable should contains the attribute disabled', () => {
+    numField.disable();
+    expect(inputElem.hasAttribute('disabled')).toBeTruthy();
   });
 
-  test('setTitle should set title', () => {
-    numField.setTitle('hello');
-    const numFieldElem = numField.getElement();
-    expect(numFieldElem.querySelector('.js-num-field__title')?.textContent).toBe('hello');
+  test('enable should not contains the attribute disabled', () => {
+    numField.enable();
+    expect(inputElem.hasAttribute('disabled')).toBeFalsy();
   });
 
   test('setAttr should set specified attribute', () => {
     numField.setAttr('type', 'number');
-    expect(numField.getInput().getAttribute('type')).toBe('number');
+    expect(inputElem.getAttribute('type')).toBe('number');
+  });
+
+  test('removeAttr should remove specified attribute', () => {
+    numField.removeAttr('type');
+    expect(inputElem.hasAttribute('type')).not.toBeTruthy();
   });
 });

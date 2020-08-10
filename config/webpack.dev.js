@@ -1,4 +1,5 @@
 const merge = require('webpack-merge');
+
 const common = require('./webpack.common');
 const dirs = require('./dirs');
 const { complitionLogHook, projectInfoHook } = require('./hooks');

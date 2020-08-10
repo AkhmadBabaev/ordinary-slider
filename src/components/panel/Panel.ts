@@ -6,14 +6,14 @@ import NumField from '../num-field/NumField';
 type Settings = { [k: string]: unknown };
 
 class Panel {
-  private panelElement: HTMLElement;
+  private panel: HTMLElement;
 
-  public fields: { [k: string]: CheckBox | NumField } = {};
+  public fields: { [k: string]: NumField | CheckBox } = {};
 
   private $slider: JQuery<object>;
 
-  constructor(elem: HTMLElement) {
-    this.panelElement = elem;
+  constructor(element: HTMLElement) {
+    this.panel = element;
     this.init();
   }
 
@@ -35,7 +35,7 @@ class Panel {
 
   @boundMethod
   public getElement(): HTMLElement {
-    return this.panelElement;
+    return this.panel;
   }
 
   private init(): void {
@@ -44,28 +44,26 @@ class Panel {
   }
 
   private foundFields(): HTMLElement[] {
-    const foundNulFields = Array.from(this.panelElement.querySelectorAll('.js-panel__field'));
-    const foundCheckboxes = Array.from(this.panelElement.querySelectorAll('.js-panel__checkbox'));
+    const foundNulFields = Array.from(this.panel.querySelectorAll('.js-panel__field'));
+    const foundCheckboxes = Array.from(this.panel.querySelectorAll('.js-panel__checkbox'));
     const foundList = [...foundNulFields, ...foundCheckboxes];
 
     return foundList.map((elem) => elem.firstElementChild as HTMLElement);
   }
 
-  private setField(field: NumField | CheckBox, name: string): void {
+  private setField(name: string, field: NumField | CheckBox): void {
     this.fields[name] = field;
-    this.fields[name].getInput().addEventListener('change', this.handleInputChange);
+    this.fields[name].getElement().addEventListener('CHANGED', this.handleFieldChange as EventListener);
   }
 
   private defineFields(): void {
     this.foundFields().forEach((elem) => {
-      const isCheckbox = elem.className.includes('checkbox');
-      const isNumField = elem.className.includes('num-field');
-      let field;
+      const isNumField = elem.className.includes('js-num-field');
+      const isCheckbox = elem.className.includes('js-checkbox');
+      if (!isNumField && !isCheckbox) return;
 
-      isNumField && (field = new NumField(elem));
-      isCheckbox && (field = new CheckBox(elem));
-
-      const name = field?.getInput().getAttribute('name');
+      const field = isNumField ? new NumField(elem) : new CheckBox(elem);
+      const { name } = elem.dataset;
 
       switch (name) {
         case 'from':
@@ -78,7 +76,7 @@ class Panel {
         case 'range':
         case 'scale':
         case 'vertical':
-          this.setField(field as NumField | CheckBox, name);
+          this.setField(name, field);
           break;
 
         default: break;
@@ -87,9 +85,11 @@ class Panel {
   }
 
   @boundMethod
-  private handleInputChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const data = { [target.name]: target.type === 'checkbox' ? target.checked : Number(target.value) };
+  private handleFieldChange(event: CustomEvent): void {
+    const target = event.target as HTMLElement;
+    const name = target.dataset.name as string;
+    const isNumField = target.className.includes('js-num-field');
+    const data = { [name]: isNumField ? event.detail.value : event.detail.isChecked };
 
     this.settings(data);
   }
@@ -101,7 +101,6 @@ class Panel {
 
     Object.keys(options).forEach((key) => {
       if (!Object.prototype.hasOwnProperty.call(fields, key)) return;
-      const input = fields[key].getInput();
       const value = options[key];
 
       switch (key) {
@@ -118,7 +117,7 @@ class Panel {
         case 'scale':
         case 'range':
         case 'vertical':
-          input.checked = value as boolean;
+          (fields[key] as CheckBox).toggle(value as boolean);
           break;
 
         default: break;
@@ -139,13 +138,11 @@ class Panel {
           break;
 
         case 'range':
-          if (options.range) {
-            this.fields.to.getInput().disabled = false;
-          } else {
-            this.fields.to.getInput().disabled = true;
-            fields.from.getInput().removeAttribute('max');
-          }
-          break;
+          if (options.range) (fields.to as NumField).enable();
+          else {
+            (fields.to as NumField).disable();
+            (fields.from as NumField).removeAttr('max');
+          } break;
 
         default: break;
       }
@@ -153,7 +150,7 @@ class Panel {
   }
 
   private setSlider(): void {
-    const slider = this.panelElement.querySelector('.js-panel__slider')?.firstElementChild!;
+    const slider = this.panel.querySelector('.js-panel__slider')?.firstElementChild!;
 
     this.$slider = $(slider).oSlider() as JQuery<object>;
     this.subscribe(this.handleSliderChanges);

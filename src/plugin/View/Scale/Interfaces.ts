@@ -1,6 +1,4 @@
-import { IComponentOptions } from '../Component/Interface';
-
-export interface IScaleOptions extends IComponentOptions {
+export interface IScaleOptions {
   vertical: boolean;
   min: number;
   max: number;

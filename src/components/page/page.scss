@@ -1,23 +1,43 @@
-@import '../../styles/mixins.scss';
+@import '../../assets/styles/mixins';
 
 .page {
   height: 100%;
   margin: 0;
 
-  &__inner {
-    min-width: 100%;
-    height: 100%;
-    overflow-x: hidden;
+  &__title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: .7rem;
+  }
+
+  &__repository-link {
+    text-align: center;
+    margin-bottom: 1rem;
+
+    a {
+      text-decoration: none;
+      font-weight: bold;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:focus {
+        text-decoration: underline;
+        outline: none;
+      }
+
+      &,
+      &:visited {
+        color: HSL(210, 82%, 60%);
+      }
+    }
   }
 
   &__container {
     @include container;
 
-    padding-top: 8em;
-    padding-bottom: 8em;
-    display: flex;
-    min-height: 100%;
-    flex-direction: column;
-    justify-content: space-around;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
   }
 }

@@ -5,7 +5,7 @@ const dirs = require('./dirs');
 module.exports = {
   context: dirs.input.path,
   entry: {
-    index: ['./preview/index', `./${dirs.styles.name}/basic.scss`],
+    index: ['./preview/index', `./${dirs.assets.name}/${dirs.styles.name}/basic.scss`],
     'o-slider': ['./plugin/o-slider', './plugin/o-slider.scss'],
   },
   output: {
@@ -27,13 +27,12 @@ module.exports = {
       {
         test: /\.pug$/,
         loader: 'pug-loader',
-        options: { root: dirs.input.path },
       },
 
       // Favicons
 
       {
-        test: /\.(png|svg)$/i,
+        test: /\.(png|jpe?g|gif|svg|ico|webmanifest|xml)$/i,
         include: dirs.favicons.path,
         loader: 'file-loader',
         options: { name: '[path][name].[ext]' },

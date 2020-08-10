@@ -19,6 +19,13 @@ class Dirs {
 
   get components() {
     const name = 'components';
+    const dirPath = path.resolve(this.input.path, name);
+
+    return { name, path: dirPath };
+  }
+
+  get assets() {
+    const name = 'assets';
     const dirPath = `${this.input.path}/${name}`;
 
     return { name, path: dirPath };
@@ -26,14 +33,14 @@ class Dirs {
 
   get styles() {
     const name = 'styles';
-    const dirPath = `${this.input.path}/${name}`;
+    const dirPath = `${this.assets.path}/${name}`;
 
     return { name, path: dirPath };
   }
 
   get favicons() {
     const name = 'favicons';
-    const dirPath = path.resolve(this.input.path, name);
+    const dirPath = path.resolve(this.assets.path, name);
 
     return { name, path: dirPath };
   }

@@ -1,8 +1,8 @@
-Ordinary slider
+oSlider
 ===============
 
 Это ещё один обыкновенный слайдер.  
-Опробовать слайдер в действии можно открыв [превью](https://akhmadbabaev.github.io/ordinary-slider/).
+Опробовать слайдер в действии можно открыв [превью](https://akhmadbabaev.github.io/o-slider/).
 
 
 ## 🏷️ Содержание
@@ -29,13 +29,13 @@ Ordinary slider
 С помощью **npm**
 
 ```bash
-npm install ordinary-slider
+npm install o-slider
 ```
 
 С помощью **yarn**
 
 ```bash
-yarn add ordinary-slider
+yarn add o-slider
 ```
 
 
@@ -46,15 +46,13 @@ yarn add ordinary-slider
 #####  ES2015+
 
 ```javascript
-import 'ordinary-slider/docs/o-slider.min';
-import 'ordinary-slider/docs/o-slider.min.css';
+import 'o-slider';
 ```
 
 #### CommonJS
 
 ```javascript
-require('ordinary-slider/docs/o-slider.min');
-require('ordinary-slider/docs/o-slider.min.css');
+require('o-slider');
 ```
 
 ### Инициализация 
@@ -78,7 +76,7 @@ $(selector).oSlider({
 });
 ```
 
-Тоже самое что и выше только с помощью дата атрибутов
+Тоже самое что и выше только с помощью data-* атрибутов
 
 ```html
 <div class = "o-slider" data-from = "50"></div>
@@ -87,9 +85,9 @@ $(selector).oSlider({
   $('.o-slider').oSlider();
 </script>
 ```
-> Передача настроек через атрибуты работает и после инициализации слайдера.
+> Передача настроек через data-* атрибуты возможно и после инициализации слайдера.
 
-> Параметры указанные в дата атрибутах имеют приоритет над переданными в объект настроек.
+> Параметры указанные в data-* атрибутах имеют приоритет над переданными в объект настроек.
 
 
 ##  <a name="configurations"></a> ⚙️ Конфигурации
@@ -129,7 +127,7 @@ $slider.oSlider('settings', {
   from: 20,
 });
 
-console.log($slider.oSlider('settings')); // {  min: 10, from: 20, ...rest }
+console.log($slider.oSlider('settings')); // { min: 10, from: 20, ...rest }
 ```
 
 #### oSlider('subscribe', callback)

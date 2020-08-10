@@ -48,7 +48,7 @@ declare global {
 
     switch (method) {
       case 'settings':
-        if (!isDefined(options)) return $firstItemFound.data('oSlider').getState() as IState;
+        if (!isDefined(typeof options)) return $firstItemFound.data('oSlider').getState() as IState;
         $firstItemFound.data('oSlider').setState(options as IPState); break;
       case 'subscribe': $firstItemFound.data('oSlider').subscribe(options as Function); break;
       case 'unsubscribe': $firstItemFound.data('oSlider').unsubscribe(options as Function); break;

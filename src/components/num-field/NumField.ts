@@ -1,30 +1,33 @@
 import { boundMethod } from 'autobind-decorator';
 
 class NumField {
-  private numFieldElement: HTMLElement;
-
-  private titleElement: HTMLElement;
+  private numField: HTMLElement;
 
   private input: HTMLInputElement;
 
   constructor(element: HTMLElement) {
-    this.numFieldElement = element;
+    this.numField = element;
     this.init();
   }
 
   @boundMethod
+  public addListeners(): void {
+    this.input.addEventListener('change', this.handleInputChange);
+  }
+
+  @boundMethod
   public getElement(): HTMLElement {
-    return this.numFieldElement;
+    return this.numField;
   }
 
   @boundMethod
-  public getInput(): HTMLInputElement {
-    return this.input;
+  public disable(): void {
+    this.input.disabled = true;
   }
 
   @boundMethod
-  public setTitle(title: string): void {
-    this.titleElement.textContent = title;
+  public enable(): void {
+    this.input.disabled = false;
   }
 
   @boundMethod
@@ -36,9 +39,22 @@ class NumField {
     this.input.setAttribute(name, String(value));
   }
 
+  @boundMethod
+  public removeAttr<T extends keyof HTMLInputElement>(name: T): void {
+    this.input.removeAttribute(name);
+  }
+
   private init(): void {
-    this.input = this.numFieldElement.querySelector('.js-num-field__input') as HTMLInputElement;
-    this.titleElement = this.numFieldElement.querySelector('.js-num-field__title') as HTMLElement;
+    this.input = this.numField.querySelector('.js-num-field__input') as HTMLInputElement;
+  }
+
+  @boundMethod
+  private handleInputChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.numField.dispatchEvent(new CustomEvent('CHANGED', {
+      detail: { value: target.value },
+      bubbles: true,
+    }));
   }
 }
 

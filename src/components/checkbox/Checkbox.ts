@@ -1,58 +1,44 @@
 import { boundMethod } from 'autobind-decorator';
 
 class CheckBox {
-  private checkboxElement: HTMLElement;
-
-  private titleElement: HTMLElement;
-
-  private input: HTMLInputElement;
+  private checkbox: HTMLElement;
 
   constructor(element: HTMLElement) {
-    this.checkboxElement = element;
-    this.init();
+    this.checkbox = element;
   }
 
   @boundMethod
   public getElement(): HTMLElement {
-    return this.checkboxElement;
+    return this.checkbox;
   }
 
   @boundMethod
-  public getInput(): HTMLInputElement {
-    return this.input;
+  public toggle(on?: boolean): void {
+    if (!arguments.length) this.checkbox.classList.toggle('checkbox_is_checked');
+    else {
+      on
+        ? this.checkbox.classList.add('checkbox_is_checked')
+        : this.checkbox.classList.remove('checkbox_is_checked');
+    }
   }
 
   @boundMethod
-  public setTitle(title: string): void {
-    this.titleElement.textContent = title;
-  }
-
-  private init(): void {
-    this.input = this.checkboxElement.querySelector('.js-checkbox__input') as HTMLInputElement;
-    this.titleElement = this.checkboxElement.querySelector('.js-checkbox__title') as HTMLElement;
-    this.addListeners();
+  public addListeners(): void {
+    this.checkbox.addEventListener('click', this.handleButtonClick);
   }
 
   @boundMethod
-  private handleCheckboxFocus(): void {
-    document.addEventListener('keyup', this.handleDocumentKeyUp);
-  }
+  private handleButtonClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const isButton = target.classList.contains('js-checkbox__button');
+    const isTitle = target.classList.contains('js-checkbox__title');
+    if (!isButton && !isTitle) return;
 
-  @boundMethod
-  private handleCheckboxBlur(): void {
-    document.removeEventListener('keyup', this.handleDocumentKeyUp);
-  }
-
-  @boundMethod
-  private handleDocumentKeyUp(event: KeyboardEvent): void {
-    if (event.code !== 'Enter') return;
-    this.input.checked = !this.input.checked;
-    this.input.dispatchEvent(new Event('change', { bubbles: true }));
-  }
-
-  private addListeners(): void {
-    this.checkboxElement.addEventListener('focus', this.handleCheckboxFocus);
-    this.checkboxElement.addEventListener('blur', this.handleCheckboxBlur);
+    this.toggle();
+    this.checkbox.dispatchEvent(new CustomEvent('CHANGED', {
+      detail: { isChecked: this.checkbox.classList.contains('checkbox_is_checked') },
+      bubbles: true,
+    }));
   }
 }
 

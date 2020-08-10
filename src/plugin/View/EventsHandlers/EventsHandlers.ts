@@ -54,8 +54,11 @@ class EventsHandlers {
     const target = event.target as HTMLElement;
     if (!target.classList.contains('js-scale__item')) return;
 
-    const value = Number(target.textContent);
-    this.view.notify({ [this.detectNearestThumb(value)]: value });
+    const content = Number(target.textContent);
+    const { vertical, min, max } = this.view.getOptions();
+    const value = vertical ? max + content : content - min;
+
+    this.view.notify({ [this.detectNearestThumb(value)]: Math.abs(value) });
     event.preventDefault();
   }
 
@@ -68,7 +71,7 @@ class EventsHandlers {
     const thumbElement = target.closest(`.js-${this.view.className}__thumb`) as HTMLElement;
     if (!thumbElement) return;
 
-    thumbElement.classList.add(`${this.view.className}__thumb_type_active`);
+    thumbElement.classList.add(`${this.view.className}__thumb_activated`);
     this.cover('on');
     this.isGrabbed = true;
 
@@ -136,7 +139,7 @@ class EventsHandlers {
     const thumbElement = target.closest(`.js-${this.view.className}__thumb`) as HTMLElement;
     if (!thumbElement) return;
 
-    thumbElement.classList.add(`${this.view.className}__thumb_type_active`);
+    thumbElement.classList.add(`${this.view.className}__thumb_activated`);
     this.isGrabbed = true;
 
     const { vertical } = this.view.getOptions();
@@ -224,7 +227,7 @@ class EventsHandlers {
 
   private cover(state: 'on' | 'off'): void {
     const { body } = document;
-    const className = `${this.view.className}__window-cover`;
+    const className = `${this.view.className}-window-cover`;
     !this.coverElement && (this.coverElement = body.querySelector(`.${className}`) as HTMLElement);
 
     if (state === 'on') {
@@ -235,14 +238,20 @@ class EventsHandlers {
   }
 
   private detectNearestThumb(value: number): string {
-    const [first, second] = this.view.getValues();
-    const distanceToFirst = value - first;
-    const distanceToSecond = second - value;
+    const from = this.convertToViewUnit(this.view.getValues()[0]);
+    const to = this.convertToViewUnit(this.view.getValues()[1]);
+    const distanceToFirst = value - from;
+    const distanceToSecond = to - value;
     return (distanceToFirst >= distanceToSecond) ? 'to' : 'from';
   }
 
+  private convertToViewUnit(value: number): number {
+    const { vertical, min, max } = this.view.getOptions();
+    return vertical ? max + value : value - min;
+  }
+
   private deleteActiveThumbMod(): void {
-    const activeClass = `${this.view.className}__thumb_type_active`;
+    const activeClass = `${this.view.className}__thumb_activated`;
     this.view.root.querySelector(`.${activeClass}`)?.classList.remove(activeClass);
   }
 

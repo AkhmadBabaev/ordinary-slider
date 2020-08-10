@@ -8,8 +8,8 @@ class Thumb extends Component<IThumbOptions> {
 
     let classes = componentClass;
     classes += ` js-${componentClass}`;
-    options.isActive && (classes += ` ${componentClass}_type_active`);
-    options.isPriority && (classes += ` ${componentClass}_type_priority`);
+    options.isActive && (classes += ` ${componentClass}_activated`);
+    options.isPriority && (classes += ` ${componentClass}_priority`);
 
     return `
       <div

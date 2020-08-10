@@ -64,6 +64,20 @@ class Model extends Observable {
     return this.state;
   }
 
+  @boundMethod
+  public handlePresenterData(options: IPState): void {
+    const data = { ...options };
+
+    isDefined(typeof data.from) && (data.from = this.convertToModelUnit(data.from as number));
+    isDefined(typeof data.to) && (data.to = this.convertToModelUnit(data.to as number));
+    this.setState(data);
+  }
+
+  private convertToModelUnit(value: number): number {
+    const { min, max, vertical } = this.getState();
+    return vertical ? max - value : min + value;
+  }
+
   private handleMin(): void {
     let { min } = this.temporaryState;
     const { max, step } = this.temporaryState;
@@ -76,9 +90,9 @@ class Model extends Observable {
     this.temporaryState.min = min;
 
     // update related properties
-    !isDefined(this.changes.step) && (step > gap) && this.handleStep();
-    !isDefined(this.changes.from) && this.handleFrom();
-    !isDefined(this.changes.to) && this.handleTo();
+    !isDefined(typeof this.changes.step) && (step > gap) && this.handleStep();
+    !isDefined(typeof this.changes.from) && this.handleFrom();
+    !isDefined(typeof this.changes.to) && this.handleTo();
   }
 
   private handleMax(): void {
@@ -93,9 +107,9 @@ class Model extends Observable {
     this.temporaryState.max = max;
 
     // update related properties
-    !isDefined(this.changes.step) && (step > gap) && this.handleStep();
-    !isDefined(this.changes.from) && this.handleFrom();
-    !isDefined(this.changes.to) && this.handleTo();
+    !isDefined(typeof this.changes.step) && (step > gap) && this.handleStep();
+    !isDefined(typeof this.changes.from) && this.handleFrom();
+    !isDefined(typeof this.changes.to) && this.handleTo();
   }
 
   private handleStep(): void {
@@ -111,8 +125,8 @@ class Model extends Observable {
     this.temporaryState.step = step;
 
     // update related property
-    !isDefined(this.changes.from) && this.handleFrom();
-    !isDefined(this.changes.to) && this.handleTo();
+    !isDefined(typeof this.changes.from) && this.handleFrom();
+    !isDefined(typeof this.changes.to) && this.handleTo();
   }
 
   private handleValue(param: number): number {
@@ -195,21 +209,21 @@ class Model extends Observable {
     if (!this.temporaryState.range || isFromLessThanTo) return;
 
     const { min, max, step } = this.temporaryState;
-    const isFromUpdated = isDefined(this.changes.from);
-    const isSecondUpdated = isDefined(this.changes.to);
+    const isFromUpdated = isDefined(typeof this.changes.from);
+    const isSecondUpdated = isDefined(typeof this.changes.to);
     const isOnlyFromUpdated = isFromUpdated && !isSecondUpdated;
     const isOnlyToUpdated = isSecondUpdated && !isFromUpdated;
 
-    if (isDefined(to) && isOnlyFromUpdated) {
+    if (isDefined(typeof to) && isOnlyFromUpdated) {
       const reminder = ((to as number) - min) % step;
       from = reminder === 0 ? (to as number) - step : (to as number) - reminder;
     }
 
-    if (isDefined(to) && isOnlyToUpdated) {
+    if (isDefined(typeof to) && isOnlyToUpdated) {
       to = (from + step < max) ? from + step : max;
     }
 
-    const shouldInitializeTo = !isDefined(to) || from >= (to as number);
+    const shouldInitializeTo = !isDefined(typeof to) || from >= (to as number);
     if (shouldInitializeTo) {
       this.initializeTo();
       return;

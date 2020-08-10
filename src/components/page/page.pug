@@ -1,9 +1,24 @@
-extends /components/layout/layout
+include ../panel-list/panel-list
 
-block body
+mixin page
   body.page
-    .page__inner
+    main.page__main
       .page__container
-        block page-content
+        h1.page__title oSlider preview
 
-    block scripts
+        .page__repository-link
+          a(
+            href = "https://github.com/AkhmadBabaev/o-slider"
+            target = "_blank"
+            rel = "noopener noreferrer"
+          ) Go to github repository
+
+        +panel-list
+
+    script(
+      src = "https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity = "sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin = "anonymous"
+    )
+    script(src = "o-slider.min.js")
+    script(src = "index.min.js")

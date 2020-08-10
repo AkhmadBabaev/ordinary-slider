@@ -13,11 +13,11 @@ class View extends Observable {
 
   public readonly className: string;
 
+  public ratio: number;
+
   private options: IState;
 
   private updates: IPState;
-
-  private ratio: number;
 
   private sliderLength: number;
 
@@ -45,8 +45,8 @@ class View extends Observable {
     this.updates = options;
 
     const { min, max, vertical } = this.updates;
-    const isDirectionUpdated = isDefined(vertical);
-    const isRatioUpdated = isDirectionUpdated || isDefined(min) || isDefined(max);
+    const isDirectionUpdated = isDefined(typeof vertical);
+    const isRatioUpdated = isDirectionUpdated || isDefined(typeof min) || isDefined(typeof max);
 
     isDirectionUpdated && this.handleOptionVertical();
     isDirectionUpdated && this.updateSliderLength();
@@ -65,9 +65,7 @@ class View extends Observable {
 
   @boundMethod
   public calculateValue(position: number): number {
-    return this.options.vertical
-      ? this.options.max - position / this.ratio
-      : position / this.ratio + this.options.min;
+    return position / this.ratio;
   }
 
   @boundMethod
@@ -98,18 +96,18 @@ class View extends Observable {
   public createElements(): void {
     this.root.innerHTML = `
       ${create('track', this.generateTrackOptions())}
-      ${this.options.scale ? create('scale', this.generateScaleOptions()) : ''}
+      ${this.options.scale ? `
+        <div class=${this.className}__scale>
+          ${create('scale', this.generateScaleOptions())}
+        </div>
+      ` : ''}
     `;
   }
 
   private handleOptionVertical(): void {
-    if (this.options.vertical) {
-      this.root.classList.add(`${this.className}_direction_vertical`);
-      this.root.classList.remove(`${this.className}_direction_horizontal`);
-    } else {
-      this.root.classList.add(`${this.className}_direction_horizontal`);
-      this.root.classList.remove(`${this.className}_direction_vertical`);
-    }
+    this.options.vertical
+      ? this.root.classList.add(`${this.className}_is_vertical`)
+      : this.root.classList.remove(`${this.className}_is_vertical`);
   }
 
   private setDataAttributes(): void {
@@ -133,8 +131,8 @@ class View extends Observable {
   }
 
   private generateScaleOptions(): IScaleOptions {
-    const optionsList = ['vertical', 'min', 'max', 'step', 'className'];
-    const options: IPScaleOptions = propertyFilter({ ...this, ...this.options }, optionsList);
+    const optionsList = ['vertical', 'min', 'max', 'step'];
+    const options: IPScaleOptions = propertyFilter(this.options, optionsList);
     const { fontSize, lineHeight } = getComputedStyle(this.root);
 
     options.scaleLength = this.getSliderLength();
