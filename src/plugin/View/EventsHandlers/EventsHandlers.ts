@@ -4,8 +4,8 @@ import { throttle, debounce } from '../../helpers/helpers';
 import View from '../View';
 
 class EventsHandlers {
-  private isGrabbed: boolean;
-  private activeThumbIndex: number;
+  private isGrabbed?: boolean;
+  private activeThumbIndex?: number;
   private view: View;
   private coverElement: HTMLElement;
 
@@ -24,7 +24,7 @@ class EventsHandlers {
   }
 
   @boundMethod
-  public getActiveThumbIndex(): number {
+  public getActiveThumbIndex(): number | undefined {
     return this.activeThumbIndex;
   }
 

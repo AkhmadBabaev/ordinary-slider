@@ -13,7 +13,7 @@ class View extends Observable {
   public readonly className: string;
   public ratio: number;
   private options: IState;
-  private updates: IPState;
+  private updates?: IPState;
   private sliderLength: number;
   private eventsHandlers: EventsHandlers;
   private attributesObserver: { [k: string]: Function };

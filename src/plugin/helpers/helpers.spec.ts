@@ -1,7 +1,12 @@
 import {
-  isNumber, propertyFilter, hasChild,
-  throttle, debounce, convertSliderUnitToPercent,
-  isBooleanSpy, objectReflection,
+  isNumber,
+  propertyFilter,
+  hasChild,
+  throttle,
+  debounce,
+  convertSliderUnitToPercent,
+  isBooleanSpy,
+  objectReflection,
 } from './helpers';
 
 describe('isNumber', () => {

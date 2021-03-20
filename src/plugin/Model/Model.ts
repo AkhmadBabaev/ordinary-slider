@@ -2,8 +2,12 @@ import { boundMethod } from 'autobind-decorator';
 
 import Observable from '../Observable/Observable';
 import {
-  isObject, isBoolean, isNumber,
-  isDefined, softRounding, objectReflection,
+  isObject,
+  isBoolean,
+  isNumber,
+  isDefined,
+  softRounding,
+  objectReflection,
 } from '../helpers/helpers';
 import defaultState from './default-state';
 import { IState, IPState } from './Interfaces';
@@ -52,10 +56,6 @@ class Model extends Observable {
 
     // notify subscribers about state changes
     Object.keys(this.changes).length && notify && this.notify(this.changes);
-
-    // this is no longer necessary
-    delete this.temporaryState;
-    delete this.changes;
   }
 
   public getState(): IState {

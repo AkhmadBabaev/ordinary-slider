@@ -88,11 +88,15 @@ function throttle(fn: Function, wait: number): () => void {
   return wrapper;
 }
 
-function debounce(fn: Function, wait: number): () => void {
-  let timer: number;
-  return (...params: unknown[]): void => {
+type DebounceCallBack = (...args: any[]) => any;
+function debounce<T extends DebounceCallBack>(
+  cb: T,
+  delay: number,
+): (...params: Parameters<T>) => void {
+  let timer = 0;
+  return (...params: Parameters<T>): void => {
     clearTimeout(timer);
-    timer = window.setTimeout(() => fn(...params), wait);
+    timer = window.setTimeout(() => cb(...params), delay);
   };
 }
 
