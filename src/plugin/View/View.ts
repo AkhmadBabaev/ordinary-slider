@@ -10,19 +10,12 @@ import { IScaleOptions, IPScaleOptions } from './Scale/Interfaces';
 
 class View extends Observable {
   public readonly root: HTMLElement;
-
   public readonly className: string;
-
   public ratio: number;
-
   private options: IState;
-
   private updates: IPState;
-
   private sliderLength: number;
-
   private eventsHandlers: EventsHandlers;
-
   private attributesObserver: { [k: string]: Function };
 
   constructor(rootElem: HTMLElement, options: IState) {

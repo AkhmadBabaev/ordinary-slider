@@ -5,11 +5,8 @@ import View from '../View';
 
 class EventsHandlers {
   private isGrabbed: boolean;
-
   private activeThumbIndex: number;
-
   private view: View;
-
   private coverElement: HTMLElement;
 
   constructor(view: View) {

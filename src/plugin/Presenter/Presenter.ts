@@ -6,7 +6,6 @@ import View from '../View/View';
 
 class Presenter {
   private view: View;
-
   private model: Model;
 
   constructor(rootElement: HTMLElement, options: IPState) {

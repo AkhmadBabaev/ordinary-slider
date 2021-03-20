@@ -10,9 +10,7 @@ import { IState, IPState } from './Interfaces';
 
 class Model extends Observable {
   private state: IState = defaultState;
-
   private temporaryState: IState;
-
   private changes: IPState;
 
   constructor(options: IPState = {}) {

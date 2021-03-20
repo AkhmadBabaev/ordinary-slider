@@ -6,10 +6,8 @@ import NumField from '../num-field/NumField';
 type Settings = { [k: string]: unknown };
 
 class Panel {
-  private panel: HTMLElement;
-
   public fields: { [k: string]: NumField | CheckBox } = {};
-
+  private panel: HTMLElement;
   private $slider: JQuery<object>;
 
   constructor(element: HTMLElement) {
