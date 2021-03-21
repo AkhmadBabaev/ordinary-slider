@@ -2,7 +2,6 @@ import { boundMethod } from 'autobind-decorator';
 
 class NumField {
   private numField: HTMLElement;
-
   private input: HTMLInputElement;
 
   constructor(element: HTMLElement) {

@@ -6,7 +6,7 @@ class Scale extends Component<IScaleOptions> {
   protected render(options: IScaleOptions): string {
     const componentClass = 'scale';
     const side = options.vertical ? 'bottom' : 'left';
-    const points = this.createPointsValues();
+    const points = this.createPointsList();
     const { min, max } = options;
 
     let classes = componentClass;
@@ -25,7 +25,7 @@ class Scale extends Component<IScaleOptions> {
     `;
   }
 
-  private createPointsValues(): number[] {
+  private createPointsList(): number[] {
     const {
       symbolLength,
       scaleLength,
@@ -37,7 +37,10 @@ class Scale extends Component<IScaleOptions> {
 
     let { step } = this.options;
     let stepsNumber = gap / step;
-    const maxSymbolsNumber = Math.max(String(max).length, String(min).length);
+    const maxSymbolsNumber = Number.isInteger(step)
+      ? Math.max(String(max).length, String(min).length)
+      : Math.max(String(max).length, String(min).length) + 1;
+
     const maxSymbolsLength = vertical ? symbolLength / 2 : symbolLength * maxSymbolsNumber;
 
     while (stepsNumber * maxSymbolsLength > scaleLength) {
@@ -61,7 +64,7 @@ class Scale extends Component<IScaleOptions> {
         : result.push(max);
     }
 
-    return result;
+    return result.map((value) => Number(value.toFixed(2)));
   }
 }
 
