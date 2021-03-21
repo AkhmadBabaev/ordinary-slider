@@ -51,11 +51,11 @@ class EventsHandlers {
     const target = event.target as HTMLElement;
     if (!target.classList.contains('js-scale__item')) return;
 
-    const content = Number(target.textContent);
+    const value = Number(target.textContent);
     const { vertical, min, max } = this.view.getOptions();
-    const value = vertical ? max + content : content - min;
+    const result = vertical ? max - value : value - min;
 
-    this.view.notify({ [this.detectNearestThumb(value)]: Math.abs(value) });
+    this.view.notify({ [this.detectNearestThumb(result)]: result });
     event.preventDefault();
   }
 
