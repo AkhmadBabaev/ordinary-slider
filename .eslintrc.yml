@@ -47,3 +47,5 @@ rules:
   class-methods-use-this: off
   no-unused-expressions: off
   import/extensions: off
+  lines-between-class-members: off
+  no-console: off

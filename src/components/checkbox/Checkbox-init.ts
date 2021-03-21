@@ -1,5 +1,4 @@
 import Checkbox from './Checkbox';
 
-const checkboxes = document.querySelectorAll('.js-checkbox') as NodeListOf<HTMLElement>;
-
+const checkboxes: NodeListOf<HTMLElement> = document.querySelectorAll('.js-checkbox');
 checkboxes.forEach((_, index): void => new Checkbox(checkboxes[index]).addListeners());

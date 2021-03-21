@@ -2,17 +2,19 @@ import { boundMethod } from 'autobind-decorator';
 
 import Observable from '../Observable/Observable';
 import {
-  isObject, isBoolean, isNumber,
-  isDefined, softRounding, objectReflection,
+  isObject,
+  isBoolean,
+  isNumber,
+  isDefined,
+  softRounding,
+  objectReflection,
 } from '../helpers/helpers';
 import defaultState from './default-state';
 import { IState, IPState } from './Interfaces';
 
 class Model extends Observable {
   private state: IState = defaultState;
-
   private temporaryState: IState;
-
   private changes: IPState;
 
   constructor(options: IPState = {}) {
@@ -54,10 +56,6 @@ class Model extends Observable {
 
     // notify subscribers about state changes
     Object.keys(this.changes).length && notify && this.notify(this.changes);
-
-    // this is no longer necessary
-    delete this.temporaryState;
-    delete this.changes;
   }
 
   public getState(): IState {
@@ -173,8 +171,8 @@ class Model extends Observable {
         case 'step':
         case 'min':
         case 'max':
-          if (!isNumber(value)) throw new TypeError(`${prop} is not number`);
-          if (!Number.isFinite(Number(value))) throw new Error(`${prop} is Infinity`);
+          if (!isNumber(value)) console.error(`${prop} is not number`);
+          if (!Number.isFinite(Number(value))) console.error(`${prop} is Infinity`);
           this.changes[prop] = Number(value);
           break;
 
@@ -183,10 +181,12 @@ class Model extends Observable {
         case 'scale':
         case 'range':
         case 'vertical':
-          if (!isBoolean(value)) throw new TypeError(`${prop} is not a boolean`);
+          if (!isBoolean(value)) console.error(`${prop} is not a boolean`);
           break;
 
-        default: throw new Error(`${prop} is non existed property`);
+        default:
+          console.error(`${prop} is non existed property`);
+          break;
       }
     });
   }
