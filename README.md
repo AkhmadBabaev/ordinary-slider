@@ -4,12 +4,9 @@ oSlider
 Это ещё один обыкновенный слайдер.  
 Опробовать слайдер в действии можно открыв [превью](https://akhmadbabaev.github.io/o-slider/).  
 
+**Внимание:** Данный пакет является учебным проектом для студентов компании [Metalamp](https://www.metalamp.io/), не стоит его использовать в реальных проектах.  
 
-**Внимание:** Данный пакет является учебным проектом для студентов компании [Metalamp](https://www.metalamp.io/),  
-не стоит его использовать в реальных проектах.  
-
-**NOTE:** This package is a training project for students of the company [Metalamp](https://en.metalamp.io/),  
-do not use it in real projects.  
+**Note:** This package is a training project for students of the company [Metalamp](https://en.metalamp.io/), do not use it in real projects.  
 
 ## 🏷️ Содержание
 
