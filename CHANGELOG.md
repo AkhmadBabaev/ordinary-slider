@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2021-03-22
+
+### Changed
+
+Use **console.error** instead of **throw new Error** when slider get wrong types of parameters.
+
+### Fixed
+
+Incorrect behavior on scale's items click of vertical slider.
+
+### Security
+
+Vulnerable dependencies:
+    - elliptic
+    - pug
+    - pug-code-gen
+
 ## [4.0.0] - 2020-10-08
 
 ### Changed
@@ -15,7 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Security
 
-- Vulnerable dependencies:
+Vulnerable dependencies:
     - websocket-extensions
     - lodash
     - elliptic
@@ -29,7 +46,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Removed
 
-- Request animation frame everywhere.
+Request animation frame everywhere.
 
 ### Fixed
 
@@ -59,7 +76,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Security
 
-- Vulnerable dependencies:
+Vulnerable dependencies:
     - kind-of
     - acorn
 
@@ -67,21 +84,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- Handling a click on the track to move the thumb.
+Handling a click on the track to move the thumb.
 
 ### Changed
 
-- The thumbs can no longer cross each other. 
+The thumbs can no longer cross each other. 
 
 ### Fixed
 
-- Issue [#15](https://github.com/AkhmadBabaev/o-slider/issues/15).
+Issue [#15](https://github.com/AkhmadBabaev/o-slider/issues/15).
 
 ## [3.0.1] - 2020-03-27
 
 ### Fixed
 
-- Issue [#17](https://github.com/AkhmadBabaev/o-slider/issues/17).
+Issue [#17](https://github.com/AkhmadBabaev/o-slider/issues/17).
 
 ## [3.0.0] - 2020-03-26
 
@@ -94,17 +111,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Removed 
 
-- Method reset.
+Method reset.
 
 ### Fixed
 
-- Issue [#14](https://github.com/AkhmadBabaev/o-slider/issues/14).
+Issue [#14](https://github.com/AkhmadBabaev/o-slider/issues/14).
 
 ## [2.0.0] - 2020-03-17
 
 ### Changed
 
-- Default parameters bar and range to false.
+Default parameters bar and range to false.
 
 ## [1.2.0] - 2020-03-16
 
@@ -115,7 +132,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Security
 
-- Vulnerable dependencies:
+Vulnerable dependencies:
     - serialize-javascript 
     - minimist
 
@@ -123,12 +140,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- Issue [#9](https://github.com/AkhmadBabaev/o-slider/issues/9).
+Issue [#9](https://github.com/AkhmadBabaev/o-slider/issues/9).
 
 ## [1.0.0] - 2020-03-06
 
 First working release.
 
+[4.0.1]: https://github.com/AkhmadBabaev/o-slider/compare/4.0.0...4.0.1
 [4.0.0]: https://github.com/AkhmadBabaev/o-slider/compare/3.2.0...4.0.0
 [3.2.0]: https://github.com/AkhmadBabaev/o-slider/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/AkhmadBabaev/o-slider/compare/3.0.1...3.1.0
